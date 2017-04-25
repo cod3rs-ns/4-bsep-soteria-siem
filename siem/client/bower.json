@@ -1,0 +1,25 @@
+{
+  "name": "awt-cts-project",
+  "homepage": "https://github.com/dmarjanovic94/bsep-siep",
+  "authors": [
+    "Stefan Ristanović <st.keky@gmail.com>",
+    "Bojan Blagojević <datiglavaradi@gmail.com>",
+    "Dragutin Marjanović <dmarjanovic94@gmail.com>"
+  ],
+  "description": "Soteria SIEP Web Application Client",
+  "main": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "angular": "^1.6.4",
+    "angular-ui-router": "^0.3.2",
+    "lodash": "^4.17.4"
+  }
+}
