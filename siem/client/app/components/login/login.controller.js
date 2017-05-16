@@ -9,7 +9,5 @@
 
     function LoginController() {
         var loginVm = this;
-
-        loginVm.message = "Hello"
     }
 })();

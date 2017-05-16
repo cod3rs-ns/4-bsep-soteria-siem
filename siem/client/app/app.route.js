@@ -14,16 +14,29 @@ angular
         $urlRouterProvider.otherwise("/login");
 
         $stateProvider
-            .state('/', {
+            .state('login', {
                 url: "/login",
                 data: {
-                    pageTitle: 'Soteria | Sign In'
+                    pageTitle: "Soteria | Sign In"
                 },
                 views: {
                     'content@': {
                         templateUrl: "app/components/login/login.html",
                         controller: "LoginController",
                         controllerAs: "loginVm"
+                    }
+                }
+            })
+            .state('register', {
+                url: "/register",
+                data: {
+                    pageTitle: "Soteria | Sign Up"
+                },
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/register/register.html",
+                        controller: "RegisterController",
+                        controllerAs: "registerVm"
                     }
                 }
             });
