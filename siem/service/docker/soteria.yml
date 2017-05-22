@@ -1,0 +1,12 @@
+version: '2'
+
+services:
+  soteria-mysql:
+    extends:
+      file: mysql.yml
+      service: soteria-mysql
+
+  soteria-mongo:
+    extends:
+      file: mongo.yml
+      service: soteria-mongo
