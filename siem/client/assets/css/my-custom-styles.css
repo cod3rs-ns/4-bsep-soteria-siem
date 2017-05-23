@@ -30,9 +30,12 @@
     margin-top: 50px;
 }
 
-img.app-logo {
+div.app-logo img {
     height: 24px;
-    margin-top: -8px;
+}
+
+div.logo img {
+    height: 64px !important;
 }
 
 dl.project-agent > dt {
