@@ -35,6 +35,14 @@ img.app-logo {
     margin-top: -8px;
 }
 
+dl.project-agent > dt {
+    width: 90px !important;
+}
+
+dl.project-agent > dd {
+    margin-left: 100px !important;
+}
+
 @media screen and (min-width: 768px) {
   .btn-auth-google {
     width: 50%;

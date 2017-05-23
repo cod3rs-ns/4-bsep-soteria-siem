@@ -1,0 +1,210 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>
+                Project name
+            </h2>
+        </div>
+        <div class="col-lg-6">
+            <div class="top-content">
+                <ul class="list-inline quick-access">
+                    <li>
+                        <a href="#">
+                            <div class="quick-access-item bg-color-green">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h5>REPORTS</h5><em>monitor your project properly</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div class="quick-access-item bg-color-blue">
+                                <i class="fa fa-envelope"></i>
+                                <h5>ALARMS</h5><em>define your own alarms</em>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Project Agents</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="widget quick-note-saved">
+                                <div class="widget-header">
+                                    <h3>Windows Agent</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <dl class="dl-horizontal project-agent">
+                                        <dt>Created at:</dt>
+                                        <dd>May 23, 2015</dd>
+
+                                        <dt>Description:</dt>
+                                        <dd>This is simple agent blah blah...</dd>
+
+                                        <dt>Another field:</dt>
+                                        <dd>Some field and</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="widget quick-note-saved">
+                                <div class="widget-header">
+                                    <h3>OSX Agent</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <dl class="dl-horizontal project-agent">
+                                        <dt>Created at:</dt>
+                                        <dd>May 23, 2015</dd>
+
+                                        <dt>Description:</dt>
+                                        <dd>This is simple agent blah blah...</dd>
+
+                                        <dt>Another field:</dt>
+                                        <dd>Some field and</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="widget quick-note-saved">
+                                <div class="widget-header">
+                                    <h3>Linux Agent</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <dl class="dl-horizontal project-agent">
+                                        <dt>Created at:</dt>
+                                        <dd>May 23, 2015</dd>
+
+                                        <dt>Description:</dt>
+                                        <dd>This is simple agent blah blah...</dd>
+
+                                        <dt>Another field:</dt>
+                                        <dd>Some field and</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Configure new agent</h3>
+                </div>
+                <div class="widget-content">
+                    <form class="form-horizontal label-left" role="form">
+                        <div class="form-group">
+                            <label for="os" class="col-sm-5 control-label">
+                                Choose Operating System
+                            </label>
+                            <div class="col-sm-7">
+                                <select id="os" name="operating-system">
+                                    <option value="win">Windows</option>
+                                    <option value="linux">Linux</option>
+                                    <option value="osx">OSX</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="col-sm-5 control-label">
+                                Field
+                            </label>
+                            <div class="col-sm-7">
+                                <input type="text" id="phone" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="myonoffswitch4" class="col-sm-5 control-label">
+                                I like this!
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="control-inline onoffswitch">
+                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+                                           id="myonoffswitch4" checked>
+                                    <label class="onoffswitch-label" for="myonoffswitch4">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="dashed" />
+                        <button type="button" class="btn btn-large btn-primary">Get your agent!</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Logs summary</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="contextual-summary-info">
+                                <i class="fa fa-close red-font"></i>
+                                <p class="pull-right"><span>ERRORS</span>4</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="contextual-summary-info">
+                                <i class="fa fa-warning yellow-font"></i>
+                                <p class="pull-right"><span>WARNINGS</span>12</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <h3>Logs</h3>
+                </div>
+                <div class="widget-content">
+                    <table id="ticket-table" class="table table-sorting">
+                        <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Time</th>
+                            <th>Host</th>
+                            <th>Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><span class="label label-critical">ERROR</span></td>
+                            <td>Nov 21, 2013 15:45</td>
+                            <td>Windows OS</td>
+                            <td>Error log message</td>
+                        </tr>
+                        <tr>
+                            <td><span class="label label-medium">INFO</span></td>
+                            <td>May 23, 2017 05:24</td>
+                            <td>macOS Sierra 10.12.4</td>
+                            <td>Info log message</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
