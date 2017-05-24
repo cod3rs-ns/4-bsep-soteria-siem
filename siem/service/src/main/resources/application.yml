@@ -9,10 +9,15 @@ spring:
         password: soteria
 
     jpa:
+        properties:
+            jadira:
+              usertype:
+                  autoRegisterUserTypes: true
         hibernate:
           naming:
             strategy: org.hibernate.cfg.DefaultNamingStrategy
           ddlAuto: update
+
 
 logging:
   level:
