@@ -22,17 +22,17 @@ public abstract class EntityMeta implements Serializable {
     @Column(name = "id", nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long id;
 
-    @Column(name = "version")
+    @Column(name = "version", nullable = false)
     @Version
     private Long version;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private DateTime createdAt;
 
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private DateTime updatedAt;
 
     @Column(name = "updated_by")
