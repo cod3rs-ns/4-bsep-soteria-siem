@@ -7,7 +7,7 @@ public class ErrorResponse {
     private final String title;
     private final String detail;
 
-    public ErrorResponse(String code, String title, String detail) {
+    public ErrorResponse(final String code, final String title, final String detail) {
         this.code = code;
         this.title = title;
         this.detail = detail;
@@ -28,4 +28,5 @@ public class ErrorResponse {
     public String getDetail() {
         return detail;
     }
+
 }

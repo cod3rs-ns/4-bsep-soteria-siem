@@ -8,7 +8,7 @@ public class PaginationLinks {
     private final String next;
     private final String last;
 
-    public PaginationLinks(String self, String first, String prev, String next, String last) {
+    public PaginationLinks(final String self, final String first, final String prev, final String next, final String last) {
         this.self = self;
         this.first = first;
         this.prev = prev;
@@ -35,4 +35,5 @@ public class PaginationLinks {
     public String getLast() {
         return last;
     }
+
 }

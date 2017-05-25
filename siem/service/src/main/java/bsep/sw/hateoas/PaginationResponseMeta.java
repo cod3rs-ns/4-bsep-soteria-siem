@@ -13,7 +13,7 @@ public class PaginationResponseMeta extends StandardResponseMeta {
     @JsonProperty("items-per-page")
     private Integer itemsPerPage;
 
-    public PaginationResponseMeta(Integer totalPages, Integer totalItems, Integer itemsPerPage) {
+    public PaginationResponseMeta(final Integer totalPages, final Integer totalItems, final Integer itemsPerPage) {
         this.totalPages = totalPages;
         this.totalItems = totalItems;
         this.itemsPerPage = itemsPerPage;
@@ -30,4 +30,5 @@ public class PaginationResponseMeta extends StandardResponseMeta {
     public Integer getItemsPerPage() {
         return itemsPerPage;
     }
+
 }
