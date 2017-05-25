@@ -1,0 +1,27 @@
+spring:
+    application:
+        name: soteria
+
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/soteria?verifyServerCertificate=false&useSSL=false&requireSSL=false
+        username: soteria
+        password: soteria
+
+    jpa:
+        properties:
+            jadira:
+              usertype:
+                  autoRegisterUserTypes: true
+        hibernate:
+          naming:
+            strategy: org.hibernate.cfg.DefaultNamingStrategy
+          ddlAuto: update
+
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+    port: 9091
