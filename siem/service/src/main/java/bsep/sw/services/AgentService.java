@@ -19,17 +19,17 @@ public class AgentService {
         this.repository = repository;
     }
 
-    public Agent save(Agent agent) {
+    public Agent save(final Agent agent) {
         return repository.save(agent);
     }
 
     @Transactional(readOnly = true)
-    public Page<Agent> findAll(Pageable pageable) {
+    public Page<Agent> findAll(final Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Agent findOne(Long id) {
+    public Agent findOne(final Long id) {
         return repository.findOne(id);
     }
 

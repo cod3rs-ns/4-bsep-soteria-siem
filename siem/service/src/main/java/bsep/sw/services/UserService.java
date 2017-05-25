@@ -19,21 +19,21 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User save(User user) {
+    public User save(final User user) {
         return repository.save(user);
     }
 
     @Transactional(readOnly = true)
-    public Page<User> findAll(Pageable pageable) {
+    public Page<User> findAll(final Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public User findOne(Long id) {
+    public User findOne(final Long id) {
         return repository.findOne(id);
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         repository.delete(id);
     }
 

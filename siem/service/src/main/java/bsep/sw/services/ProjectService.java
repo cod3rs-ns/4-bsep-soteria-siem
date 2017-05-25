@@ -19,21 +19,21 @@ public class ProjectService {
         this.repository = repository;
     }
 
-    public Project save(Project project) {
+    public Project save(final Project project) {
         return repository.save(project);
     }
 
     @Transactional(readOnly = true)
-    public Page<Project> findAll(Pageable pageable) {
+    public Page<Project> findAll(final Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Project findOne(Long id) {
+    public Project findOne(final Long id) {
         return repository.findOne(id);
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         repository.delete(id);
     }
 

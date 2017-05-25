@@ -19,21 +19,21 @@ public class AlarmService {
         this.repository = repository;
     }
 
-    public Alarm save(Alarm alarm) {
+    public Alarm save(final Alarm alarm) {
         return repository.save(alarm);
     }
 
     @Transactional(readOnly = true)
-    public Page<Alarm> findAll(Pageable pageable) {
+    public Page<Alarm> findAll(final Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public Alarm findOne(Long id) {
+    public Alarm findOne(final Long id) {
         return repository.findOne(id);
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         repository.delete(id);
     }
 

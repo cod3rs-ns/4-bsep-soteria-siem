@@ -19,21 +19,21 @@ public class AlarmDefinitionService {
         this.repository = repository;
     }
 
-    public AlarmDefinition save(AlarmDefinition alarmDefinition) {
+    public AlarmDefinition save(final AlarmDefinition alarmDefinition) {
         return repository.save(alarmDefinition);
     }
 
     @Transactional(readOnly = true)
-    public Page<AlarmDefinition> findAll(Pageable pageable) {
+    public Page<AlarmDefinition> findAll(final Pageable pageable) {
         return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
-    public AlarmDefinition findOne(Long id) {
+    public AlarmDefinition findOne(final Long id) {
         return repository.findOne(id);
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         repository.delete(id);
     }
 
