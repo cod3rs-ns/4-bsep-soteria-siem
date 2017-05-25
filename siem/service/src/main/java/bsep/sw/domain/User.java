@@ -1,47 +1,53 @@
 package bsep.sw.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 public class User extends EntityMeta {
 
     @NotNull
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "u_username", unique = true, nullable = false)
     private String username;
 
     @NotNull
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "u_email", unique = true, nullable = false)
     private String email;
 
     @NotNull
-    @Column(name = "password", nullable = false)
+    @Column(name = "u_password", nullable = false)
     private String password;
 
     @NotNull
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "u_first_name", nullable = false)
     private String firstName;
 
     @NotNull
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "u_last_name", nullable = false)
     private String lastName;
 
     @NotNull
-    @Column(name = "phone", nullable = false)
+    @Column(name = "u_phone", nullable = false)
     private String phoneNumber;
 
     @NotNull
-    @Column(name = "role", nullable = false)
+    @Column(name = "u_role", nullable = false)
     private UserRole role;
 
-    @Column(name = "image")
+    @Column(name = "u_image")
     private String imagePath;
 
-    @Column(name = "verified", nullable = false)
+    @Column(name = "u_verified", nullable = false)
     private Boolean verified = false;
+
+    @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
+    private Set<Project> projects = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    private Set<Project> ownedProjects = new HashSet<>(0);
 
     public String getUsername() {
         return username;
@@ -155,9 +161,34 @@ public class User extends EntityMeta {
         this.verified = verified;
     }
 
-
     public User verified(Boolean verified) {
         this.verified = verified;
+        return this;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<Project> projects) {
+        this.projects = projects;
+    }
+
+    public User projects(Set<Project> projects) {
+        this.projects = projects;
+        return this;
+    }
+
+    public Set<Project> getOwnedProjects() {
+        return ownedProjects;
+    }
+
+    public void setOwnedProjects(Set<Project> ownedProjects) {
+        this.ownedProjects = ownedProjects;
+    }
+
+    public User owned(Set<Project> ownedProjects) {
+        this.ownedProjects = ownedProjects;
         return this;
     }
 
