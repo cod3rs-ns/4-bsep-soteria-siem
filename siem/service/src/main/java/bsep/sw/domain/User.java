@@ -10,42 +10,38 @@ import javax.validation.constraints.NotNull;
 public class User extends EntityMeta {
 
     @NotNull
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @NotNull
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "phone", nullable = false)
     private String phoneNumber;
 
     @NotNull
-    @Column(nullable = false)
-    private String type;
+    @Column(name = "role", nullable = false)
+    private UserRole role;
 
-    @Column
+    @Column(name = "image")
     private String imagePath;
 
-    @Column(nullable = false)
+    @Column(name = "verified", nullable = false)
     private Boolean verified = false;
-
-    @Column(nullable = false)
-    private Boolean deleted = false;
-
 
     public String getUsername() {
         return username;
@@ -125,16 +121,16 @@ public class User extends EntityMeta {
         return this;
     }
 
-    public String getType() {
-        return type;
+    public UserRole getRole() {
+        return role;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
-    public User type(String type) {
-        this.type = type;
+    public User type(UserRole type) {
+        this.role = type;
         return this;
     }
 
@@ -148,19 +144,6 @@ public class User extends EntityMeta {
 
     public User imagePath(String imagePath) {
         this.imagePath = imagePath;
-        return this;
-    }
-
-    public Boolean isDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
-
-    public User deleted(Boolean deleted) {
-        this.deleted = deleted;
         return this;
     }
 
@@ -187,10 +170,9 @@ public class User extends EntityMeta {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", type='" + type + '\'' +
+                ", role='" + role + '\'' +
                 ", imagePath='" + imagePath + '\'' +
                 ", verified=" + verified +
-                ", deleted=" + deleted +
                 '}';
     }
 }

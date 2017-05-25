@@ -38,6 +38,9 @@ public abstract class EntityMeta implements Serializable {
     @Column(name = "updated_by")
     private String updatedBy;
 
+    @Column(name = "active", nullable = false)
+    private Boolean active = false;
+
     public Long getId() {
         return id;
     }
@@ -116,6 +119,19 @@ public abstract class EntityMeta implements Serializable {
         return this;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public EntityMeta active(Boolean active) {
+        this.active = active;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -131,6 +147,7 @@ public abstract class EntityMeta implements Serializable {
                 .append(createdBy, that.createdBy)
                 .append(updatedAt, that.updatedAt)
                 .append(updatedBy, that.updatedBy)
+                .append(active, that.active)
                 .isEquals();
     }
 
@@ -143,6 +160,7 @@ public abstract class EntityMeta implements Serializable {
                 .append(createdBy)
                 .append(updatedAt)
                 .append(updatedBy)
+                .append(active)
                 .toHashCode();
     }
 
@@ -155,6 +173,7 @@ public abstract class EntityMeta implements Serializable {
                 ", createdBy='" + createdBy + '\'' +
                 ", updatedAt=" + updatedAt +
                 ", updatedBy='" + updatedBy + '\'' +
+                ", active=" + active +
                 '}';
     }
 }
