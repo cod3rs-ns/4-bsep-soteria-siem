@@ -36,6 +36,9 @@ public class Project extends EntityMeta {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<Agent> agents = new HashSet<>(0);
 
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<Alarm> alarms = new HashSet<>(0);
+
     public String getName() {
         return name;
     }
@@ -98,6 +101,19 @@ public class Project extends EntityMeta {
 
     public Project agents(Set<Agent> agents) {
         this.agents = agents;
+        return this;
+    }
+
+    public Set<Alarm> getAlarms() {
+        return alarms;
+    }
+
+    public void setAlarms(Set<Alarm> alarms) {
+        this.alarms = alarms;
+    }
+
+    public Project alarms(Set<Alarm> alarms) {
+        this.alarms = alarms;
         return this;
     }
 
