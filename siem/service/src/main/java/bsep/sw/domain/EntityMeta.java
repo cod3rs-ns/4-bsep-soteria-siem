@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -26,14 +27,16 @@ public abstract class EntityMeta implements Serializable {
     @Version
     private Long version;
 
+    @NotNull
     @Column(name = "created_at", nullable = false)
-    private DateTime createdAt;
+    private DateTime createdAt = new DateTime();
 
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "updated_at", nullable = false)
-    private DateTime updatedAt;
+    @NotNull
+    @Column(name = "last_update", nullable = false)
+    private DateTime lastUpdate = new DateTime();
 
     @Column(name = "updated_by")
     private String updatedBy;
@@ -93,16 +96,16 @@ public abstract class EntityMeta implements Serializable {
         return this;
     }
 
-    public DateTime getUpdatedAt() {
-        return updatedAt;
+    public DateTime getLastUpdate() {
+        return lastUpdate;
     }
 
-    public void setUpdatedAt(DateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setLastUpdate(DateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
-    public EntityMeta updatedAt(DateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public EntityMeta lastUpdated(DateTime updatedAt) {
+        this.lastUpdate = updatedAt;
         return this;
     }
 
@@ -145,7 +148,7 @@ public abstract class EntityMeta implements Serializable {
                 .append(version, that.version)
                 .append(createdAt, that.createdAt)
                 .append(createdBy, that.createdBy)
-                .append(updatedAt, that.updatedAt)
+                .append(lastUpdate, that.lastUpdate)
                 .append(updatedBy, that.updatedBy)
                 .append(active, that.active)
                 .isEquals();
@@ -158,7 +161,7 @@ public abstract class EntityMeta implements Serializable {
                 .append(version)
                 .append(createdAt)
                 .append(createdBy)
-                .append(updatedAt)
+                .append(lastUpdate)
                 .append(updatedBy)
                 .append(active)
                 .toHashCode();
@@ -171,7 +174,7 @@ public abstract class EntityMeta implements Serializable {
                 ", version=" + version +
                 ", createdAt=" + createdAt +
                 ", createdBy='" + createdBy + '\'' +
-                ", updatedAt=" + updatedAt +
+                ", lastUpdate=" + lastUpdate +
                 ", updatedBy='" + updatedBy + '\'' +
                 ", active=" + active +
                 '}';
