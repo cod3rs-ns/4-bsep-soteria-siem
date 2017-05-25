@@ -7,6 +7,8 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "alarm_definitions")
@@ -35,8 +37,11 @@ public class AlarmDefinition extends EntityMeta {
     private DateTime lastOccurrence;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "al_project_id")
+    @JoinColumn(name = "ad_project_id")
     private Project project;
+
+    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY)
+    private Set<Alarm> alarms = new HashSet<>(0);
 
     public String getName() {
         return name;
@@ -126,6 +131,19 @@ public class AlarmDefinition extends EntityMeta {
 
     public AlarmDefinition project(Project project) {
         this.project = project;
+        return this;
+    }
+
+    public Set<Alarm> getAlarms() {
+        return alarms;
+    }
+
+    public void setAlarms(Set<Alarm> alarms) {
+        this.alarms = alarms;
+    }
+
+    public AlarmDefinition alarms(Set<Alarm> alarms) {
+        this.alarms = alarms;
         return this;
     }
 
