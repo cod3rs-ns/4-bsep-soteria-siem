@@ -1,25 +1,34 @@
 package bsep.sw.domain;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "agents")
 public class Agent extends EntityMeta {
 
-    @Column(name = "name")
+    @NotNull
+    @Column(name = "a_name")
     private String name;
 
-    @Column(name = "type")
+    @NotNull
+    @Column(name = "a_type")
     private AgentType type;
 
-    @Column(name = "description")
+    @Column(name = "a_description")
     private String description;
 
-    @Column(name = "agent_version")
+    @NotNull
+    @Column(name = "a_agent_version")
     private String agentVersion;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "a_project_id")
+    private Project project;
 
     public String getName() {
         return name;
@@ -71,6 +80,49 @@ public class Agent extends EntityMeta {
     public Agent agentVersion(String agentVersion) {
         this.agentVersion = agentVersion;
         return this;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Agent project(Project project) {
+        this.project = project;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Agent)) return false;
+
+        Agent agent = (Agent) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(name, agent.name)
+                .append(type, agent.type)
+                .append(description, agent.description)
+                .append(agentVersion, agent.agentVersion)
+                .append(project, agent.project)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(name)
+                .append(type)
+                .append(description)
+                .append(agentVersion)
+                .append(project)
+                .toHashCode();
     }
 
     @Override

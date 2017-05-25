@@ -2,6 +2,8 @@ package bsep.sw.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -30,6 +32,9 @@ public class Project extends EntityMeta {
             joinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
     private Set<User> members = new HashSet<>(0);
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private Set<Agent> agents = new HashSet<>(0);
 
     public String getName() {
         return name;
@@ -81,5 +86,44 @@ public class Project extends EntityMeta {
     public Project members(Set<User> members) {
         this.members = members;
         return this;
+    }
+
+    public Set<Agent> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(Set<Agent> agents) {
+        this.agents = agents;
+    }
+
+    public Project agents(Set<Agent> agents) {
+        this.agents = agents;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Project)) return false;
+
+        Project project = (Project) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(name, project.name)
+                .append(description, project.description)
+                .append(owner, project.owner)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(name)
+                .append(description)
+                .append(owner)
+                .toHashCode();
     }
 }

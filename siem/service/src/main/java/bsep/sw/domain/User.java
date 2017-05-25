@@ -1,5 +1,8 @@
 package bsep.sw.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
@@ -29,7 +32,6 @@ public class User extends EntityMeta {
     @Column(name = "u_last_name", nullable = false)
     private String lastName;
 
-    @NotNull
     @Column(name = "u_phone", nullable = false)
     private String phoneNumber;
 
@@ -190,6 +192,45 @@ public class User extends EntityMeta {
     public User owned(Set<Project> ownedProjects) {
         this.ownedProjects = ownedProjects;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(username, user.username)
+                .append(email, user.email)
+                .append(password, user.password)
+                .append(firstName, user.firstName)
+                .append(lastName, user.lastName)
+                .append(phoneNumber, user.phoneNumber)
+                .append(role, user.role)
+                .append(imagePath, user.imagePath)
+                .append(verified, user.verified)
+                .append(ownedProjects, user.ownedProjects)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(username)
+                .append(email)
+                .append(password)
+                .append(firstName)
+                .append(lastName)
+                .append(phoneNumber)
+                .append(role)
+                .append(imagePath)
+                .append(verified)
+                .toHashCode();
     }
 
     @Override
