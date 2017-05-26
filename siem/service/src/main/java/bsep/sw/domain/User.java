@@ -32,7 +32,7 @@ public class User extends EntityMeta {
     @Column(name = "u_last_name", nullable = false)
     private String lastName;
 
-    @Column(name = "u_phone", nullable = false)
+    @Column(name = "u_phone")
     private String phoneNumber;
 
     @NotNull

@@ -9,4 +9,5 @@ public class SoteriaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SoteriaApplication.class, args);
 	}
+
 }
