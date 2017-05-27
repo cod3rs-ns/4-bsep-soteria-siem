@@ -12,7 +12,8 @@ public class LogRequest {
                 .level(LogLevel.valueOf(data.getAttributes().getLevel().toUpperCase()))
                 .time(data.getAttributes().getTime())
                 .info(data.getAttributes().getInfo().toDomain())
-                .message(data.getAttributes().getMessage());
+                .message(data.getAttributes().getMessage())
+                .project(Long.valueOf(data.getRelationships().getProject().getData().getId()));
     }
 
     public LogRequestData getData() {

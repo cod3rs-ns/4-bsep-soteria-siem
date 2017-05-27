@@ -21,6 +21,8 @@ public class Log {
 
     private String message;
 
+    private Long project;
+
     public Log() {
         super();
     }
@@ -90,6 +92,19 @@ public class Log {
         return this;
     }
 
+    public Long getProject() {
+        return project;
+    }
+
+    public void setProject(final Long project) {
+        this.project = project;
+    }
+
+    public Log project(final Long project) {
+        this.project = project;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,6 +119,7 @@ public class Log {
                 .append(time, log.time)
                 .append(info, log.info)
                 .append(message, log.message)
+                .append(project, log.project)
                 .isEquals();
     }
 
@@ -115,6 +131,7 @@ public class Log {
                 .append(time)
                 .append(info)
                 .append(message)
+                .append(project)
                 .toHashCode();
     }
 
@@ -126,6 +143,7 @@ public class Log {
                 .append("time", time)
                 .append("info", info)
                 .append("message", message)
+                .append("project", project)
                 .toString();
     }
 }
