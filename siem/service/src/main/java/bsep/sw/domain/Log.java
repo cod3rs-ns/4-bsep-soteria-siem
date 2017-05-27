@@ -1,10 +1,11 @@
 package bsep.sw.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Document(collection = "logs")
 public class Log {
@@ -16,15 +17,9 @@ public class Log {
 
     private DateTime time;
 
+    private LogInfo info;
+
     private String message;
-
-    private String host;
-
-    private String source;
-
-    // TODO: Introduce pid, gid, uid and <message id>
-
-    private List<LogError> errors;
 
     public Log() {
         super();
@@ -38,12 +33,22 @@ public class Log {
         this.id = id;
     }
 
+    public Log id(final Long id) {
+        this.id = id;
+        return this;
+    }
+
     public LogLevel getLevel() {
         return level;
     }
 
     public void setLevel(final LogLevel level) {
         this.level = level;
+    }
+
+    public Log level(final LogLevel level) {
+        this.level = level;
+        return this;
     }
 
     public DateTime getTime() {
@@ -54,6 +59,24 @@ public class Log {
         this.time = time;
     }
 
+    public Log time(final DateTime time) {
+        this.time = time;
+        return this;
+    }
+
+    public LogInfo getInfo() {
+        return info;
+    }
+
+    public void setInfo(final LogInfo info) {
+        this.info = info;
+    }
+
+    public Log info(final LogInfo info) {
+        this.info = info;
+        return this;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -62,27 +85,47 @@ public class Log {
         this.message = message;
     }
 
-    public String getHost() {
-        return host;
+    public Log message(final String message) {
+        this.message = message;
+        return this;
     }
 
-    public void setHost(final String host) {
-        this.host = host;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (!(o instanceof Log)) return false;
+
+        Log log = (Log) o;
+
+        return new EqualsBuilder()
+                .append(id, log.id)
+                .append(level, log.level)
+                .append(time, log.time)
+                .append(info, log.info)
+                .append(message, log.message)
+                .isEquals();
     }
 
-    public String getSource() {
-        return source;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(level)
+                .append(time)
+                .append(info)
+                .append(message)
+                .toHashCode();
     }
 
-    public void setSource(final String source) {
-        this.source = source;
-    }
-
-    public List<LogError> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(final List<LogError> errors) {
-        this.errors = errors;
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("level", level)
+                .append("time", time)
+                .append("info", info)
+                .append("message", message)
+                .toString();
     }
 }

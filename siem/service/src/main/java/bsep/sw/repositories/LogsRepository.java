@@ -1,4 +1,4 @@
-package bsep.sw.dao;
+package bsep.sw.repositories;
 
 import bsep.sw.domain.Log;
 import org.springframework.data.mongodb.repository.MongoRepository;
