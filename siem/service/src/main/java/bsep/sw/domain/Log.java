@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Log {
 
     @Id
-    private Long id;
+    private String id;
 
     private LogLevel level;
 
@@ -27,15 +27,15 @@ public class Log {
         super();
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final Long id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
-    public Log id(final Long id) {
+    public Log id(final String id) {
         this.id = id;
         return this;
     }

@@ -1,12 +1,13 @@
 package bsep.sw.controllers;
 
+import bsep.sw.domain.Log;
+import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.repositories.LogsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -21,9 +22,10 @@ public class LogController {
 
     @PostMapping("/logs")
     @ResponseBody
-    public ResponseEntity<?> storeLog() {
-        // TODO Implement JSON API for Log storing
-        return ResponseEntity.ok("");
+    public ResponseEntity<?> storeLog(@RequestBody LogRequest request) {
+        final Log log = request.toDomain()
+                .id(UUID.randomUUID().toString());
+        return ResponseEntity.ok(logs.save(log));
     }
 
 }
