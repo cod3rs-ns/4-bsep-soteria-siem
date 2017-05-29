@@ -16,10 +16,7 @@ public class LogCollectionResponse {
         this.links = links;
     }
 
-    public static LogCollectionResponse fromDomain(final List<Log> logs) {
-
-        final PaginationLinks links = new PaginationLinks("self", "next");
-
+    public static LogCollectionResponse fromDomain(final List<Log> logs, final PaginationLinks links) {
         return new LogCollectionResponse(logs.stream().map(LogResponseData::fromDomain).collect(Collectors.toList()), links);
     }
 
