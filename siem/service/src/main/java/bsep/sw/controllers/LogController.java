@@ -6,6 +6,7 @@ import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,10 @@ public class LogController {
     }
 
     @GetMapping("/projects/{projectId}/logs")
-    public ResponseEntity<?> retrieveLogsForProject(@PathVariable("projectId") final Long project) {
-        return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project)));
+    public ResponseEntity<?> retrieveLogsForProject(@PathVariable("projectId") final Long project,
+                                                    @RequestParam(value = "page[offset]", required = false, defaultValue = "0") Integer offset,
+                                                    @RequestParam(value= "page[limit]", required = false, defaultValue = "10") Integer limit) {
+        return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project, new PageRequest(offset/limit, limit))));
     }
 
     @PostMapping("/logs")
