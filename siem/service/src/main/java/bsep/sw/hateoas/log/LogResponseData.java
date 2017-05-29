@@ -2,6 +2,8 @@ package bsep.sw.hateoas.log;
 
 import bsep.sw.domain.Log;
 
+import java.util.stream.Collectors;
+
 import static bsep.sw.hateoas.ResourceTypes.LOGS_TYPE;
 
 public class LogResponseData {
@@ -37,8 +39,7 @@ public class LogResponseData {
         info.setGid(log.getInfo().getGid());
         info.setPid(log.getInfo().getPid());
         info.setUid(log.getInfo().getUid());
-        // FIXME: Create errors list
-        info.setErrors(null);
+        info.setErrors(log.getInfo().getErrors().stream().map(LogErrorHateoas::fromDomain).collect(Collectors.toList()));
 
         return new LogAttributes()
                 .level(log.getLevel().toString())
@@ -48,7 +49,7 @@ public class LogResponseData {
     }
 
     private static LogResponseRelationships createRelationships(final Log log) {
-        return new LogResponseRelationships();
+        return LogResponseRelationships.fromDomain(log);
     }
 
     public String getType() {

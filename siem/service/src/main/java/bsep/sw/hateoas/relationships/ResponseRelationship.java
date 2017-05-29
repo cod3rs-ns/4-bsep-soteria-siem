@@ -9,4 +9,20 @@ public class ResponseRelationship {
         this.links = links;
         this.data = data;
     }
+
+    public RelationshipLinks getLinks() {
+        return links;
+    }
+
+    public void setLinks(RelationshipLinks links) {
+        this.links = links;
+    }
+
+    public RelationshipData getData() {
+        return data;
+    }
+
+    public void setData(RelationshipData data) {
+        this.data = data;
+    }
 }
