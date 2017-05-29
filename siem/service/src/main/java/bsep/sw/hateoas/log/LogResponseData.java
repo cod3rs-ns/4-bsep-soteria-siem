@@ -2,24 +2,14 @@ package bsep.sw.hateoas.log;
 
 import bsep.sw.domain.Log;
 
-import java.util.stream.Collectors;
-
 import static bsep.sw.hateoas.ResourceTypes.LOGS_TYPE;
 
 public class LogResponseData {
 
-    private String type;
-    private String id;
-    private LogAttributes attributes;
-    private LogResponseRelationships relationships;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
+    public String type;
+    public String id;
+    public LogAttributes attributes;
+    public LogResponseRelationships relationships;
 
     public static LogResponseData fromDomain(final Log log) {
         return new LogResponseData(LOGS_TYPE, log.getId(), createAttributes(log), createRelationships(log));
@@ -33,17 +23,9 @@ public class LogResponseData {
     }
 
     private static LogAttributes createAttributes(final Log log) {
-        final LogInfoHateoas info = new LogInfoHateoas();
-        info.setHost(log.getInfo().getHost());
-        info.setSource(log.getInfo().getSource());
-        info.setGid(log.getInfo().getGid());
-        info.setPid(log.getInfo().getPid());
-        info.setUid(log.getInfo().getUid());
-        info.setErrors(log.getInfo().getErrors().stream().map(LogErrorHateoas::fromDomain).collect(Collectors.toList()));
-
         return new LogAttributes()
                 .level(log.getLevel().toString())
-                .info(info)
+                .info(LogInfoHateoas.fromDomain(log.getInfo()))
                 .time(log.getTime())
                 .message(log.getMessage());
     }
@@ -52,27 +34,4 @@ public class LogResponseData {
         return LogResponseRelationships.fromDomain(log);
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
-    }
-
-    public LogAttributes getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(final LogAttributes attributes) {
-        this.attributes = attributes;
-    }
-
-    public LogResponseRelationships getRelationships() {
-        return relationships;
-    }
-
-    public void setRelationships(final LogResponseRelationships relationships) {
-        this.relationships = relationships;
-    }
 }

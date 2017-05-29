@@ -9,11 +9,11 @@ public class LogRequest {
 
     public Log toDomain() {
         return new Log()
-                .level(LogLevel.valueOf(data.getAttributes().getLevel().toUpperCase()))
-                .time(data.getAttributes().getTime())
-                .info(data.getAttributes().getInfo().toDomain())
-                .message(data.getAttributes().getMessage())
-                .project(Long.valueOf(data.getRelationships().getProject().getData().getId()));
+                .level(LogLevel.valueOf(data.attributes.level.toUpperCase()))
+                .time(data.attributes.time)
+                .info(data.attributes.info.toDomain())
+                .message(data.attributes.message)
+                .project(Long.valueOf(data.relationships.project.data.id));
     }
 
     public LogRequestData getData() {
@@ -23,4 +23,5 @@ public class LogRequest {
     public void setData(LogRequestData data) {
         this.data = data;
     }
+
 }

@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 
 public class LogCollectionResponse {
 
-    private List<LogResponseData> data;
-    private PaginationLinks links;
+    public List<LogResponseData> data;
+    public PaginationLinks links;
 
     public LogCollectionResponse(final List<LogResponseData> data, final PaginationLinks links) {
         this.data = data;
@@ -20,19 +20,4 @@ public class LogCollectionResponse {
         return new LogCollectionResponse(logs.stream().map(LogResponseData::fromDomain).collect(Collectors.toList()), links);
     }
 
-    public List<LogResponseData> getData() {
-        return data;
-    }
-
-    public void setData(final List<LogResponseData> data) {
-        this.data = data;
-    }
-
-    public PaginationLinks getLinks() {
-        return links;
-    }
-
-    public void setLinks(final PaginationLinks links) {
-        this.links = links;
-    }
 }

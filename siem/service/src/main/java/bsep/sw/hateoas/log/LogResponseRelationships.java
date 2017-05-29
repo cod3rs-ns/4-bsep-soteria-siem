@@ -9,7 +9,7 @@ import static bsep.sw.hateoas.ResourceTypes.PROJECTS_TYPE;
 
 public class LogResponseRelationships {
 
-    private ResponseRelationship project;
+    public ResponseRelationship project;
 
     public static LogResponseRelationships fromDomain(final Log log) {
         final RelationshipData data = new RelationshipData(PROJECTS_TYPE, log.getProject().toString());
@@ -20,16 +20,9 @@ public class LogResponseRelationships {
                 .project(new ResponseRelationship(links, data));
     }
 
-    public ResponseRelationship getProject() {
-        return project;
-    }
-
-    public void setProject(final ResponseRelationship project) {
-        this.project = project;
-    }
-
     public LogResponseRelationships project(final ResponseRelationship project) {
         this.project = project;
         return this;
     }
+
 }

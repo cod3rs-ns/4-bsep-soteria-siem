@@ -7,12 +7,24 @@ import java.util.stream.Collectors;
 
 class LogInfoHateoas {
 
-    private String host;
-    private String source;
-    private String pid;
-    private String gid;
-    private String uid;
-    private List<LogErrorHateoas> errors;
+    public String host;
+    public String source;
+    public String pid;
+    public String gid;
+    public String uid;
+    public List<LogErrorHateoas> errors;
+
+    public static LogInfoHateoas fromDomain(final LogInfo logInfo) {
+        final LogInfoHateoas info = new LogInfoHateoas();
+        info.host = logInfo.getHost();
+        info.source = logInfo.getSource();
+        info.gid = logInfo.getGid();
+        info.pid = logInfo.getPid();
+        info.uid = logInfo.getUid();
+        info.errors = (logInfo.getErrors().stream().map(LogErrorHateoas::fromDomain).collect(Collectors.toList()));
+
+        return info;
+    }
 
     public LogInfo toDomain() {
         return new LogInfo()
@@ -24,51 +36,4 @@ class LogInfoHateoas {
                 .errors(errors.stream().map(LogErrorHateoas::toDomain).collect(Collectors.toList()));
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(final String host) {
-        this.host = host;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(final String source) {
-        this.source = source;
-    }
-
-    public String getPid() {
-        return pid;
-    }
-
-    public void setPid(final String pid) {
-        this.pid = pid;
-    }
-
-    public String getGid() {
-        return gid;
-    }
-
-    public void setGid(final String gid) {
-        this.gid = gid;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(final String uid) {
-        this.uid = uid;
-    }
-
-    public List<LogErrorHateoas> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(final List<LogErrorHateoas> errors) {
-        this.errors = errors;
-    }
 }
