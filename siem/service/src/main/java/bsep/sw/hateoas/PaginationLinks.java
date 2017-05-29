@@ -1,12 +1,19 @@
 package bsep.sw.hateoas;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class PaginationLinks {
 
-    private final String self;
-    private final String first;
-    private final String prev;
-    private final String next;
-    private final String last;
+    private String self;
+    private String first;
+    private String prev;
+    private String next;
+    private String last;
+
+    public PaginationLinks(final String self, final String next) {
+        this.self = self;
+        this.next = next;
+    }
 
     public PaginationLinks(final String self, final String first, final String prev, final String next, final String last) {
         this.self = self;
@@ -20,10 +27,12 @@ public class PaginationLinks {
         return self;
     }
 
+    @JsonIgnore
     public String getFirst() {
         return first;
     }
 
+    @JsonIgnore
     public String getPrev() {
         return prev;
     }
@@ -32,6 +41,7 @@ public class PaginationLinks {
         return next;
     }
 
+    @JsonIgnore
     public String getLast() {
         return last;
     }

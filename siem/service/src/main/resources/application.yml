@@ -8,6 +8,12 @@ spring:
         username: soteria
         password: soteria
 
+    data:
+      mongodb:
+        host: localhost
+        port: 27017
+        database: test
+
     jpa:
         properties:
             jadira:

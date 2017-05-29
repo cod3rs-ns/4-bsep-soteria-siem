@@ -5,6 +5,8 @@ import bsep.sw.hateoas.resource.response.ResponseData;
 import bsep.sw.hateoas.resource.response.ResponseMeta;
 import bsep.sw.hateoas.resource.response.ResourceResponse;
 
+import static bsep.sw.hateoas.ResourceTypes.PROJECTS_TYPE;
+
 public class ProjectResponse extends ResourceResponse {
 
     public ProjectResponse fromDomain(Project project) {
@@ -17,7 +19,7 @@ public class ProjectResponse extends ResourceResponse {
     }
 
     private ProjectResponse createData(Project project) {
-        this.data = new ResponseData(project.getId(), "projects", createAttributes(project));
+        this.data = new ResponseData(project.getId(), PROJECTS_TYPE, createAttributes(project));
         return this;
     }
 
