@@ -3,7 +3,7 @@ package bsep.sw.hateoas.log;
 public class LogRequestData {
 
     private String type;
-    private LogRequestAttributes attributes;
+    private LogAttributes attributes;
     private LogRequestRelationships relationships;
 
     public String getType() {
@@ -14,11 +14,11 @@ public class LogRequestData {
         this.type = type;
     }
 
-    public LogRequestAttributes getAttributes() {
+    public LogAttributes getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(LogRequestAttributes attributes) {
+    public void setAttributes(LogAttributes attributes) {
         this.attributes = attributes;
     }
 

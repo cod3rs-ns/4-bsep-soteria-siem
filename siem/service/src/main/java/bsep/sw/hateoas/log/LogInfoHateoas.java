@@ -5,14 +5,14 @@ import bsep.sw.domain.LogInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class LogRequestInfo {
+class LogInfoHateoas {
 
     private String host;
     private String source;
     private String pid;
     private String gid;
     private String uid;
-    private List<LogRequestError> errors;
+    private List<LogErrorHateoas> errors;
 
     public LogInfo toDomain() {
         return new LogInfo()
@@ -21,7 +21,7 @@ class LogRequestInfo {
                 .pid(pid)
                 .gid(gid)
                 .uid(uid)
-                .errors(errors.stream().map(LogRequestError::toDomain).collect(Collectors.toList()));
+                .errors(errors.stream().map(LogErrorHateoas::toDomain).collect(Collectors.toList()));
     }
 
     public String getHost() {
@@ -64,11 +64,11 @@ class LogRequestInfo {
         this.uid = uid;
     }
 
-    public List<LogRequestError> getErrors() {
+    public List<LogErrorHateoas> getErrors() {
         return errors;
     }
 
-    public void setErrors(final List<LogRequestError> errors) {
+    public void setErrors(final List<LogErrorHateoas> errors) {
         this.errors = errors;
     }
 }

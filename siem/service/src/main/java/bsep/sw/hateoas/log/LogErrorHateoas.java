@@ -2,7 +2,7 @@ package bsep.sw.hateoas.log;
 
 import bsep.sw.domain.LogError;
 
-class LogRequestError {
+class LogErrorHateoas {
 
     private String type;
     private String error;
