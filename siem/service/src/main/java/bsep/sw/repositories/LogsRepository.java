@@ -4,7 +4,11 @@ import bsep.sw.domain.Log;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface LogsRepository extends MongoRepository <Log, Long> {
+public interface LogsRepository extends MongoRepository <Log, String> {
+
+    List<Log> findByProject(final Long project);
 
 }
