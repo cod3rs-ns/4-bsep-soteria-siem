@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "description": "Soteria - takes care of your logs.",
+    "description": "Soteria - take care of your logs.",
     "version": "0.0.1",
     "title": "Soteria API",
     "termsOfService": "http://swagger.io/terms/",
@@ -43,9 +43,6 @@
         "tags": [
           "Projects"
         ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "name": "project",
@@ -58,9 +55,21 @@
         ],
         "responses": {
           "201": {
-            "description": "Success",
+            "description": "Project created",
             "schema": {
               "$ref": "#/definitions/ProjectResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         },
@@ -113,6 +122,52 @@
         "updated-at",
         "created-by",
         "updated-by"
+      ]
+    },
+    "SimpleErrorMeta": {
+      "title": "Simple error meta",
+      "description": "Simple error meta response data",
+      "properties": {
+        "created-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Time of error occurrence in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        }
+      },
+      "required": [
+        "created-at"
+      ]
+    },
+    "ErrorResponse": {
+      "title": "Error response",
+      "description": "Standard error response",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/SimpleErrorMeta"
+        },
+        "code": {
+          "type": "string",
+          "description": "Custom application error code",
+          "example": "STA-1001"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the occurred error",
+          "example": "Something bad happened"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Additional details describing occurred error",
+          "example": "This error happened because of bad luck"
+        }
+      },
+      "required": [
+        "meta",
+        "code",
+        "title",
+        "detail"
       ]
     },
     "CreateProjectRequest": {

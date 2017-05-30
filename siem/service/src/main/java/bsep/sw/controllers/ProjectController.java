@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Enumeration;
 import java.util.Set;
 
 @RestController
@@ -36,10 +35,6 @@ public class ProjectController extends StandardResponses {
     @ResponseBody
     public ResponseEntity<?> createProject(final HttpServletRequest request,
                                            @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
-        Enumeration<String> enums = request.getHeaderNames();
-        while(enums.hasMoreElements()) {
-            System.out.println(enums.nextElement());
-        }
         final User user = securityUtil.getLoggedUser();
 
         if (user == null) {
