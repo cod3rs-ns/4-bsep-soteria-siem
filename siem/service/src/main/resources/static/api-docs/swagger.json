@@ -1,0 +1,221 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Soteria - takes care of your logs.",
+    "version": "0.0.1",
+    "title": "Soteria API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "soteria@gmail.com"
+    }
+  },
+  "host": "localhost:9091",
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Projects",
+      "description": "Everything about your Projects"
+    },
+    {
+      "name": "logs",
+      "description": "Access to your Logs"
+    },
+    {
+      "name": "users",
+      "description": "Operations about User"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/projects": {
+      "post": {
+        "summary": "Create new project",
+        "description": "This action creates new Project entity",
+        "operationId": "createProject",
+        "tags": [
+          "Projects"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "project",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProjectRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/ProjectResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "X-Auth-Token": {
+      "type": "apiKey",
+      "name": "X-Auth-Token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "ResponseMeta": {
+      "title": "Response meta",
+      "description": "Standard response meta data",
+      "type": "object",
+      "properties": {
+        "created-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Time of entity creation in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        },
+        "updated-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time of entity updated in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        },
+        "created-by": {
+          "type": "string",
+          "description": "Name of the entity's author",
+          "example": "Chandler Bing"
+        },
+        "updated-by": {
+          "type": "string",
+          "description": "Name of the last user that changed this entity",
+          "example": "Joey Tribbiani"
+        }
+      },
+      "required": [
+        "created-at",
+        "updated-at",
+        "created-by",
+        "updated-by"
+      ]
+    },
+    "CreateProjectRequest": {
+      "title": "Create project request",
+      "description": "Request to create new project",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "projects"
+              ],
+              "description": "Represents entity type",
+              "example": "projects"
+            },
+            "attributes": {
+              "type": "object",
+              "title": "Project Request Attributes",
+              "description": "Project request attributes",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Project's name",
+                  "example": "Super cool project"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Project's description",
+                  "example": "This is some super cool project"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "attributes"
+          ]
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "ProjectResponse": {
+      "title": "Project Response",
+      "description": "Response containing data about Project entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "format": "int64",
+              "description": "Project's unique identifier",
+              "example": 1001
+            },
+            "type": {
+              "type": "string",
+              "description": "Type of the entity",
+              "example": "projects"
+            },
+            "attributes": {
+              "type": "object",
+              "title": "Project Request Attributes",
+              "description": "Project request attributes",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Project's name",
+                  "example": "Super cool project"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Project's description",
+                  "example": "This is some super cool project"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "type",
+            "attributes"
+          ]
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    }
+  }
+}
