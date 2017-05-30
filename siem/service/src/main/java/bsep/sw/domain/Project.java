@@ -142,4 +142,16 @@ public class Project extends EntityMeta {
                 .append(owner)
                 .toHashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", owner=" + owner +
+                ", members=" + members +
+                ", agents=" + agents +
+                ", alarmDefinitions=" + alarmDefinitions +
+                '}';
+    }
 }

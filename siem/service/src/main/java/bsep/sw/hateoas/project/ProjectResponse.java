@@ -9,7 +9,7 @@ import static bsep.sw.hateoas.ResourceTypes.PROJECTS_TYPE;
 
 public class ProjectResponse extends ResourceResponse {
 
-    public ProjectResponse fromDomain(Project project) {
+    public static ProjectResponse fromDomain(Project project) {
         return new ProjectResponse().createMeta(project).createData(project);
     }
 
