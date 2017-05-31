@@ -44,9 +44,28 @@ public class ProjectController extends StandardResponses {
         final Project toSave = projectRequest.toDomain();
         toSave.owner(user);
 
-        Project result = projectService.save(toSave);
+        final Project result = projectService.save(toSave);
 
         return ResponseEntity.created(new URI(request.getRequestURL().append(result.getId()).toString())).body(ProjectResponse.fromDomain(result));
+    }
+
+    @GetMapping("/projects/{projectId}")
+    @ResponseBody
+    public ResponseEntity<?> getProject(final HttpServletRequest request,
+                                        @PathVariable Long projectId) {
+        final User user = securityUtil.getLoggedUser();
+
+        if (user == null) {
+            return unauthorized();
+        }
+
+        final Project result = projectService.findByUserAndId(user, projectId);
+
+        if (result == null) {
+            return notFound();
+        }
+
+        return ResponseEntity.ok().body(ProjectResponse.fromDomain(result));
     }
 
 }

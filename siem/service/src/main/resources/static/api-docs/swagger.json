@@ -79,6 +79,51 @@
           }
         ]
       }
+    },
+    "/projects/{projectId}": {
+      "get": {
+        "summary": "Retrieve project",
+        "description": "This action retrieves single project",
+        "operationId": "retrieveProject",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "required": true,
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project",
+            "schema": {
+              "$ref": "#/definitions/ProjectResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {

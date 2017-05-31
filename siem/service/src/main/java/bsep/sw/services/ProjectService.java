@@ -1,6 +1,7 @@
 package bsep.sw.services;
 
 import bsep.sw.domain.Project;
+import bsep.sw.domain.User;
 import bsep.sw.repositories.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,4 +38,7 @@ public class ProjectService {
         repository.delete(id);
     }
 
+    public Project findByUserAndId(final User user, final Long id) {
+        return repository.findProjectByOwnerAndId(user, id);
+    }
 }
