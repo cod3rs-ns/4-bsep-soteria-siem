@@ -2,11 +2,11 @@ package bsep.sw.configuration;
 
 import bsep.sw.security.AuthenticationTokenFilter;
 import bsep.sw.security.EntryPointUnauthorizedHandler;
+import bsep.sw.security.TokenUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -30,18 +30,21 @@ import org.springframework.stereotype.Component;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private Logger log = Logger.getLogger(WebSecurityConfiguration.class);
+    private final Logger log = Logger.getLogger(WebSecurityConfiguration.class);
+
+    private final EntryPointUnauthorizedHandler unauthorizedHandler;
+    private final UserDetailsService userDetailsService;
+    private final TokenUtils tokenUtils;
 
 
     @Autowired
-    private EntryPointUnauthorizedHandler unauthorizedHandler;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-
-    @Autowired
-    private Environment env;
+    public WebSecurityConfiguration(final EntryPointUnauthorizedHandler unauthorizedHandler,
+                                    final UserDetailsService userDetailsService,
+                                    final TokenUtils tokenUtils) {
+        this.unauthorizedHandler = unauthorizedHandler;
+        this.userDetailsService = userDetailsService;
+        this.tokenUtils = tokenUtils;
+    }
 
     /**
      * Configures authentication.
@@ -49,7 +52,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @param authenticationManagerBuilder authentication manager builder
      */
     @Autowired
-    public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) {
+    public void configureAuthentication(final AuthenticationManagerBuilder authenticationManagerBuilder) {
         try {
             authenticationManagerBuilder
                     .userDetailsService(this.userDetailsService)
@@ -80,17 +83,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      * Creates authentication token filter.
      *
      * @return AuthenticationTokenFilter
-     * @throws Exception
+     * @throws Exception when wrong token is provided
      */
     @Bean
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
+        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(userDetailsService, tokenUtils);
         authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationTokenFilter;
     }
 
     @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
+    protected void configure(final HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf()
                 .disable()

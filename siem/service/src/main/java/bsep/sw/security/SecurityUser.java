@@ -20,9 +20,6 @@ public class SecurityUser implements UserDetails {
     private Boolean credentialsNonExpired = true;
     private Boolean enabled = true;
 
-    /**
-     * Empty constructor.
-     */
     public SecurityUser() {
         super();
     }

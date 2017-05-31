@@ -7,6 +7,7 @@ import bsep.sw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,7 +48,7 @@ public class UserController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        final String token = tokenUtils.generateToken(userDetails);
+        final String token = tokenUtils.generateToken(userDetails, null, TokenUtils.LoginType.BASIC);
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
@@ -68,8 +69,8 @@ public class UserController {
                 .body(result);
     }
 
-
     @RequestMapping("/users/me")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<User> me() throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
