@@ -29,8 +29,8 @@ public class Project extends EntityMeta {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_memberships",
-            joinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
     private Set<User> members = new HashSet<>(0);
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)

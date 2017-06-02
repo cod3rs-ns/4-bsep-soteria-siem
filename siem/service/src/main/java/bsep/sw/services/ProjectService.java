@@ -52,4 +52,8 @@ public class ProjectService {
     public List<Project> findOwnedProjects(final User user) {
         return repository.findProjectsByOwner(user);
     }
+
+    public List<Project> findProjectByMembership(final User user) {
+        return repository.findProjectsByMembersContaining(user);
+    }
 }

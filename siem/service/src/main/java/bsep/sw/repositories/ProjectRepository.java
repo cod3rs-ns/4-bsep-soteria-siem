@@ -12,4 +12,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findProjectsByOwner(final User user);
 
+    List<Project> findProjectsByMembersContaining(final User user);
+
 }

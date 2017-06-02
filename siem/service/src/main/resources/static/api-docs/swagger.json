@@ -164,7 +164,12 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
       }
     },
     "/projects/owned": {
@@ -195,7 +200,48 @@
               "$ref": "#/definitions/ErrorResponse"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/member-of": {
+      "get": {
+        "summary": "Retrieve belonging projects",
+        "description": "Retrieve projects in which user has membership status",
+        "operationId": "retrieveMembershipProjects",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved projects",
+            "schema": {
+              "$ref": "#/definitions/ProjectCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
       }
     }
   },

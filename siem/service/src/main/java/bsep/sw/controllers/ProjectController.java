@@ -66,6 +66,19 @@ public class ProjectController extends StandardResponses {
         return ResponseEntity.ok().body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
     }
 
+    @GetMapping("/projects/member-of")
+    public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request) {
+        final User user = securityUtil.getLoggedUser();
+
+        if(user == null) {
+            return unauthorized();
+        }
+
+        final List<Project> projects = projectService.findProjectByMembership(user);
+
+        return ResponseEntity.ok().body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+    }
+
     @GetMapping("/projects/{projectId}")
     @ResponseBody
     public ResponseEntity<?> getProject(final HttpServletRequest request,
