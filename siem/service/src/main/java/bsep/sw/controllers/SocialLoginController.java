@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
 
@@ -34,7 +35,7 @@ import static bsep.sw.util.FacebookConstants.*;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
-@RequestMapping("/facebook")
+@RequestMapping("api/social")
 public class SocialLoginController {
 
     @Value("${spring.social.facebook.app-id}")
@@ -74,7 +75,7 @@ public class SocialLoginController {
         this.tokenUtils = tokenUtils;
     }
 
-    @RequestMapping("/auth")
+    @RequestMapping("/facebook/auth")
     public void loginViaFb(@RequestParam(value = STATE) String state, final HttpServletResponse http) throws Exception {
         final URIBuilder builder = new URIBuilder(dialogUrl);
 
@@ -86,7 +87,7 @@ public class SocialLoginController {
         http.sendRedirect(builder.build().toString());
     }
 
-    @RequestMapping("/access-token")
+    @RequestMapping("/facebook/access-token")
     public ResponseEntity<?> redirectionCallback(@RequestParam(value = CODE, required = false) final String code,
                                                  @RequestParam(value = STATE) final String state,
                                                  @RequestParam(value = ERROR, required = false) final String error,
@@ -129,9 +130,7 @@ public class SocialLoginController {
         return new ObjectMapper().readValue(RestClient.get(url), FacebookUserResponse.class);
     }
 
-    private User createOrFindFbUser(final FacebookUserResponse userResponse) {
-        // TODO: define default password and username
-        // TODO: HANDLE utf-8
+    private User createOrFindFbUser(final FacebookUserResponse userResponse) throws UnsupportedEncodingException {
         User retUser = userService.getUserByUsername("fb_" + userResponse.getId());
         if (retUser == null) {
             retUser = new User();

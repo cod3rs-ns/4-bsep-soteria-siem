@@ -31,7 +31,7 @@ spring:
         app-id: 380680235662631
         app-secret: dc431f53170612aaae626a7915edd723
         dialog-url: https://www.facebook.com/dialog/oauth/
-        redirect-uri: http://localhost:9091/facebook/access-token
+        redirect-uri: http://localhost:9091/api/social/facebook/access-token
         access-token-url: https://graph.facebook.com/v2.9/oauth/access_token
         user-info-url: https://graph.facebook.com/me
         scope: email,user_about_me

@@ -12,15 +12,15 @@ import java.io.IOException;
 
 public class RestClient {
 
-    public static String get(String uri) throws IOException {
-        RestTemplate rest = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
+    public static String get(final String uri) throws IOException {
+        final RestTemplate rest = new RestTemplate();
+        final HttpHeaders headers = new HttpHeaders();
 
         headers.add("Content-Type", "application/json");
         headers.add("Accept", "*/*");
 
-        HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
-        ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
+        final HttpEntity<String> requestEntity = new HttpEntity<>("", headers);
+        final ResponseEntity<String> responseEntity = rest.exchange(uri, HttpMethod.GET, requestEntity, String.class);
 
         return responseEntity.getBody();
     }

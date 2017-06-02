@@ -21,10 +21,10 @@ public class UserService {
     }
 
     public User save(final User newUser) {
-            User user = repository.findOneByUsername(newUser.getUsername());
+            final User user = repository.findOneByUsername(newUser.getUsername());
             if (newUser.getPassword() != null && (user == null || !newUser.getPassword().equals(user.getPassword()))) {
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String hashedPassword = passwordEncoder.encode(newUser.getPassword());
+                final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                final String hashedPassword = passwordEncoder.encode(newUser.getPassword());
                 newUser.setPassword(hashedPassword);
             }
 
@@ -45,7 +45,7 @@ public class UserService {
         repository.delete(id);
     }
 
-    public User getUserByUsername(String username) {
+    public User getUserByUsername(final String username) {
         return repository.findOneByUsername(username);
     }
 }

@@ -1,6 +1,5 @@
 package bsep.sw.security;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -104,7 +103,6 @@ public class SecurityUser implements UserDetails {
         this.type = type;
     }
 
-    @JsonIgnore
     public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
@@ -113,7 +111,6 @@ public class SecurityUser implements UserDetails {
         this.accountNonExpired = accountNonExpired;
     }
 
-    @JsonIgnore
     public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
@@ -122,7 +119,6 @@ public class SecurityUser implements UserDetails {
         this.accountNonLocked = accountNonLocked;
     }
 
-    @JsonIgnore
     public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
@@ -131,7 +127,6 @@ public class SecurityUser implements UserDetails {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
-    @JsonIgnore
     public Boolean getEnabled() {
         return enabled;
     }

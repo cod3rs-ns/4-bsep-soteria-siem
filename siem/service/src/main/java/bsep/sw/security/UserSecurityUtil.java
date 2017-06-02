@@ -51,7 +51,7 @@ public class UserSecurityUtil {
      * @param authType AuthorityRole
      * @return true if user have provided AuthorityRole, false otherwise
      */
-    public boolean checkAuthType(String authType) {
+    public boolean checkAuthType(final String authType) {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority(authType));
     }
 
@@ -62,7 +62,7 @@ public class UserSecurityUtil {
      * @param userRole        role of the user
      * @return true if user haver permission, false otherwise
      */
-    public boolean checkPermission(String currentUsername, String userRole) {
+    public boolean checkPermission(final String currentUsername, final String userRole) {
         if (checkAuthType(userRole) && !currentUsername.equals(getLoggedUserUsername())) {
             return false;
         }

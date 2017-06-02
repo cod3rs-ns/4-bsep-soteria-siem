@@ -48,7 +48,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             // refresh token
             final Claims claims = ex.getClaims();
 
-            TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
+            final TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
             if (loginType == TokenUtils.LoginType.FACEBOOK) {
                 final HttpServletResponse httpResponse = (HttpServletResponse) response;
                 // TODO: Redirect to client login page

@@ -17,20 +17,20 @@ public class CorsFilter implements Filter {
     private String tokenHeader;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(final FilterConfig filterConfig) throws ServletException {
         // Standard init - must override
     }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
 
         final HttpServletResponse response = (HttpServletResponse) res;
 
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
         response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-SCT-Alert, X-SCT-Params, X-SCT-Error-Key, " + tokenHeader);
-        response.setHeader("Access-Control-Expose-Headers", "Link, X-Total-Count, X-SCT-Alert, X-SCT-Params, X-SCT-Error-Key");
+        response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept" + tokenHeader);
+        response.setHeader("Access-Control-Expose-Headers", "Link, X-Total-Count");
         chain.doFilter(req, res);
     }
 

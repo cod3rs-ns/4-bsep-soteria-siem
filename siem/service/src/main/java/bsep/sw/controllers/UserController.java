@@ -42,7 +42,7 @@ public class UserController {
 
     @PostMapping(path = "/users/auth")
     public ResponseEntity<AuthResponse> authenticate(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
-        Authentication authentication = authenticationManager.authenticate(
+        final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
 
@@ -71,8 +71,8 @@ public class UserController {
     @RequestMapping("/users/me")
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<UserResponse> me() throws IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String currentPrincipalName = authentication.getName();
 
         return new ResponseEntity<>(UserResponse.fromDomain(userService.getUserByUsername(currentPrincipalName)), HttpStatus.OK);
     }

@@ -87,7 +87,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(userDetailsService, tokenUtils);
+        final AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(userDetailsService, tokenUtils);
         authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationTokenFilter;
     }
@@ -105,12 +105,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // Anyone can see API provided by Swagger
-                .antMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-                .antMatchers(HttpMethod.GET, "/swagger*").permitAll()
-                .antMatchers(HttpMethod.GET, "/*/springfox-swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/v2/api-docs/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/images/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/configuration/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users**").permitAll();
         // Custom JWT based authentication
