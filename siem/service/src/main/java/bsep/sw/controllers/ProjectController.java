@@ -3,6 +3,8 @@ package bsep.sw.controllers;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
+import bsep.sw.hateoas.PaginationLinks;
+import bsep.sw.hateoas.project.ProjectCollectionResponse;
 import bsep.sw.hateoas.project.ProjectRequest;
 import bsep.sw.hateoas.project.ProjectResponse;
 import bsep.sw.security.UserSecurityUtil;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -47,6 +51,19 @@ public class ProjectController extends StandardResponses {
         final Project result = projectService.save(toSave);
 
         return ResponseEntity.created(new URI(request.getRequestURL().append(result.getId()).toString())).body(ProjectResponse.fromDomain(result));
+    }
+
+    @GetMapping("/projects/owned")
+    public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request) {
+        final User user = securityUtil.getLoggedUser();
+
+        if(user == null) {
+            return unauthorized();
+        }
+
+        final List<Project> projects = projectService.findOwnedProjects(user);
+
+        return ResponseEntity.ok().body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}")
