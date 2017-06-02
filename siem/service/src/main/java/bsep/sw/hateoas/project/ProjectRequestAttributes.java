@@ -1,24 +1,13 @@
 package bsep.sw.hateoas.project;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ProjectRequestAttributes {
 
-    private String name;
-    private String description;
+    @JsonProperty("name")
+    public String name;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @JsonProperty("description")
+    public String description;
 
 }
