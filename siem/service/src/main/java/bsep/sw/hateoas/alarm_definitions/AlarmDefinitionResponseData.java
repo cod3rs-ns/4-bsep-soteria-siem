@@ -10,7 +10,7 @@ public class AlarmDefinitionResponseData extends ResourceResponseData {
     public static AlarmDefinitionResponseData fromDomain(final AlarmDefinition definition) {
         final AlarmDefinitionResponseData data = new AlarmDefinitionResponseData();
         data.id = definition.getId();
-        data.type = ResourceTypes.PROJECTS_TYPE;
+        data.type = ResourceTypes.ALARM_DEFINITION_TYPE;
         data.attributes = AlarmDefinitionResponseAttributes.fromDomain(definition);
         return data;
     }

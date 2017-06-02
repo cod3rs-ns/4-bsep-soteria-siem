@@ -259,7 +259,7 @@
       "post": {
         "summary": "Create Alarm Definition",
         "description": "Create new alarm definitions for selected project",
-        "operationId": "createAlarmDefinition",
+        "operationId": "createAlarmDefinitions",
         "tags": [
           "Alarm Definitions"
         ],
@@ -296,6 +296,114 @@
           },
           "404": {
             "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Get Alarm Definitions",
+        "description": "Retrieve all alarm definitions within single project",
+        "operationId": "getAlarmDefinition",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of Project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm definitions",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarm-definitions/{definition_id}": {
+      "get": {
+        "summary": "Get Alarm Definition",
+        "description": "Retrieve alarm definition",
+        "operationId": "getAlarmDefinition",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of Project",
+            "required": true
+          },
+          {
+            "name": "definition_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of Alarm Definition",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm definition",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -751,6 +859,30 @@
         "id",
         "type",
         "attributes"
+      ]
+    },
+    "AlarmDefinitionCollectionResponse": {
+      "title": "Alarm Definition Collection Response",
+      "description": "Collection of Alarm definition with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlarmDefinition"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
       ]
     }
   }
