@@ -3,6 +3,7 @@ package bsep.sw.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,8 @@ import java.util.Map;
 
 @Component
 public class TokenUtils {
+
+    private final Logger log = Logger.getLogger(TokenUtils.class);
 
     private static final String CREATED = "created";
     private static final String SUBJECT = "sub";
@@ -99,16 +102,10 @@ public class TokenUtils {
     }
 
     public String refreshToken(Claims claims) {
-        LoginType loginType = LoginType.valueOf(claims.get(LOGIN_TYPE).toString());
-        if (loginType == LoginType.FACEBOOK) {
-            // TODO: Implement logic for fb redirection
-            return null;
-        } else if (loginType == LoginType.BASIC) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(claims.get(SUBJECT).toString());
-            if (userDetails != null) {
-                claims.put(CREATED, this.generateCurrentDate());
-                return generateToken(claims, null);
-            }
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(claims.get(SUBJECT).toString());
+        if (userDetails != null) {
+            claims.put(CREATED, this.generateCurrentDate());
+            return generateToken(claims, null);
         }
         return null;
     }
@@ -119,5 +116,9 @@ public class TokenUtils {
 
     public void setExpiration(Long expiration) {
         this.expiration = expiration;
+    }
+
+    public static String getLoginType() {
+        return LOGIN_TYPE;
     }
 }

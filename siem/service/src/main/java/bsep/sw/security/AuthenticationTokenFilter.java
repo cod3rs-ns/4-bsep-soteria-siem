@@ -47,8 +47,23 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         } catch (ExpiredJwtException ex) {
             // refresh token
             final Claims claims = ex.getClaims();
+
+            TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
+            if (loginType == TokenUtils.LoginType.FACEBOOK) {
+                final HttpServletResponse httpResponse = (HttpServletResponse) response;
+                // TODO: Redirect to client login page
+                final String redirectUrl = "http://www.google.ba";
+                try {
+                    httpResponse.sendRedirect(redirectUrl);
+                } catch (IOException e) {
+                    log.debug(String.format("Can't redirect fb user to url %s", redirectUrl));
+                }
+                return;
+            }
+
             authToken = tokenUtils.refreshToken(claims);
             username = claims.getSubject();
+
             log.debug(String.format("Token refreshed for user: %s", username), ex);
         } catch (Exception ex) {
             log.debug("Wrong token provided", ex);

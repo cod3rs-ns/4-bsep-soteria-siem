@@ -3,9 +3,10 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.User;
 import bsep.sw.domain.UserRole;
+import bsep.sw.hateoas.ErrorResponse;
+import bsep.sw.hateoas.user.AuthResponse;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
-import bsep.sw.hateoas.user.AuthResponse;
 import bsep.sw.util.FacebookTokenResponse;
 import bsep.sw.util.FacebookUserResponse;
 import bsep.sw.util.RestClient;
@@ -13,7 +14,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,9 +29,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
-import java.util.UUID;
 
 import static bsep.sw.util.FacebookConstants.*;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @RestController
 @RequestMapping("/facebook")
@@ -58,7 +58,7 @@ public class SocialLoginController {
     @Value("${spring.social.facebook.scope}")
     private String scope;
 
-    private static final String pass = "default";
+    private final String pass = "default";
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -75,23 +75,23 @@ public class SocialLoginController {
     }
 
     @RequestMapping("/auth")
-    public void loginViaFb(final HttpServletResponse http) throws Exception {
+    public void loginViaFb(@RequestParam(value = STATE) String state, final HttpServletResponse http) throws Exception {
         final URIBuilder builder = new URIBuilder(dialogUrl);
 
         builder.addParameter(CLIENT_ID, appId);
         builder.addParameter(REDIRECT_URI, redirectUri);
         builder.addParameter(SCOPE, scope);
-        builder.addParameter(STATE, UUID.randomUUID().toString());
+        builder.addParameter(STATE, state);
 
         http.sendRedirect(builder.build().toString());
     }
 
     @RequestMapping("/access-token")
-    public ResponseEntity<AuthResponse> redirectionCallback(
-            @RequestParam(CODE) final String code,
-            @RequestParam(STATE) final String state) throws Exception {
+    public ResponseEntity<?> redirectionCallback(@RequestParam(value = CODE, required = false) final String code,
+                                                 @RequestParam(value = STATE) final String state,
+                                                 @RequestParam(value = ERROR, required = false) final String error,
+                                                 @RequestParam(value = ERROR_DESCRIPTION, required = false) final String errorDescription) throws Exception {
         if (code != null) {
-            // TODO: check state to prevent CSRF attack
             // Exchange code to get access token
             final URIBuilder builder = new URIBuilder(accessTokenUrl);
 
@@ -116,7 +116,7 @@ public class SocialLoginController {
             return ResponseEntity.ok(AuthResponse.fromDomain(token, tokenResponse.getExpiresIn()));
         }
 
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(new ErrorResponse(String.valueOf(UNAUTHORIZED.value()), error, errorDescription), UNAUTHORIZED);
     }
 
     private FacebookUserResponse getFbUserInfo(final String accessToken) throws URISyntaxException, IOException {
@@ -131,6 +131,7 @@ public class SocialLoginController {
 
     private User createOrFindFbUser(final FacebookUserResponse userResponse) {
         // TODO: define default password and username
+        // TODO: HANDLE utf-8
         User retUser = userService.getUserByUsername("fb_" + userResponse.getId());
         if (retUser == null) {
             retUser = new User();
