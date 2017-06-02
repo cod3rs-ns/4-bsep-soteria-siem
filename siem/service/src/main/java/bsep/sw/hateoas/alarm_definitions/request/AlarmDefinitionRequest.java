@@ -9,7 +9,7 @@ public class AlarmDefinitionRequest {
     public AlarmDefinitionRequestData data;
 
     public AlarmDefinition toDomain() {
-        return new AlarmDefinition().name(data.attributes.name).description(data.attributes.description);
+        return new AlarmDefinition().name(data.attributes.name).description(data.attributes.description).level(data.attributes.level);
     }
 
 }

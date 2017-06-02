@@ -50,7 +50,7 @@ public class ProjectController extends StandardResponses {
 
         final Project result = projectService.save(toSave);
 
-        return ResponseEntity.created(new URI(request.getRequestURL().append(result.getId()).toString())).body(ProjectResponse.fromDomain(result));
+        return ResponseEntity.created(new URI(request.getRequestURL().append("/").append(result.getId()).toString())).body(ProjectResponse.fromDomain(result));
     }
 
     @GetMapping("/projects/owned")

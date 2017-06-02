@@ -4,7 +4,6 @@
     "description": "Soteria - take care of your logs.",
     "version": "0.0.1",
     "title": "Soteria API",
-    "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "soteria@gmail.com"
     }
@@ -20,15 +19,27 @@
   "tags": [
     {
       "name": "Projects",
-      "description": "Everything about your Projects"
+      "description": "API for maintaining projects"
     },
     {
-      "name": "logs",
-      "description": "Access to your Logs"
+      "name": "Alarm Definitions",
+      "description": "API for maintaining alarm definitions"
     },
     {
-      "name": "users",
-      "description": "Operations about User"
+      "name": "Logs",
+      "description": "API for maintaining logs"
+    },
+    {
+      "name": "Users",
+      "description": "API for maintaining users"
+    },
+    {
+      "name": "Alarms",
+      "description": "API for maintaining alarms"
+    },
+    {
+      "name": "Agents",
+      "description": "API for maintaining agents"
     }
   ],
   "schemes": [
@@ -226,6 +237,65 @@
           },
           "401": {
             "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarm-definitions": {
+      "post": {
+        "summary": "Create Alarm Definition",
+        "description": "Create new alarm definitions for selected project",
+        "operationId": "createAlarmDefinition",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of Project",
+            "required": true
+          },
+          {
+            "name": "definition",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAlarmDefinitionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Alarm definition created",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
@@ -526,6 +596,161 @@
       },
       "required": [
         "total-items"
+      ]
+    },
+    "CreateAlarmDefinitionRequest": {
+      "title": "Create alarm definition request",
+      "description": "Request to create new alarm definition",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "alarm-definitions"
+              ],
+              "description": "Represents entity type",
+              "example": "projects"
+            },
+            "attributes": {
+              "type": "object",
+              "title": "Alarm definition Request Attributes",
+              "description": "Alarm definition request attributes",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Alarm definition's name",
+                  "example": "Some important alarm"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Alarm definition's description",
+                  "example": "This is some very important alarm"
+                },
+                "level": {
+                  "type": "string",
+                  "description": "Alarm definition importance (priority)",
+                  "enum": [
+                    "INFO",
+                    "LOW",
+                    "MEDIUM",
+                    "HIGH",
+                    "SEVERE"
+                  ],
+                  "example": "MEDIUM"
+                }
+              },
+              "required": [
+                "name",
+                "level"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "attributes"
+          ]
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "AlarmDefinitionResponse": {
+      "title": "AlarmDefinition Response",
+      "description": "Response containing data about AlarmDefinition entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/AlarmDefinition"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "AlarmDefinition": {
+      "title": "Alarm Definition",
+      "description": "Data about Alarm definition",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Alarm definition's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "alarm-definitions"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Alarm definition's attributes",
+          "description": "Alarm definition's attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Alarm definition's name",
+              "example": "Some important alarm"
+            },
+            "description": {
+              "type": "string",
+              "description": "Alarm definition's description",
+              "example": "This is some very important alarm"
+            },
+            "level": {
+              "type": "string",
+              "description": "Alarm definition's importance (priority)",
+              "enum": [
+                "INFO",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "SEVERE"
+              ],
+              "example": "MEDIUM"
+            },
+            "triggers": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Total number of triggered alarm within this definition",
+              "example": 100
+            },
+            "first-occurrence": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Time of the first occurrence of Alarm within this definition in UTC (ISO-8601 format)",
+              "example": "2017-05-30T17:57:40.797+02:00"
+            },
+            "last-occurrence": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Time of the last occurrence of Alarm within this definition in UTC (ISO-8601 format)",
+              "example": "2017-05-30T17:57:40.797+02:00"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "level",
+            "triggers",
+            "first-occurrence",
+            "last-occurrence"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
       ]
     }
   }
