@@ -316,7 +316,7 @@
       "get": {
         "summary": "Get Alarm Definitions",
         "description": "Retrieve all alarm definitions within single project",
-        "operationId": "getAlarmDefinition",
+        "operationId": "getAlarmDefinitions",
         "tags": [
           "Alarm Definitions"
         ],
@@ -401,6 +401,55 @@
             "schema": {
               "$ref": "#/definitions/ErrorResponse"
             }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete Alarm Definition",
+        "description": "This action deletes alarm definition",
+        "operationId": "deleteAlarmDefinition",
+        "consumes": [],
+        "produces": [],
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "required": true
+          },
+          {
+            "name": "definition_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of Alarm Definition",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully removed alarm definition"
           },
           "404": {
             "description": "Not found",

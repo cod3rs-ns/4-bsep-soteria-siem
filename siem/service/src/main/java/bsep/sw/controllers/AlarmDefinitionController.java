@@ -85,8 +85,8 @@ public class AlarmDefinitionController extends StandardResponses {
     @GetMapping("/projects/{projectId}/alarm-definitions/{definitionId}")
     @ResponseBody
     public ResponseEntity<?> getAlarmDefinition(final HttpServletRequest request,
-                                                 @PathVariable final Long projectId,
-                                                 @PathVariable final Long definitionId) {
+                                                @PathVariable final Long projectId,
+                                                @PathVariable final Long definitionId) {
         final User user = securityUtil.getLoggedUser();
 
         if (user == null) {
@@ -94,7 +94,7 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         final Project project = projectService.findByUserAndId(user, projectId);
-        
+
         if (project == null) {
             return notFound();
         }
@@ -102,6 +102,26 @@ public class AlarmDefinitionController extends StandardResponses {
         final AlarmDefinition definition = alarmDefinitionService.findByProjectAndId(project, definitionId);
 
         return ResponseEntity.ok().body(AlarmDefinitionResponse.fromDomain(definition));
+    }
+
+    @DeleteMapping("/projects/{projectId}/alarm-definitions/{definitionId}")
+    public ResponseEntity<?> deleteAlarmDefinition(@PathVariable final Long projectId,
+                                                   @PathVariable final Long definitionId) {
+        final User user = securityUtil.getLoggedUser();
+
+        if (user == null) {
+            return unauthorized();
+        }
+
+        final Project project = projectService.findByUserAndId(user, projectId);
+
+        if (project == null) {
+            return notFound();
+        }
+
+        alarmDefinitionService.delete(definitionId);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
