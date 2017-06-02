@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -38,7 +39,7 @@ public class ProjectController extends StandardResponses {
     @PostMapping("/projects")
     @ResponseBody
     public ResponseEntity<?> createProject(final HttpServletRequest request,
-                                           @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
+                                           @Valid @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
         final User user = securityUtil.getLoggedUser();
 
         if (user == null) {
