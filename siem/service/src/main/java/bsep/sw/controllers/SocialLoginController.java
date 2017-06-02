@@ -5,7 +5,7 @@ import bsep.sw.domain.User;
 import bsep.sw.domain.UserRole;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
-import bsep.sw.util.AuthResponse;
+import bsep.sw.hateoas.user.AuthResponse;
 import bsep.sw.util.FacebookTokenResponse;
 import bsep.sw.util.FacebookUserResponse;
 import bsep.sw.util.RestClient;
@@ -113,7 +113,7 @@ public class SocialLoginController {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(fbUser.getUsername());
             String token = tokenUtils.generateToken(userDetails, tokenResponse.getExpiresIn(), TokenUtils.LoginType.FACEBOOK);
 
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(AuthResponse.fromDomain(token, tokenResponse.getExpiresIn()));
         }
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

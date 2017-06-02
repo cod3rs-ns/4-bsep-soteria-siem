@@ -113,4 +113,11 @@ public class TokenUtils {
         return null;
     }
 
+    public Long getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(Long expiration) {
+        this.expiration = expiration;
+    }
 }

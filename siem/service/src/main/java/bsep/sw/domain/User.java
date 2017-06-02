@@ -137,8 +137,8 @@ public class User extends EntityMeta {
         this.role = role;
     }
 
-    public User type(UserRole type) {
-        this.role = type;
+    public User role(UserRole role) {
+        this.role = role;
         return this;
     }
 
@@ -238,7 +238,6 @@ public class User extends EntityMeta {
         return "User{" +
                 "username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +

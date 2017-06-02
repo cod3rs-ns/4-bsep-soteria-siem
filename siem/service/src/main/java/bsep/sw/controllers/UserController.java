@@ -1,9 +1,12 @@
 package bsep.sw.controllers;
 
 import bsep.sw.domain.User;
-import bsep.sw.util.AuthResponse;
+import bsep.sw.hateoas.ErrorResponse;
+import bsep.sw.hateoas.user.UserRequest;
+import bsep.sw.hateoas.user.UserResponse;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
+import bsep.sw.hateoas.user.AuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
-
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -50,31 +50,30 @@ public class UserController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String token = tokenUtils.generateToken(userDetails, null, TokenUtils.LoginType.BASIC);
 
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(AuthResponse.fromDomain(token, tokenUtils.getExpiration()));
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody User user) throws URISyntaxException {
-        if (user.getId() != null) {
-            return ResponseEntity.badRequest().body("User have an id already.");
-        }
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRequest userRequest) {
+        final User user = userRequest.toDomain();
 
         if (userService.getUserByUsername(user.getUsername()) != null) {
-            return ResponseEntity.badRequest().body(String.format("User with username: %s  already exists.", user.getUsername()));
+            final ErrorResponse errorResponse = new ErrorResponse(
+                    HttpStatus.BAD_REQUEST.toString(),
+                    "Already exist",
+                    String.format("User with username: %s  already exists.", user.getUsername()));
+            return ResponseEntity.badRequest().body(errorResponse);
         }
 
-        User result = userService.save(user);
-
-        return ResponseEntity.created(new URI("/api/users/" + result.getId()))
-                .body(result);
+        return ResponseEntity.ok(UserResponse.fromDomain(userService.save(user)));
     }
 
     @RequestMapping("/users/me")
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
-    public ResponseEntity<User> me() throws IOException {
+    public ResponseEntity<UserResponse> me() throws IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
-        return new ResponseEntity<>(userService.getUserByUsername(currentPrincipalName), HttpStatus.OK);
+        return new ResponseEntity<>(UserResponse.fromDomain(userService.getUserByUsername(currentPrincipalName)), HttpStatus.OK);
     }
 }

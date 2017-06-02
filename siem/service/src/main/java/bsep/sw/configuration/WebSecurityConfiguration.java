@@ -111,7 +111,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/v2/api-docs/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/configuration/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll();
+                .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users**").permitAll();
         // Custom JWT based authentication
         httpSecurity
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
