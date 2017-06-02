@@ -5,6 +5,7 @@ import bsep.sw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +20,15 @@ public class UserService {
         this.repository = repository;
     }
 
-    public User save(final User user) {
-        return repository.save(user);
+    public User save(final User newUser) {
+            final User user = repository.findOneByUsername(newUser.getUsername());
+            if (newUser.getPassword() != null && (user == null || !newUser.getPassword().equals(user.getPassword()))) {
+                final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                final String hashedPassword = passwordEncoder.encode(newUser.getPassword());
+                newUser.setPassword(hashedPassword);
+            }
+
+            return repository.save(newUser);
     }
 
     @Transactional(readOnly = true)
@@ -37,4 +45,7 @@ public class UserService {
         repository.delete(id);
     }
 
+    public User getUserByUsername(final String username) {
+        return repository.findOneByUsername(username);
+    }
 }
