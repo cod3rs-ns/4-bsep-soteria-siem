@@ -123,6 +123,42 @@
             "X-Auth-Token": []
           }
         ]
+      },
+      "delete": {
+        "summary": "Delete project",
+        "description": "This action deletes project",
+        "operationId": "deleteProject",
+        "consumes": [],
+        "produces": [],
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "projectId",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully removed project"
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
       }
     }
   },

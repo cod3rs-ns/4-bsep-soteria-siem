@@ -22,12 +22,12 @@ public class Project extends EntityMeta {
     private String description;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pr_owner_id")
     private User owner;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_memberships",
             joinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))

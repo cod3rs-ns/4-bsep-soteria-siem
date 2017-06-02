@@ -48,7 +48,7 @@ public class User extends EntityMeta {
     @ManyToMany(mappedBy = "members", fetch = FetchType.LAZY)
     private Set<Project> projects = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Project> ownedProjects = new HashSet<>(0);
 
     public String getUsername() {

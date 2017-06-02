@@ -68,4 +68,20 @@ public class ProjectController extends StandardResponses {
         return ResponseEntity.ok().body(ProjectResponse.fromDomain(result));
     }
 
+    @DeleteMapping("/projects/{projectId}")
+    public ResponseEntity<?> deleteProject(final HttpServletRequest request,
+                                           @PathVariable Long projectId) {
+        final User user = securityUtil.getLoggedUser();
+
+        if (user == null) {
+            return unauthorized();
+        }
+
+        if (!projectService.delete(user, projectId)){
+            return notFound();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
