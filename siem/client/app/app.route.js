@@ -1,6 +1,8 @@
 angular
     .module('soteria-app', [
-        'ui.router'
+        'ui.router',
+        'angular-jwt',
+        'ngStorage'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -8,6 +10,12 @@ angular
             return $window._;
         }
     ])
+    .constant(
+        'CONFIG', {
+            'SERVICE_URL': 'http://localhost:9091/api',
+            'AUTH_TOKEN': 'X-Auth-Token'
+        }
+    )
     .config(function ($stateProvider, $urlRouterProvider) {
 
         // For any unmatched url, redirect to /login

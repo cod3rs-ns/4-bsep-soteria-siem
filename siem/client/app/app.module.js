@@ -1,4 +1,6 @@
 angular
     .module('soteria-app', [
-        'ui.router'
+        'ui.router',
+        'angular-jwt',
+        'ngStorage'
     ]);
