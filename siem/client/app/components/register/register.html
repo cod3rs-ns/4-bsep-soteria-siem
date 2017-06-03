@@ -7,8 +7,12 @@
 		<div class="register-box center-block">
 			<form>
 				<p class="title">Create Your Account</p>
-				<input type="email" placeholder="email" class="form-control">
-				<input type="password" placeholder="password" class="form-control">
+				<input type="text" ng-model="registerVm.registrationUser.firstName" placeholder="first name" class="form-control">
+				<input type="text" ng-model="registerVm.registrationUser.lastName" placeholder="last name" class="form-control">
+				<input type="text" ng-model="registerVm.registrationUser.phoneNumber" placeholder="phone number" class="form-control">				
+				<input type="email" ng-model="registerVm.registrationUser.email" placeholder="email" class="form-control">
+				<input type="text" ng-model="registerVm.registrationUser.username" placeholder="username" class="form-control">
+				<input type="password" ng-model="registerVm.registrationUser.password" placeholder="password" class="form-control">
 				<input type="password" placeholder="repeat password" class="form-control">
 
 				<label class="fancy-checkbox">
@@ -16,7 +20,7 @@
 					<span>I accept the <a href="#">Terms &amp; Agreements</a></span>
 				</label>
 				
-				<button class="btn btn-custom-primary btn-lg btn-block btn-auth"><i class="fa fa-check-circle"></i> Create Account</button>
+				<button class="btn btn-custom-primary btn-lg btn-block btn-auth" ng-click="registerVm.register();"><i class="fa fa-check-circle"></i> Create Account</button>
 			</form>
 		</div>
 	</div>
