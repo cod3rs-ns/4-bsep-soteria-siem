@@ -50,7 +50,7 @@ public class ProjectService {
     }
 
     public Project findByMembershipAndId(final User user, final Long id) {
-        return repository.findProjectByOwnerAndId(user, id);
+        return repository.findProjectsByMembersContainingAndId(user, id);
     }
 
     public List<Project> findOwned(final User user) {
