@@ -78,5 +78,5 @@ public class AlarmController extends StandardResponses {
                 .ok()
                 .body(AlarmResponse.fromDomain(alarm));
     }
-    
+
 }
