@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,7 +23,7 @@ import javax.validation.ConstraintViolationException;
 public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(value = AccessDeniedException.class)
+    @ExceptionHandler(value = {AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleBaseException(final AccessDeniedException e) {
         final ErrorResponse response = new ErrorResponse("401", "Unauthorized", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
@@ -69,4 +70,12 @@ public class GlobalExceptionHandler {
         final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Non-existing enumeration type");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {BadCredentialsException.class})
+    public ResponseEntity<ErrorResponse> handleBaseException(final BadCredentialsException e) {
+        final ErrorResponse response = new ErrorResponse("400", e.getMessage(), e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }
