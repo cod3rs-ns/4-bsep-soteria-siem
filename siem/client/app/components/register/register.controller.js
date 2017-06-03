@@ -24,7 +24,7 @@
 
             registerVm.passwordRetyped = undefined;
 
-            registerService.register({'type': 'users', 'attributes': registerVm.registrationUser})
+            registerService.register({'type': 'users', 'attributes': user})
                 .then(function(response) {
                     ngToast.create({
                         className: 'success',

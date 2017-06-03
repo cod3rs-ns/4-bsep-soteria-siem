@@ -39,6 +39,8 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
+        final HttpServletResponse httpResponse = (HttpServletResponse) response;
+
         String authToken = httpRequest.getHeader(this.tokenHeader);
 
         String username;
@@ -50,7 +52,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
             final TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
             if (loginType == TokenUtils.LoginType.FACEBOOK) {
-                final HttpServletResponse httpResponse = (HttpServletResponse) response;
                 // TODO: Redirect to client login page
                 final String redirectUrl = "http://www.google.ba";
                 try {
@@ -63,6 +64,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
             authToken = tokenUtils.refreshToken(claims);
             username = claims.getSubject();
+            httpResponse.setHeader("X-Auth-Refreshed", "true");
 
             log.debug(String.format("Token refreshed for user: %s", username), ex);
         } catch (Exception ex) {
@@ -77,8 +79,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        final HttpServletResponse httpResponse = (HttpServletResponse) response;
-        httpResponse.setHeader("X-AUTH-TOKEN", authToken);
+        httpResponse.setHeader("X-Auth-Token", authToken);
         chain.doFilter(request, httpResponse);
     }
 }
