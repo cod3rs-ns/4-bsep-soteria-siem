@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,11 +16,13 @@ import java.util.Set;
 public class AlarmDefinition extends EntityMeta {
 
     @NotNull
-    @Column(name = "ad_name", nullable = false)
+    @Column(name = "ad_name", nullable = false, length = 20)
+    @Size(min = 1, max = 20)
     private String name;
 
     @NotNull
-    @Column(name = "ad_description", nullable = false)
+    @Column(name = "ad_description", nullable = false, length = 60)
+    @Size(min = 1, max = 60)
     private String description;
 
     @NotNull

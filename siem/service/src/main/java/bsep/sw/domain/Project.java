@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,10 +16,13 @@ import java.util.Set;
 public class Project extends EntityMeta {
 
     @NotNull
-    @Column(name = "pr_name", nullable = false)
+    @Column(name = "pr_name", nullable = false, length = 30)
+    @Size(min = 3, max = 30)
     private String name;
 
-    @Column(name = "pr_description")
+    @NotNull
+    @Column(name = "pr_description", nullable = false, length = 60)
+    @Size(min = 1, max = 60)
     private String description;
 
     @NotNull
@@ -146,6 +150,7 @@ public class Project extends EntityMeta {
     @Override
     public String toString() {
         return "Project{" +
+                super.toString() +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", owner=" + owner +

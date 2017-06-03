@@ -6,24 +6,29 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "agents")
 public class Agent extends EntityMeta {
 
     @NotNull
-    @Column(name = "a_name")
+    @Column(name = "a_name", nullable = false, length = 20)
+    @Size(min = 3, max = 20)
     private String name;
 
     @NotNull
-    @Column(name = "a_type")
+    @Column(name = "a_type", nullable = false)
     private AgentType type;
 
-    @Column(name = "a_description")
+    @NotNull
+    @Column(name = "a_description", nullable = false, length = 60)
+    @Size(min = 1, max = 60)
     private String description;
 
     @NotNull
-    @Column(name = "a_agent_version")
+    @Column(name = "a_agent_version", nullable = false, length = 10)
+    @Size(min = 1, max = 10)
     private String agentVersion;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

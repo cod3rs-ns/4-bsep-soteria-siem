@@ -2,9 +2,13 @@ package bsep.sw.domain;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,26 +17,32 @@ import java.util.Set;
 public class User extends EntityMeta {
 
     @NotNull
-    @Column(name = "u_username", unique = true, nullable = false)
+    @Column(name = "u_username", unique = true, nullable = false, length = 20)
+    @Size(min = 3, max = 20)
     private String username;
 
     @NotNull
+    @Email
     @Column(name = "u_email", unique = true, nullable = false)
     private String email;
 
     @NotNull
     @Column(name = "u_password", nullable = false)
+    @Min(6)
     private String password;
 
     @NotNull
-    @Column(name = "u_first_name", nullable = false)
+    @Column(name = "u_first_name", nullable = false, length = 20)
+    @Size(min = 2, max = 20)
     private String firstName;
 
     @NotNull
-    @Column(name = "u_last_name", nullable = false)
+    @Column(name = "u_last_name", nullable = false, length = 30)
+    @Size(min = 2, max = 30)
     private String lastName;
 
-    @Column(name = "u_phone")
+    @Column(name = "u_phone", length = 16)
+    @Max(16)
     private String phoneNumber;
 
     @NotNull
