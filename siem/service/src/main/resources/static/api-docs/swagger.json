@@ -91,7 +91,7 @@
         ]
       }
     },
-    "/projects/{projectId}": {
+    "/projects/{project_id}": {
       "get": {
         "summary": "Retrieve project",
         "description": "This action retrieves single project",
@@ -101,10 +101,11 @@
         ],
         "parameters": [
           {
-            "name": "projectId",
+            "name": "project_id",
             "in": "path",
             "type": "integer",
             "format": "int64",
+            "description": "Unique identifier of the project",
             "required": true,
             "default": 1
           }
@@ -152,10 +153,11 @@
         ],
         "parameters": [
           {
-            "name": "projectId",
+            "name": "project_id",
             "in": "path",
             "type": "integer",
             "format": "int64",
+            "description": "Unique identifier of the project",
             "required": true
           }
         ],
@@ -221,7 +223,7 @@
     },
     "/projects/member-of": {
       "get": {
-        "summary": "Retrieve belonging projects",
+        "summary": "Retrieve all projects (member)",
         "description": "Retrieve projects in which user has membership status",
         "operationId": "retrieveMembershipProjects",
         "tags": [
@@ -257,7 +259,7 @@
     },
     "/projects/{project_id}/alarm-definitions": {
       "post": {
-        "summary": "Create Alarm Definition",
+        "summary": "Create alarm definition",
         "description": "Create new alarm definitions for selected project",
         "operationId": "createAlarmDefinitions",
         "tags": [
@@ -269,7 +271,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
-            "description": "Unique identifier of Project",
+            "description": "Unique identifier of the project",
             "required": true
           },
           {
@@ -314,7 +316,7 @@
         ]
       },
       "get": {
-        "summary": "Get Alarm Definitions",
+        "summary": "Retrieve all alarm definitions",
         "description": "Retrieve all alarm definitions within single project",
         "operationId": "getAlarmDefinitions",
         "tags": [
@@ -326,7 +328,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
-            "description": "Unique identifier of Project",
+            "description": "Unique identifier of the project",
             "required": true
           }
         ],
@@ -365,8 +367,8 @@
     },
     "/projects/{project_id}/alarm-definitions/{definition_id}": {
       "get": {
-        "summary": "Get Alarm Definition",
-        "description": "Retrieve alarm definition",
+        "summary": "Retrieve alarm definition",
+        "description": "Retrieve alarm definition from selected project",
         "operationId": "getAlarmDefinition",
         "tags": [
           "Alarm Definitions"
@@ -377,7 +379,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
-            "description": "Unique identifier of Project",
+            "description": "Unique identifier of the project",
             "required": true
           },
           {
@@ -385,7 +387,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
-            "description": "Unique identifier of Alarm Definition",
+            "description": "Unique identifier of the alarm definition",
             "required": true
           }
         ],
@@ -422,13 +424,13 @@
         ]
       },
       "delete": {
-        "summary": "Delete Alarm Definition",
+        "summary": "Delete alarm definition",
         "description": "This action deletes alarm definition",
         "operationId": "deleteAlarmDefinition",
         "consumes": [],
         "produces": [],
         "tags": [
-          "Projects"
+          "Alarm Definitions"
         ],
         "parameters": [
           {
@@ -436,6 +438,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
+            "description": "Unique identifier of the project",
             "required": true
           },
           {
@@ -443,7 +446,7 @@
             "in": "path",
             "type": "integer",
             "format": "int64",
-            "description": "Unique identifier of Alarm Definition",
+            "description": "Unique identifier of the alarm definition",
             "required": true
           }
         ],
@@ -585,16 +588,21 @@
                 "name": {
                   "type": "string",
                   "description": "Project's name",
-                  "example": "Super cool project"
+                  "example": "Super cool project",
+                  "minLength": 3,
+                  "maxLength": 30
                 },
                 "description": {
                   "type": "string",
                   "description": "Project's description",
-                  "example": "This is some super cool project"
+                  "example": "This is some super cool project",
+                  "minLength": 1,
+                  "maxLength": 60
                 }
               },
               "required": [
-                "name"
+                "name",
+                "description"
               ]
             }
           },
@@ -641,7 +649,8 @@
             }
           },
           "required": [
-            "name"
+            "name",
+            "description"
           ]
         }
       },
@@ -779,12 +788,16 @@
                 "name": {
                   "type": "string",
                   "description": "Alarm definition's name",
-                  "example": "Some important alarm"
+                  "example": "Some important alarm",
+                  "minLength": 3,
+                  "maxLength": 30
                 },
                 "description": {
                   "type": "string",
                   "description": "Alarm definition's description",
-                  "example": "This is some very important alarm"
+                  "example": "This is some very important alarm",
+                  "minLength": 1,
+                  "maxLength": 60
                 },
                 "level": {
                   "type": "string",
@@ -801,6 +814,7 @@
               },
               "required": [
                 "name",
+                "description",
                 "level"
               ]
             }
