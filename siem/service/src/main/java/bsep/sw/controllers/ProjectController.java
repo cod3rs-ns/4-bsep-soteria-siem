@@ -4,7 +4,7 @@ import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.project.ProjectCollectionResponse;
-import bsep.sw.hateoas.project.ProjectRequest;
+import bsep.sw.hateoas.project.request.ProjectRequest;
 import bsep.sw.hateoas.project.ProjectResponse;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.ProjectService;
