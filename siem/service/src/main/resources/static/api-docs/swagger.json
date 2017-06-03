@@ -1026,6 +1026,17 @@
             "first-occurrence",
             "last-occurrence"
           ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/Relationship"
+            },
+            "alarms": {
+              "$ref": "#/definitions/CollectionRelationship"
+            }
+          }
         }
       },
       "required": [
@@ -1193,6 +1204,47 @@
               "type": "string",
               "description": "Type of the entity",
               "example": "car"
+            }
+          }
+        }
+      },
+      "required": [
+        "links",
+        "data"
+      ]
+    },
+    "CollectionRelationship": {
+      "title": "Collection Relationship",
+      "description": "Relationships with other entity",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "description": "Links to other entities",
+          "properties": {
+            "related": {
+              "type": "string",
+              "description": "URL to this resource",
+              "example": "/api/entity/1"
+            }
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Meta data about entity",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Entity's unique identifier",
+                "example": "100"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the entity",
+                "example": "car"
+              }
             }
           }
         }

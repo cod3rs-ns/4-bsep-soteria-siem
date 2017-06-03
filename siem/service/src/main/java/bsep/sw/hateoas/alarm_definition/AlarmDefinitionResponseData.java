@@ -11,6 +11,7 @@ public class AlarmDefinitionResponseData extends ResourceResponseData {
         data.id = definition.getId();
         data.type = ResourceTypes.ALARM_DEFINITION_TYPE;
         data.attributes = AlarmDefinitionResponseAttributes.fromDomain(definition);
+        data.relationships = AlarmDefinitionResponseRelationships.fromDomain(definition);
         return data;
     }
 
