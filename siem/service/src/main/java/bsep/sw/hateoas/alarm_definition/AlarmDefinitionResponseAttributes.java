@@ -1,8 +1,7 @@
-package bsep.sw.hateoas.alarm_definitions;
+package bsep.sw.hateoas.alarm_definition;
 
 import bsep.sw.domain.AlarmDefinition;
 import bsep.sw.domain.AlarmLevel;
-import bsep.sw.domain.Project;
 import bsep.sw.hateoas.resource.response.ResourceResponseAttributes;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;

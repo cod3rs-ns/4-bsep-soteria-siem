@@ -1,4 +1,4 @@
-package bsep.sw.hateoas.alarm_definitions;
+package bsep.sw.hateoas.alarm_definition;
 
 import bsep.sw.domain.AlarmDefinition;
 import bsep.sw.hateoas.PaginationLinks;

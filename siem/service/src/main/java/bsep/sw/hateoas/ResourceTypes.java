@@ -7,6 +7,7 @@ public final class ResourceTypes {
     public static String USERS_TYPE = "users";
     public static String TOKENS_TYPE = "tokens";
     public static String ALARM_DEFINITION_TYPE = "alarm-definitions";
+    public static String ALARM_TYPE = "alarms";
 
     private ResourceTypes() {
         super();

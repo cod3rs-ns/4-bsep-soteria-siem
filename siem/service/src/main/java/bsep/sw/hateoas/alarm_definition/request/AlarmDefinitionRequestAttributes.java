@@ -1,4 +1,4 @@
-package bsep.sw.hateoas.alarm_definitions.request;
+package bsep.sw.hateoas.alarm_definition.request;
 
 import bsep.sw.domain.AlarmLevel;
 import com.fasterxml.jackson.annotation.JsonProperty;

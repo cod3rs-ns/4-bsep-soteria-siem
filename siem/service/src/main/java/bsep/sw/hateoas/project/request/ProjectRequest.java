@@ -1,4 +1,4 @@
-package bsep.sw.hateoas.project;
+package bsep.sw.hateoas.project.request;
 
 import bsep.sw.domain.Project;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,7 +1,6 @@
-package bsep.sw.hateoas.alarm_definitions;
+package bsep.sw.hateoas.alarm_definition;
 
 import bsep.sw.domain.AlarmDefinition;
-import bsep.sw.domain.Project;
 import bsep.sw.hateoas.ResourceTypes;
 import bsep.sw.hateoas.resource.response.ResourceResponseData;
 
