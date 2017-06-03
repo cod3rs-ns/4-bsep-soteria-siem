@@ -13,9 +13,11 @@ import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -39,17 +41,13 @@ public class AlarmDefinitionController extends StandardResponses {
 
     @PostMapping("/projects/{projectId}/alarm-definitions")
     @ResponseBody
+    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
     public ResponseEntity<?> createAlarmDefinition(final HttpServletRequest request,
-                                                   @PathVariable final Long projectId,
-                                                   @RequestBody final AlarmDefinitionRequest alarmDefinitionRequest) throws URISyntaxException {
+                                                   @Valid @PathVariable final Long projectId,
+                                                   @Valid @RequestBody final AlarmDefinitionRequest alarmDefinitionRequest) throws URISyntaxException {
         final User user = securityUtil.getLoggedUser();
 
-        if (user == null) {
-            return unauthorized();
-        }
-
         final AlarmDefinition toSave = alarmDefinitionRequest.toDomain();
-
         final Project parent = projectService.findByOwnerAndId(user, projectId);
 
         if (parent == null) {
@@ -59,39 +57,37 @@ public class AlarmDefinitionController extends StandardResponses {
         toSave.project(parent);
 
         final AlarmDefinition result = alarmDefinitionService.save(toSave);
-        return ResponseEntity.created(new URI(request.getRequestURL().append("/").append(result.getId()).toString())).body(AlarmDefinitionResponse.fromDomain(result));
+        return ResponseEntity
+                .created(new URI(request.getRequestURL().append("/").append(result.getId()).toString()))
+                .body(AlarmDefinitionResponse.fromDomain(result));
     }
 
     @GetMapping("/projects/{projectId}/alarm-definitions")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getProjectAlarmDefinitions(final HttpServletRequest request,
-                                                        @PathVariable final Long projectId) {
+                                                        @Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
-        if (user == null) {
-            return unauthorized();
-        }
-
-        final Project project = projectService.findByOwnerAndId(user, projectId);
+        final Project project = projectService.findByMembershipAndId(user, projectId);
 
         if (project == null) {
             return notFound("project");
         }
-        final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
 
-        return ResponseEntity.ok().body(AlarmDefinitionCollectionResponse.fromDomain(definitions, new PaginationLinks(request.getRequestURL().toString())));
+        final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
+        return ResponseEntity
+                .ok()
+                .body(AlarmDefinitionCollectionResponse.fromDomain(definitions, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}/alarm-definitions/{definitionId}")
     @ResponseBody
-    public ResponseEntity<?> getAlarmDefinition(final HttpServletRequest request,
-                                                @PathVariable final Long projectId,
-                                                @PathVariable final Long definitionId) {
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> getAlarmDefinition(@Valid @PathVariable final Long projectId,
+                                                @Valid @PathVariable final Long definitionId) {
         final User user = securityUtil.getLoggedUser();
 
-        if (user == null) {
-            return unauthorized();
-        }
 
         final Project project = projectService.findByOwnerAndId(user, projectId);
 
@@ -100,18 +96,16 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         final AlarmDefinition definition = alarmDefinitionService.findByProjectAndId(project, definitionId);
-
-        return ResponseEntity.ok().body(AlarmDefinitionResponse.fromDomain(definition));
+        return ResponseEntity
+                .ok()
+                .body(AlarmDefinitionResponse.fromDomain(definition));
     }
 
     @DeleteMapping("/projects/{projectId}/alarm-definitions/{definitionId}")
-    public ResponseEntity<?> deleteAlarmDefinition(@PathVariable final Long projectId,
-                                                   @PathVariable final Long definitionId) {
+    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    public ResponseEntity<?> deleteAlarmDefinition(@Valid @PathVariable final Long projectId,
+                                                   @Valid @PathVariable final Long definitionId) {
         final User user = securityUtil.getLoggedUser();
-
-        if (user == null) {
-            return unauthorized();
-        }
 
         final Project project = projectService.findByOwnerAndId(user, projectId);
 
@@ -120,8 +114,9 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         alarmDefinitionService.delete(definitionId);
-
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 }
