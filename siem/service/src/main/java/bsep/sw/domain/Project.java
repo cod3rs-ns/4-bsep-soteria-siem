@@ -37,10 +37,10 @@ public class Project extends EntityMeta {
             joinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
     private Set<User> members = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Agent> agents = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<AlarmDefinition> alarmDefinitions = new HashSet<>(0);
 
     public String getName() {
@@ -147,16 +147,4 @@ public class Project extends EntityMeta {
                 .toHashCode();
     }
 
-    @Override
-    public String toString() {
-        return "Project{" +
-                super.toString() +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", owner=" + owner +
-                ", members=" + members +
-                ", agents=" + agents +
-                ", alarmDefinitions=" + alarmDefinitions +
-                '}';
-    }
 }

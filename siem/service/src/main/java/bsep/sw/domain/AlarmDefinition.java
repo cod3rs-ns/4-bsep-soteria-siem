@@ -39,7 +39,7 @@ public class AlarmDefinition extends EntityMeta {
     @Column(name = "ad_last_occurrence")
     private DateTime lastOccurrence;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_project_id")
     private Project project;
 
@@ -180,14 +180,4 @@ public class AlarmDefinition extends EntityMeta {
                 .toHashCode();
     }
 
-    @Override
-    public String toString() {
-        return "AlarmDefinition{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", triggeredCount=" + triggeredCount +
-                ", level=" + level +
-                ", project=" + project +
-                '}';
-    }
 }

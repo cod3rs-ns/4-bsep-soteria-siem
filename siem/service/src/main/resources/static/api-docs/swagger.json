@@ -1124,6 +1124,14 @@
             "resolved-by",
             "resolved-at"
           ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "alarm-definition": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
         }
       },
       "required": [
@@ -1153,6 +1161,44 @@
       "required": [
         "links",
         "meta",
+        "data"
+      ]
+    },
+    "Relationship": {
+      "title": "Relationship",
+      "description": "Relationship with other entity",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "description": "Links to other entities",
+          "properties": {
+            "related": {
+              "type": "string",
+              "description": "URL to this resource",
+              "example": "/api/entity/1"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "description": "Meta data about entity",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Entity's unique identifier",
+              "example": "100"
+            },
+            "type": {
+              "type": "string",
+              "description": "Type of the entity",
+              "example": "car"
+            }
+          }
+        }
+      },
+      "required": [
+        "links",
         "data"
       ]
     }

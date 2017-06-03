@@ -23,7 +23,7 @@ public class UserResponseRelationships {
             projectsData.add(new RelationshipData(PROJECTS_TYPE, project.getId().toString()));
         }
         // FIXME
-        final RelationshipLinks projectLinks = new RelationshipLinks("self-link", "related-link");
+        final RelationshipLinks projectLinks = new RelationshipLinks( "related-link");
         final ResponseCollectionRelationship projects = new ResponseCollectionRelationship(projectLinks, projectsData);
 
         final List<RelationshipData> ownedProjectsData = new ArrayList<>();
@@ -31,7 +31,7 @@ public class UserResponseRelationships {
             ownedProjectsData.add(new RelationshipData(PROJECTS_TYPE, project.getId().toString()));
         }
         // FIXME
-        final RelationshipLinks ownedProjectLinks = new RelationshipLinks("self-link", "related-link");
+        final RelationshipLinks ownedProjectLinks = new RelationshipLinks( "related-link");
         final ResponseCollectionRelationship ownedProjects = new ResponseCollectionRelationship(ownedProjectLinks, ownedProjectsData);
 
         return new UserResponseRelationships(projects, ownedProjects);
