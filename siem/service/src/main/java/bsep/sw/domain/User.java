@@ -5,8 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
@@ -28,7 +26,7 @@ public class User extends EntityMeta {
 
     @NotNull
     @Column(name = "u_password", nullable = false)
-    @Min(6)
+    @Size(min = 6)
     private String password;
 
     @NotNull
@@ -42,7 +40,7 @@ public class User extends EntityMeta {
     private String lastName;
 
     @Column(name = "u_phone", length = 16)
-    @Max(16)
+    @Size(max = 16)
     private String phoneNumber;
 
     @NotNull

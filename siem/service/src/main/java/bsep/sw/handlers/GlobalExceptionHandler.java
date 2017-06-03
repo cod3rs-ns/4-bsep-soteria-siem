@@ -7,6 +7,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
 @RestController
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseEntity<ErrorResponse> handleJSONBodyExceptionMissingField(final NullPointerException e) {
-        final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Missing necessary field.");
+        final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Missing necessary field");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -60,6 +60,13 @@ public class GlobalExceptionHandler {
         final String simplifiedMessage = StringUtils.substringBefore(errorMessage, " for key");
 
         final ErrorResponse response = new ErrorResponse("400", "Conflict", simplifiedMessage);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleJSONBodyUniqueException(final HttpMessageNotReadableException e) {
+        final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Non-existing enumeration type");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

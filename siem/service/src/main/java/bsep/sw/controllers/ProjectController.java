@@ -2,7 +2,6 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
-import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.project.ProjectCollectionResponse;
 import bsep.sw.hateoas.project.ProjectRequest;
@@ -11,17 +10,15 @@ import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -38,78 +35,67 @@ public class ProjectController extends StandardResponses {
 
     @PostMapping("/projects")
     @ResponseBody
+    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
     public ResponseEntity<?> createProject(final HttpServletRequest request,
                                            @Valid @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
         final User user = securityUtil.getLoggedUser();
-
-        if (user == null) {
-            return unauthorized();
-        }
-
         final Project toSave = projectRequest.toDomain();
         toSave.owner(user);
+        toSave.getMembers().add(user);
 
         final Project result = projectService.save(toSave);
 
-        return ResponseEntity.created(new URI(request.getRequestURL().append("/").append(result.getId()).toString())).body(ProjectResponse.fromDomain(result));
+        return ResponseEntity
+                .created(new URI(request.getRequestURL().append("/").append(result.getId()).toString()))
+                .body(ProjectResponse.fromDomain(result));
     }
 
     @GetMapping("/projects/owned")
+    @ResponseBody
+    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
     public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request) {
         final User user = securityUtil.getLoggedUser();
+        final List<Project> projects = projectService.findOwned(user);
 
-        if(user == null) {
-            return unauthorized();
-        }
-
-        final List<Project> projects = projectService.findOwnedProjects(user);
-
-        return ResponseEntity.ok().body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+        return ResponseEntity
+                .ok()
+                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/member-of")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request) {
         final User user = securityUtil.getLoggedUser();
+        final List<Project> projects = projectService.findAllByMembership(user);
 
-        if(user == null) {
-            return unauthorized();
-        }
-
-        final List<Project> projects = projectService.findProjectByMembership(user);
-
-        return ResponseEntity.ok().body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+        return ResponseEntity
+                .ok()
+                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}")
     @ResponseBody
-    public ResponseEntity<?> getProject(final HttpServletRequest request,
-                                        @PathVariable Long projectId) {
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> getProject(@Valid @PathVariable Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
-        if (user == null) {
-            return unauthorized();
-        }
-
-        final Project result = projectService.findByUserAndId(user, projectId);
+        final Project result = projectService.findByMembershipAndId(user, projectId);
 
         if (result == null) {
-            return notFound();
+            return notFound("project");
         }
 
         return ResponseEntity.ok().body(ProjectResponse.fromDomain(result));
     }
 
     @DeleteMapping("/projects/{projectId}")
-    public ResponseEntity<?> deleteProject(final HttpServletRequest request,
-                                           @PathVariable Long projectId) {
+    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    public ResponseEntity<?> deleteProject(@Valid @PathVariable Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
-        if (user == null) {
-            return unauthorized();
-        }
-
-        if (!projectService.delete(user, projectId)){
-            return notFound();
+        if (!projectService.delete(user, projectId)) {
+            return notFound("project");
         }
 
         return ResponseEntity.noContent().build();

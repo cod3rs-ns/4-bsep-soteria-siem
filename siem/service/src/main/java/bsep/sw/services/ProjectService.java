@@ -45,15 +45,19 @@ public class ProjectService {
         }
     }
 
-    public Project findByUserAndId(final User user, final Long id) {
+    public Project findByOwnerAndId(final User user, final Long id) {
         return repository.findProjectByOwnerAndId(user, id);
     }
 
-    public List<Project> findOwnedProjects(final User user) {
+    public Project findByMembershipAndId(final User user, final Long id) {
+        return repository.findProjectByOwnerAndId(user, id);
+    }
+
+    public List<Project> findOwned(final User user) {
         return repository.findProjectsByOwner(user);
     }
 
-    public List<Project> findProjectByMembership(final User user) {
+    public List<Project> findAllByMembership(final User user) {
         return repository.findProjectsByMembersContaining(user);
     }
 }

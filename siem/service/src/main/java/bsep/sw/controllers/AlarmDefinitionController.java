@@ -50,10 +50,10 @@ public class AlarmDefinitionController extends StandardResponses {
 
         final AlarmDefinition toSave = alarmDefinitionRequest.toDomain();
 
-        final Project parent = projectService.findByUserAndId(user, projectId);
+        final Project parent = projectService.findByOwnerAndId(user, projectId);
 
         if (parent == null) {
-            return notFound();
+            return notFound("project");
         }
 
         toSave.project(parent);
@@ -72,10 +72,10 @@ public class AlarmDefinitionController extends StandardResponses {
             return unauthorized();
         }
 
-        final Project project = projectService.findByUserAndId(user, projectId);
+        final Project project = projectService.findByOwnerAndId(user, projectId);
 
         if (project == null) {
-            return notFound();
+            return notFound("project");
         }
         final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
 
@@ -93,10 +93,10 @@ public class AlarmDefinitionController extends StandardResponses {
             return unauthorized();
         }
 
-        final Project project = projectService.findByUserAndId(user, projectId);
+        final Project project = projectService.findByOwnerAndId(user, projectId);
 
         if (project == null) {
-            return notFound();
+            return notFound("project");
         }
 
         final AlarmDefinition definition = alarmDefinitionService.findByProjectAndId(project, definitionId);
@@ -113,10 +113,10 @@ public class AlarmDefinitionController extends StandardResponses {
             return unauthorized();
         }
 
-        final Project project = projectService.findByUserAndId(user, projectId);
+        final Project project = projectService.findByOwnerAndId(user, projectId);
 
         if (project == null) {
-            return notFound();
+            return notFound("project");
         }
 
         alarmDefinitionService.delete(definitionId);
