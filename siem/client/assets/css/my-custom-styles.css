@@ -56,3 +56,25 @@ dl.project-agent > dd {
     width: 30%;
   }
 }
+
+.btn-add-field {
+  font-size: 10pt !important;
+  padding: 4px 4px !important;
+  margin-top: 4px !important;
+}
+
+.agent-config-header {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.agent-field {
+  margin-top: 4px;
+}
+
+.fa-logo {
+  font-size: 48px;
+  text-align: center;
+  color: #555555;
+  padding-top: 12px;
+}
