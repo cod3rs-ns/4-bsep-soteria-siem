@@ -1,6 +1,9 @@
 angular
     .module('soteria-app', [
-        'ui.router'
+        'ui.router',
+        'angular-jwt',
+        'ngStorage',
+        'ngToast'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -8,7 +11,12 @@ angular
             return $window._;
         }
     ])
-    .config(function ($stateProvider, $urlRouterProvider) {
+    .constant(
+    'CONFIG', {
+        'SERVICE_URL': 'http://localhost:9091/api',
+        'AUTH_TOKEN': 'X-Auth-Token'
+    })
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
         // For any unmatched url, redirect to /login
         $urlRouterProvider.otherwise("/login");
@@ -79,4 +87,32 @@ angular
                     }
                 }
             });
+
+        
+        $httpProvider.interceptors.push(['$q', '$location', '$localStorage', 'jwtHelper', '_', function ($q, $location, $localStorage, jwtHelper, _) {
+            return {
+                // Set Header to Request if user is logged
+                'request': function (config) {
+                    var token = $localStorage.token;
+
+                    if (token != "null") {
+                        config.headers['X-Auth-Token'] = token;
+                    }
+                    return config;
+                },
+
+                // Catch refreshed token
+                'response': function (response) {
+                    var token = response.headers('X-Auth-Token');
+                    if (!_.isNull(token) && !_.isNull(response.headers('X-Auth-Refreshed'))) {
+                        var tokenPayload = jwtHelper.decodeToken(token);
+                        $localStorage.token = token;
+                        $localStorage.user = tokenPayload.sub;
+                        $localStorage.role = tokenPayload.role.authority;
+                    }
+                    return response;
+                }
+            };
+        }]);
     });
+    

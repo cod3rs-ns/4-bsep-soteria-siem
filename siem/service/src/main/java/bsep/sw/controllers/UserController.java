@@ -2,6 +2,7 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
+import bsep.sw.hateoas.user.AvailabilityResponse;
 import bsep.sw.hateoas.user.UserRequest;
 import bsep.sw.hateoas.user.UserResponse;
 import bsep.sw.security.TokenUtils;
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/users/auth")
-    public ResponseEntity<AuthResponse> authenticate(@RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
+    public ResponseEntity<AuthResponse> authenticate(@RequestParam(value = "username") final String username, @RequestParam(value = "password") final String password) {
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
@@ -54,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody final UserRequest userRequest) {
         final User user = userRequest.toDomain();
 
         if (userService.getUserByUsername(user.getUsername()) != null) {
@@ -75,5 +76,23 @@ public class UserController {
         final String currentPrincipalName = authentication.getName();
 
         return new ResponseEntity<>(UserResponse.fromDomain(userService.getUserByUsername(currentPrincipalName)), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/username/available")
+    public ResponseEntity<AvailabilityResponse> usernameAvailable(@RequestParam(value = "username") final String username) {
+        if (userService.getUserByUsername(username) != null) {
+            return ResponseEntity.ok(new AvailabilityResponse("username", false));
+        }
+
+        return ResponseEntity.ok(new AvailabilityResponse("username", true));
+    }
+
+    @GetMapping("/users/email/available")
+    public ResponseEntity<AvailabilityResponse> emailAvailable(@RequestParam(value = "email") final String email) {
+        if (userService.getUserByEmail(email) != null) {
+            return ResponseEntity.ok(new AvailabilityResponse("email", false));
+        }
+
+        return ResponseEntity.ok(new AvailabilityResponse("email", true));
     }
 }

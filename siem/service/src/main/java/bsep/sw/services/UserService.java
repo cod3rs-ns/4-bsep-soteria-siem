@@ -48,4 +48,8 @@ public class UserService {
     public User getUserByUsername(final String username) {
         return repository.findOneByUsername(username);
     }
+
+    public User getUserByEmail(final String email) {
+        return repository.findOneByEmail(email);
+    }
 }
