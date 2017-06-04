@@ -1,9 +1,9 @@
 package bsep.sw.security;
 
+import bsep.sw.util.HttpHeaders;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,9 +24,6 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     private final Logger log = Logger.getLogger(AuthenticationTokenFilter.class);
 
-    @Value("${security.token.header}")
-    private String tokenHeader;
-
     private final UserDetailsService userDetailsService;
     private final TokenUtils tokenUtils;
 
@@ -41,33 +38,33 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        String authToken = httpRequest.getHeader(this.tokenHeader);
+        String authToken = httpRequest.getHeader(HttpHeaders.X_AUTH_TOKEN.getName());
 
         String username;
         try {
             username = tokenUtils.getUsernameFromToken(authToken);
-        } catch (ExpiredJwtException ex) {
+        } catch (final ExpiredJwtException ex) {
             // refresh token
             final Claims claims = ex.getClaims();
 
             final TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
             if (loginType == TokenUtils.LoginType.FACEBOOK) {
                 // TODO: Redirect to client login page
-                final String redirectUrl = "http://www.google.ba";
+                final String redirectUrl = "http://www.google.ba" ;
                 try {
                     httpResponse.sendRedirect(redirectUrl);
-                } catch (IOException e) {
-                    log.debug(String.format("Can't redirect fb user to url %s", redirectUrl));
+                } catch (final IOException e) {
+                    log.debug(String.format("Can't redirect fb user to url %s", redirectUrl), e);
                 }
                 return;
             }
 
             authToken = tokenUtils.refreshToken(claims);
             username = claims.getSubject();
-            httpResponse.setHeader("X-Auth-Refreshed", "true");
+            httpResponse.setHeader(HttpHeaders.X_AUTH_REFRESHED.getName(), HttpHeaders.X_AUTH_REFRESHED.getValue());
 
             log.debug(String.format("Token refreshed for user: %s", username), ex);
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             log.debug("Wrong token provided", ex);
             username = null;
         }
@@ -79,7 +76,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        httpResponse.setHeader("X-Auth-Token", authToken);
+        httpResponse.setHeader(HttpHeaders.X_AUTH_TOKEN.getName(), authToken);
         chain.doFilter(request, httpResponse);
     }
 }
