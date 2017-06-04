@@ -762,6 +762,20 @@
             "name",
             "description"
           ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "owner": {
+              "$ref": "#/definitions/Relationship"
+            },
+            "members": {
+              "$ref": "#/definitions/CollectionRelationship"
+            },
+            "alarm-definitions": {
+              "$ref": "#/definitions/CollectionRelationship"
+            }
+          }
         }
       },
       "required": [

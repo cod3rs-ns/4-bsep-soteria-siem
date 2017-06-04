@@ -11,6 +11,7 @@ public class ProjectResponseData extends ResourceResponseData {
         data.id = project.getId();
         data.type = ResourceTypes.PROJECTS_TYPE;
         data.attributes = ProjectResponseAttributes.fromDomain(project);
+        data.relationships = ProjectResponseRelationships.fromDomain(project);
         return data;
     }
 
