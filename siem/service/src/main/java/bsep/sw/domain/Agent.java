@@ -130,13 +130,4 @@ public class Agent extends EntityMeta {
                 .toHashCode();
     }
 
-    @Override
-    public String toString() {
-        return "Agent{" +
-                "name='" + name + '\'' +
-                ", type=" + type +
-                ", description='" + description + '\'' +
-                ", agentVersion='" + agentVersion + '\'' +
-                '}';
-    }
 }
