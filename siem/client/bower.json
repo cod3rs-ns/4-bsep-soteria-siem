@@ -22,6 +22,9 @@
     "lodash": "^4.17.4",
     "angular-jwt": "^0.1.8",
     "ngstorage": "^0.3.11",
-    "ngToast": "ngtoast#^2.0.0"
+    "ngToast": "ngtoast#^2.0.0",
+    "sockjs": "^0.3.4",
+    "ng-stomp": "^0.3.0",
+    "stomp-websocket": "^2.3.4"
   }
 }
