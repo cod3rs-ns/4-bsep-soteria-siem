@@ -3,7 +3,8 @@ angular
         'ui.router',
         'angular-jwt',
         'ngStorage',
-        'ngToast'
+        'ngToast',
+        'ngStomp'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -14,6 +15,7 @@ angular
     .constant(
     'CONFIG', {
         'SERVICE_URL': 'http://localhost:9091/api',
+        'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
         'AUTH_TOKEN': 'X-Auth-Token'
     })
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {

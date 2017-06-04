@@ -3,5 +3,6 @@ angular
         'ui.router',
         'angular-jwt',
         'ngStorage',
-        'ngToast'
+        'ngToast',
+        'ngStomp'
     ]);
