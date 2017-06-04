@@ -1,18 +1,23 @@
 package bsep.sw.hateoas.project;
 
-import bsep.sw.domain.Project;
 import bsep.sw.hateoas.resource.response.ResourceResponseAttributes;
 
 public class ProjectResponseAttributes extends ResourceResponseAttributes {
 
-    public String name;
-    public String description;
+    private final String name;
+    private final String description;
 
-    public static ProjectResponseAttributes fromDomain(final Project project) {
-        final ProjectResponseAttributes attributes = new ProjectResponseAttributes();
-        attributes.description = project.getDescription();
-        attributes.name = project.getName();
-        return attributes;
+    public ProjectResponseAttributes(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
 }

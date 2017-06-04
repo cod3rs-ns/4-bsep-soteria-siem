@@ -42,7 +42,7 @@ public abstract class EntityMeta implements Serializable {
     private String updatedBy;
 
     @Column(name = "active", nullable = false)
-    private Boolean active = true;
+    private Boolean active = false;
 
     public Long getId() {
         return id;

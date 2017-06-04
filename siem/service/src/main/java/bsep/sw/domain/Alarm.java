@@ -26,7 +26,7 @@ public class Alarm extends EntityMeta {
     private String resolvedBy;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "al_definition_id")
     private AlarmDefinition definition;
 
