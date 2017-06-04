@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,28 +16,31 @@ import java.util.Set;
 public class Project extends EntityMeta {
 
     @NotNull
-    @Column(name = "pr_name", nullable = false)
+    @Column(name = "pr_name", nullable = false, length = 30)
+    @Size(min = 3, max = 30)
     private String name;
 
-    @Column(name = "pr_description")
+    @NotNull
+    @Column(name = "pr_description", nullable = false, length = 60)
+    @Size(min = 1, max = 60)
     private String description;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pr_owner_id")
     private User owner;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_memberships",
-            joinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
+            inverseJoinColumns = @JoinColumn(name = "pm_user_id", referencedColumnName = "id"),
+            joinColumns = @JoinColumn(name = "pm_project_id", referencedColumnName = "id"))
     private Set<User> members = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Agent> agents = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<AlarmDefinition> alarmDefinitions = new HashSet<>(0);
 
     public String getName() {
@@ -142,4 +146,5 @@ public class Project extends EntityMeta {
                 .append(owner)
                 .toHashCode();
     }
+
 }

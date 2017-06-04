@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,11 +16,13 @@ import java.util.Set;
 public class AlarmDefinition extends EntityMeta {
 
     @NotNull
-    @Column(name = "ad_name", nullable = false)
+    @Column(name = "ad_name", nullable = false, length = 20)
+    @Size(min = 1, max = 20)
     private String name;
 
     @NotNull
-    @Column(name = "ad_description", nullable = false)
+    @Column(name = "ad_description", nullable = false, length = 60)
+    @Size(min = 1, max = 60)
     private String description;
 
     @NotNull
@@ -36,7 +39,7 @@ public class AlarmDefinition extends EntityMeta {
     @Column(name = "ad_last_occurrence")
     private DateTime lastOccurrence;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_project_id")
     private Project project;
 
@@ -177,14 +180,4 @@ public class AlarmDefinition extends EntityMeta {
                 .toHashCode();
     }
 
-    @Override
-    public String toString() {
-        return "AlarmDefinition{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", triggeredCount=" + triggeredCount +
-                ", level=" + level +
-                ", project=" + project +
-                '}';
-    }
 }

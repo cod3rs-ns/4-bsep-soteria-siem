@@ -1,34 +1,23 @@
 package bsep.sw.hateoas;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaginationResponseMeta extends StandardResponseMeta {
 
     @JsonProperty("total-pages")
-    private Integer totalPages;
+    public Integer totalPages;
 
     @JsonProperty("total-items")
-    private Integer totalItems;
+    public Integer totalItems;
 
     @JsonProperty("items-per-page")
-    private Integer itemsPerPage;
+    public Integer itemsPerPage;
 
     public PaginationResponseMeta(final Integer totalPages, final Integer totalItems, final Integer itemsPerPage) {
         this.totalPages = totalPages;
         this.totalItems = totalItems;
         this.itemsPerPage = itemsPerPage;
     }
-
-    public Integer getTotalPages() {
-        return totalPages;
-    }
-
-    public Integer getTotalItems() {
-        return totalItems;
-    }
-
-    public Integer getItemsPerPage() {
-        return itemsPerPage;
-    }
-
 }
