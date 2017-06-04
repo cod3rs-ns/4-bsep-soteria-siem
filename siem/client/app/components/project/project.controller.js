@@ -15,8 +15,17 @@
             'next': null
         };
 
+        projectVm.config = {
+            'os': null,
+            'defaultLevel': null,
+            'paths': [],
+            'regexes': []
+        };
+
         projectVm.loadInitialLogs = loadLogs;
         projectVm.loadMore = loadLogs;
+
+        projectVm.addField = addField;
 
         activate();
 
@@ -33,6 +42,11 @@
                 .catch(function(error) {
                     $log.error(error);
                 });
+        }
+
+        function addField(group) {
+            var index = _.size(projectVm.config[group]) + 1;
+            projectVm.config[group].push({'id': index, value: ''});
         }
     }
 })();

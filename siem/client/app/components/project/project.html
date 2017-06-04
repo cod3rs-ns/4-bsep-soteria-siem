@@ -103,47 +103,110 @@
                 <div class="widget-header">
                     <h3>Configure new agent</h3>
                 </div>
+                <div class="row">
+                    <div class="col-md-4 fa-logo">
+                        <i class="fa fa-windows"></i>
+                    </div>
+                    <div class="col-md-4 fa-logo">
+                        <i class="fa fa-linux"></i>
+                    </div>
+                    <div class="col-md-4 fa-logo">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                </div>
                 <div class="widget-content">
-                    <form class="form-horizontal label-left" role="form">
-                        <div class="form-group">
-                            <label for="os" class="col-sm-5 control-label">
-                                Choose Operating System
-                            </label>
-                            <div class="col-sm-7">
-                                <select id="os" name="operating-system">
-                                    <option value="win">Windows</option>
-                                    <option value="linux">Linux</option>
-                                    <option value="osx">OSX</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone" class="col-sm-5 control-label">
-                                Field
-                            </label>
-                            <div class="col-sm-7">
-                                <input type="text" id="phone" class="form-control">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="myonoffswitch4" class="col-sm-5 control-label">
-                                I like this!
-                            </label>
-                            <div class="col-sm-7">
-                                <div class="control-inline onoffswitch">
-                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-                                           id="myonoffswitch4" checked>
-                                    <label class="onoffswitch-label" for="myonoffswitch4">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            General agent info
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <label for="default-log-level" class="col-sm-6 control-label">Choose default level:</label>
+                                                <div class="col-sm-6">
+                                                    <select name="default-log-level" id="default-log-level" class="select2">
+                                                        <option value="debug">DEBUG</option>
+                                                        <option value="info">INFO</option>
+                                                        <option value="notice">NOTICE</option>
+                                                        <option value="warn">WARN</option>
+                                                        <option value="error">ERROR</option>
+                                                        <option value="crit">CRIT</option>
+                                                        <option value="alert">ALERT</option>
+                                                        <option value="emerg">EMERG</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
+                                                    <input type="checkbox">
+                                                    <span>System logs</span>
+                                                </label>
+                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
+                                                    <input type="checkbox">
+                                                    <span>Application logs</span>
+                                                </label>
+                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
+                                                    <input type="checkbox">
+                                                    <span>Some logs</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            Agent custom paths
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Provide your custom paths your agent has to parse logs from.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.paths" type="text"
+                                                           autocomplete="off" class="input form-control agent-field"
+                                                           id="{{'paths' + field.id}}" ng-model="field.value"/>
+                                                    <button class="btn btn-primary btn-add-field" type="button"
+                                                            ng-click="projectVm.addField('paths')">Add another field
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading agent-config-header">
+                                        <h4 class="panel-title agent-config-header">
+                                            Regex for parsing your logs
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            You have to provide regex so agent could know how to process your logs.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.regexes"
+                                                           type="text" autocomplete="off"
+                                                           class="input form-control agent-field"
+                                                           id="{{'regexes' + field.id}}" ng-model="field.value"/>
+                                                    <button class="btn btn-primary btn-add-field" type="button"
+                                                            ng-click="projectVm.addField('regexes')">Add another field
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <hr class="dashed" />
-                        <button type="button" class="btn btn-large btn-primary">Get your agent!</button>
-                    </form>
+                    </div>
+                    <button class="btn btn-lg btn-primary" type="button" style="width: 100%;">Get your agent!</button>
                 </div>
             </div>
         </div>
@@ -197,7 +260,9 @@
                         </tr>
                         </tbody>
                     </table>
-                    <button class="btn btn-custom-primary btn-lg btn-block btn-auth" ng-click="projectVm.loadMore(projectVm.logs.next);">Load more...</button>
+                    <button class="btn btn-custom-primary btn-lg btn-block btn-auth"
+                            ng-click="projectVm.loadMore(projectVm.logs.next);">Load more...
+                    </button>
                 </div>
             </div>
         </div>
