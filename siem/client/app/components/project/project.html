@@ -189,17 +189,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><span class="label label-critical">ERROR</span></td>
-                            <td>Nov 21, 2013 15:45</td>
-                            <td>Windows OS</td>
-                            <td>Error log message</td>
-                        </tr>
-                        <tr>
-                            <td><span class="label label-medium">INFO</span></td>
-                            <td>May 23, 2017 05:24</td>
-                            <td>macOS Sierra 10.12.4</td>
-                            <td>Info log message</td>
+                        <tr ng-repeat="log in projectVm.logs.data">
+                            <td><span class="label label-critical">{{log.attributes.level}}</span></td>
+                            <td>{{log.attributes.time}}</td>
+                            <td>{{log.attributes.info.host}}</td>
+                            <td>{{log.attributes.message}}</td>
                         </tr>
                         </tbody>
                     </table>
