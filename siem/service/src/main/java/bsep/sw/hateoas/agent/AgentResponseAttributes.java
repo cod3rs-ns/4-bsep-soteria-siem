@@ -11,7 +11,7 @@ public class AgentResponseAttributes extends ResourceResponseAttributes {
     @JsonProperty("name")
     public String name;
 
-    @JsonProperty("type")
+    @JsonProperty("agent-type")
     public AgentType type;
 
     @JsonProperty("description")

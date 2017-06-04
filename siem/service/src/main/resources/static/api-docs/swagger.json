@@ -583,6 +583,116 @@
           }
         ]
       }
+    },
+    "/projects/{project_id}/agents": {
+      "get": {
+        "summary": "Retrieve agents",
+        "description": "Retrieve agents from selected project",
+        "operationId": "getAgents",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved agent",
+            "schema": {
+              "$ref": "#/definitions/AgentCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/agents/{agent_id}": {
+      "get": {
+        "summary": "Retrieve agent",
+        "description": "Retrieve alarm from selected project",
+        "operationId": "getAgent",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "agent_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the agent",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved agent",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
     }
   },
   "securityDefinitions": {
@@ -1180,6 +1290,116 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Alarm"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
+      ]
+    },
+    "AgentResponse": {
+      "title": "Agent Response",
+      "description": "Response containing data about Agent entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/Agent"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "Agent": {
+      "title": "Agent",
+      "description": "Data about Agent",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Agent's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "agents"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Agent's attributes",
+          "description": "Agent's attributes",
+          "properties": {
+            "name": {
+              "name": "string",
+              "description": "Agent's name",
+              "example": "Some specific alarm"
+            },
+            "agent-type": {
+              "type": "string",
+              "enum": [
+                "LINUX_AGENT",
+                "OSX_AGENT",
+                "WINDOWS_AGENT"
+              ],
+              "description": "Type of agent",
+              "example": true
+            },
+            "description": {
+              "type": "string",
+              "description": "Additional alarm's description",
+              "example": "This is alarm placed on server number 42"
+            },
+            "agent-version": {
+              "type": "string",
+              "description": "Version of agent script",
+              "example": "v1.0.1b"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "agent-type",
+            "agent-version"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ]
+    },
+    "AgentCollectionResponse": {
+      "title": "Agent Collection Response",
+      "description": "Collection of agent with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Agent"
           }
         }
       },
