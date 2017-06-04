@@ -14,7 +14,7 @@ public class LogResponseRelationships {
     public static LogResponseRelationships fromDomain(final Log log) {
         final RelationshipData data = new RelationshipData(PROJECTS_TYPE, log.getProject().toString());
         // FIXME
-        final RelationshipLinks links = new RelationshipLinks("self-link", "related-link");
+        final RelationshipLinks links = new RelationshipLinks( "related-link");
 
         return new LogResponseRelationships()
                 .project(new ResponseRelationship(links, data));
