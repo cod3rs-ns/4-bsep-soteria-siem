@@ -5,9 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.net.URI;
-
 public abstract class StandardResponses {
+
     protected ResponseEntity<ErrorResponse> unauthorized() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse("STA-401", "Unauthorized", "Please login first."));
     }
@@ -16,7 +15,4 @@ public abstract class StandardResponses {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("STA-404", "Not Found", StringUtils.capitalize(entity) + " does not exists."));
     }
 
-    protected ResponseEntity<?> created(URI location, Object body) {
-        return ResponseEntity.created(location).body(body);
-    }
 }

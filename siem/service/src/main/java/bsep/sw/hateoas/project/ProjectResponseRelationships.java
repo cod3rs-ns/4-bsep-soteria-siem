@@ -1,8 +1,6 @@
 package bsep.sw.hateoas.project;
 
-import bsep.sw.domain.AlarmDefinition;
 import bsep.sw.domain.Project;
-import bsep.sw.hateoas.alarm_definition.AlarmDefinitionResponseRelationships;
 import bsep.sw.hateoas.relationships.RelationshipData;
 import bsep.sw.hateoas.relationships.RelationshipLinks;
 import bsep.sw.hateoas.relationships.ResponseCollectionRelationship;
@@ -28,6 +26,9 @@ public class ProjectResponseRelationships extends ResourceResponseRelationships 
     @JsonProperty("alarm-definitions")
     public ResponseCollectionRelationship alarmDefinitions;
 
+    @JsonProperty("agents")
+    public ResponseCollectionRelationship agents;
+
 
     public static ProjectResponseRelationships fromDomain(final Project project) {
         final ProjectResponseRelationships relationships = new ProjectResponseRelationships();
@@ -40,16 +41,23 @@ public class ProjectResponseRelationships extends ResourceResponseRelationships 
         final RelationshipLinks membersLinks = new RelationshipLinks(LinkGenerator.generateUsersLink(project));
         final List<RelationshipData> membersData = new ArrayList<>(project.getMembers()
                 .stream()
-                .map(a -> new RelationshipData(USERS_TYPE,a.getId().toString()))
+                .map(a -> new RelationshipData(USERS_TYPE, a.getId().toString()))
                 .collect(Collectors.toList()));
         relationships.members = new ResponseCollectionRelationship(membersLinks, membersData);
 
         final RelationshipLinks definitionsLinks = new RelationshipLinks(LinkGenerator.generateAlarmDefinitionsLink(project));
         final List<RelationshipData> definitionsData = new ArrayList<>(project.getAlarmDefinitions()
                 .stream()
-                .map(a -> new RelationshipData(ALARM_DEFINITION_TYPE,a.getId().toString()))
+                .map(a -> new RelationshipData(ALARM_DEFINITION_TYPE, a.getId().toString()))
                 .collect(Collectors.toList()));
         relationships.alarmDefinitions = new ResponseCollectionRelationship(definitionsLinks, definitionsData);
+
+        final RelationshipLinks agentsLinks = new RelationshipLinks(LinkGenerator.generateAgentsLink(project));
+        final List<RelationshipData> agentsData = new ArrayList<>(project.getAgents()
+                .stream()
+                .map(a -> new RelationshipData(AGENT_TYPE, a.getId().toString()))
+                .collect(Collectors.toList()));
+        relationships.agents = new ResponseCollectionRelationship(agentsLinks, agentsData);
 
         return relationships;
     }

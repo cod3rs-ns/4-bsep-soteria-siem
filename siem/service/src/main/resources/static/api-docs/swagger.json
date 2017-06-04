@@ -884,6 +884,9 @@
             },
             "alarm-definitions": {
               "$ref": "#/definitions/CollectionRelationship"
+            },
+            "agents": {
+              "$ref": "#/definitions/CollectionRelationship"
             }
           }
         }
@@ -1338,7 +1341,7 @@
           "description": "Agent's attributes",
           "properties": {
             "name": {
-              "name": "string",
+              "type": "string",
               "description": "Agent's name",
               "example": "Some specific alarm"
             },

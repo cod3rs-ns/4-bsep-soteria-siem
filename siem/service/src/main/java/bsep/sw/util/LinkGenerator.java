@@ -59,4 +59,12 @@ public class LinkGenerator {
                 .toString();
     }
 
+    public static String generateAgentsLink(final Project project) {
+        return new StringBuilder()
+                .append("/api/projects/")
+                .append(project.getId())
+                .append("/agents")
+                .toString();
+    }
+
 }
