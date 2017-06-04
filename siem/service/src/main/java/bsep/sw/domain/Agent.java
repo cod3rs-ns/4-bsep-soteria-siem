@@ -6,29 +6,24 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "agents")
 public class Agent extends EntityMeta {
 
     @NotNull
-    @Column(name = "a_name", nullable = false, length = 20)
-    @Size(min = 3, max = 20)
+    @Column(name = "a_name")
     private String name;
 
     @NotNull
-    @Column(name = "a_type", nullable = false)
+    @Column(name = "a_type")
     private AgentType type;
 
-    @NotNull
-    @Column(name = "a_description", nullable = false, length = 60)
-    @Size(min = 1, max = 60)
+    @Column(name = "a_description")
     private String description;
 
     @NotNull
-    @Column(name = "a_agent_version", nullable = false, length = 10)
-    @Size(min = 1, max = 10)
+    @Column(name = "a_agent_version")
     private String agentVersion;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -130,4 +125,13 @@ public class Agent extends EntityMeta {
                 .toHashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", agentVersion='" + agentVersion + '\'' +
+                '}';
+    }
 }
