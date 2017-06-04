@@ -5,28 +5,29 @@
         .module('soteria-app')
         .controller('ProjectController', ProjectController);
 
-    ProjectController.$inject = ['$log', 'projectService'];
+    ProjectController.$inject = ['CONFIG', '$stateParams', '$log', 'projectService', '_'];
 
-    function ProjectController($log, projectService) {
+    function ProjectController(CONFIG, $stateParams, $log, projectService, _) {
         var projectVm = this;
 
         projectVm.logs = {
-            'data': {},
+            'data': [],
             'next': null
         };
 
-        projectVm.retrieveLogs = retrieveLogs;
+        projectVm.loadInitialLogs = loadLogs;
+        projectVm.loadMore = loadLogs;
 
         activate();
 
         function activate () {
-            projectVm.retrieveLogs(1);
+            projectVm.loadInitialLogs(CONFIG.SERVICE_URL + '/projects/' + $stateParams.id + '/logs?page[limit]=2');
         }
 
-        function retrieveLogs(projectId) {
-            projectService.getLogs(projectId)
+        function loadLogs(url) {
+            projectService.getLogs(url)
                 .then(function(response) {
-                    projectVm.logs.data = response.data;
+                    projectVm.logs.data = _.concat(projectVm.logs.data, response.data);
                     projectVm.logs.next = response.links.next;
                 })
                 .catch(function(error) {

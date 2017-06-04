@@ -5,17 +5,17 @@
         .module('soteria-app')
         .service('projectService', projectService);
 
-    projectService.$inject = ['$http', '$log', 'CONFIG'];
+    projectService.$inject = ['$http', '$log'];
 
-    function projectService($http, $log, CONFIG) {
+    function projectService($http, $log) {
         var service = {
             getLogs: getLogs
         };
 
         return service;
 
-        function getLogs(projectId) {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/' + projectId + '/logs')
+        function getLogs(url) {
+            return $http.get(url)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {

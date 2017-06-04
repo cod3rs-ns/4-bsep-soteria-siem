@@ -75,7 +75,7 @@ angular
                 }
             })
             .state('project', {
-                url: "/project",
+                url: "/project/:id",
                 data: {
                     pageTitle: "Soteria | Project details"
                 },
