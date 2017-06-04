@@ -1,6 +1,6 @@
 package bsep.sw.security;
 
-import bsep.sw.util.HttpHeaders;
+import bsep.sw.util.HttpHeadersUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.log4j.Logger;
@@ -38,7 +38,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        String authToken = httpRequest.getHeader(HttpHeaders.X_AUTH_TOKEN.getName());
+        String authToken = httpRequest.getHeader(HttpHeadersUtil.X_AUTH_TOKEN.getName());
 
         String username;
         try {
@@ -61,7 +61,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
             authToken = tokenUtils.refreshToken(claims);
             username = claims.getSubject();
-            httpResponse.setHeader(HttpHeaders.X_AUTH_REFRESHED.getName(), HttpHeaders.X_AUTH_REFRESHED.getValue());
+            httpResponse.setHeader(HttpHeadersUtil.X_AUTH_REFRESHED.getName(), HttpHeadersUtil.X_AUTH_REFRESHED.getValue());
 
             log.debug(String.format("Token refreshed for user: %s", username), ex);
         } catch (final Exception ex) {
@@ -76,7 +76,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
-        httpResponse.setHeader(HttpHeaders.X_AUTH_TOKEN.getName(), authToken);
+        httpResponse.setHeader(HttpHeadersUtil.X_AUTH_TOKEN.getName(), authToken);
         chain.doFilter(request, httpResponse);
     }
 }

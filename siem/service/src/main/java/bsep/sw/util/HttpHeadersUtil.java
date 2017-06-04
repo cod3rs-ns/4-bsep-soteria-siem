@@ -1,6 +1,6 @@
 package bsep.sw.util;
 
-public enum HttpHeaders {
+public enum HttpHeadersUtil {
 
     ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin", "*"),
     ACCESS_CONTROL_ALLOW_METHODS("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE"),
@@ -13,7 +13,7 @@ public enum HttpHeaders {
     private final String name;
     private final String value;
 
-    HttpHeaders(final String name, final String value) {
+    HttpHeadersUtil(final String name, final String value) {
         this.name = name;
         this.value = value;
     }
