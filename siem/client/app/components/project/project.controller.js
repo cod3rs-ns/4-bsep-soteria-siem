@@ -105,8 +105,9 @@
 
             projectService.addAgent(projectId, data)
                 .then(function(response) {
-                    // TODO Add agent to list if necessary
-                    $log.info(response.data);
+                    if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {
+                        projectVm.agents.data.push(response.data);
+                    }
                     // TODO Download with provided configuration
                 })
                 .catch(function(error) {

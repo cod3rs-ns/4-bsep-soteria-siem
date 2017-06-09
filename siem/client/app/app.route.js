@@ -16,7 +16,8 @@ angular
     'CONFIG', {
         'SERVICE_URL': 'http://localhost:9091/api',
         'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
-        'AUTH_TOKEN': 'X-Auth-Token'
+        'AUTH_TOKEN': 'X-Auth-Token',
+        'AGENTS_LIMIT': 6
     })
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
