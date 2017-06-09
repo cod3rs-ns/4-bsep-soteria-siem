@@ -73,13 +73,16 @@
                     <h3>Configure new agent</h3>
                 </div>
                 <div class="row">
-                    <div class="col-md-4 fa-logo">
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'WINDOWS_AGENT' }"
+                         ng-click="projectVm.choosePlatform('WINDOWS_AGENT')">
                         <i class="fa fa-windows"></i>
                     </div>
-                    <div class="col-md-4 fa-logo">
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'LINUX_AGENT' }"
+                         ng-click="projectVm.choosePlatform('LINUX_AGENT')">
                         <i class="fa fa-linux"></i>
                     </div>
-                    <div class="col-md-4 fa-logo">
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'OSX_AGENT' }"
+                         ng-click="projectVm.choosePlatform('OSX_AGENT')">
                         <i class="fa fa-apple"></i>
                     </div>
                 </div>
@@ -95,6 +98,27 @@
                                     </div>
                                     <div class="panel-collapse collapse in">
                                         <div class="panel-body">
+                                            <div class="form-group">
+                                                <label for="agent-name" class="col-sm-3 control-label">Name:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-name" id="agent-name" placeholder="Agent name"
+                                                           ng-model="projectVm.config.name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent-name" class="col-sm-3 control-label">Description:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-description" id="agent-description" placeholder="Agent description"
+                                                           ng-model="projectVm.config.description">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent-name" class="col-sm-3 control-label">Version:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-description" id="agent-version" placeholder="Agent version"
+                                                           ng-model="projectVm.config.version">
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="default-log-level" class="col-sm-6 control-label">Choose default level:</label>
                                                 <div class="col-sm-6">
@@ -121,7 +145,7 @@
                                                 </label>
                                                 <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
                                                     <input type="checkbox">
-                                                    <span>Some logs</span>
+                                                    <span>Firewall logs</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -175,7 +199,7 @@
                             </div>
                         </div>
                     </div>
-                    <button class="btn btn-lg btn-primary" type="button" style="width: 100%;">Get your agent!</button>
+                    <button class="btn btn-lg btn-primary" ng-click="projectVm.saveAgent();" type="button" style="width: 100%;">Get your agent!</button>
                 </div>
             </div>
         </div>

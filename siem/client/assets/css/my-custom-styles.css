@@ -78,3 +78,12 @@ dl.project-agent > dd {
   color: #555555;
   padding-top: 12px;
 }
+
+.fa-logo:hover {
+  color: #1D92AF;
+  cursor: pointer;
+}
+
+.background-dark {
+  color: #1D92AF;
+}
