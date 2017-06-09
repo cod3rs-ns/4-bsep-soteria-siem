@@ -7,13 +7,11 @@ public class ProjectResponseAttributes extends ResourceResponseAttributes {
 
     public String name;
     public String description;
-    public Integer membersCount;
 
     public static ProjectResponseAttributes fromDomain(final Project project) {
         final ProjectResponseAttributes attributes = new ProjectResponseAttributes();
         attributes.description = project.getDescription();
         attributes.name = project.getName();
-        attributes.membersCount = project.getMembers().size();
         return attributes;
     }
 

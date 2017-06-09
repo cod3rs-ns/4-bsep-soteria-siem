@@ -31,7 +31,7 @@
                 <div class="widget-footer">
                     <em> Number of collaborators </em>
                     <div class="pull-right">
-                        <span class="badge element-bg-color-green">{{project.attributes.membersCount}}</span>
+                        <span class="badge element-bg-color-green">{{project.relationships.members.data.length}}</span>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                 <div class="widget-footer">
                     <em> Number of collaborators </em>
                     <div class="pull-right">
-                        <span class="badge element-bg-color-green">{{project.attributes.membersCount}}</span>
+                        <span class="badge element-bg-color-green">{{project.relationships.members.data.length}}</span>
                     </div>
                 </div>
             </div>
