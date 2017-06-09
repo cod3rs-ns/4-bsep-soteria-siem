@@ -24,6 +24,9 @@
         };
 
         projectVm.config = {
+            'name': '',
+            'description': '',
+            'version': '1.0.0',
             'os': null,
             'defaultLevel': null,
             'paths': [],
@@ -36,6 +39,9 @@
         projectVm.loadInitialAgents = loadAgents;
         projectVm.nextAgents = loadAgents;
         projectVm.prevAgents = loadAgents;
+
+        projectVm.choosePlatform = chooseAgentPlatform;
+        projectVm.saveAgent = saveAgent;
 
         projectVm.addField = addField;
 
@@ -79,6 +85,38 @@
                 .catch(function(error) {
                     $log.error(error);
                 });
+        }
+
+        function saveAgent() {
+            var projectId = $stateParams.id;
+            var data = {
+                'type': 'agents',
+                'attributes': {
+                    'name': projectVm.config.name,
+                    'description': projectVm.config.description,
+                    'agent_version': projectVm.config.version,
+                    'agent_type': projectVm.config.os
+                },
+                'relationships': {
+                    'type': 'projects',
+                    'id': projectId
+                }
+            };
+
+            projectService.addAgent(projectId, data)
+                .then(function(response) {
+                    if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {
+                        projectVm.agents.data.push(response.data);
+                    }
+                    // TODO Download with provided configuration
+                })
+                .catch(function(error) {
+                    $log.error(error);
+                });
+        }
+
+        function chooseAgentPlatform(platform) {
+            projectVm.config.os = platform;
         }
 
         function addField(group) {

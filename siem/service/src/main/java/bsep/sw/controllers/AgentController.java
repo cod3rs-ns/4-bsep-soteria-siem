@@ -6,6 +6,7 @@ import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.agent.AgentCollectionResponse;
+import bsep.sw.hateoas.agent.AgentRequest;
 import bsep.sw.hateoas.agent.AgentResponse;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AgentService;
@@ -68,10 +69,28 @@ public class AgentController extends StandardResponses {
                 .body(AgentCollectionResponse.fromDomain(agents, new PaginationLinks(self, next, prev)));
     }
 
+    @PostMapping("/projects/{projectId}/agents")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> addAgentToProject(@Valid @PathVariable final Long projectId, @RequestBody final AgentRequest request) {
+        final User user = securityUtil.getLoggedUser();
+
+        final Project project = projectService.findByMembershipAndId(user, projectId);
+
+        if (project == null) {
+            return notFound("project");
+        }
+
+        final Agent agent = agentService.save(request.toDomain().project(project));
+        return ResponseEntity
+                .ok()
+                .body(AgentResponse.fromDomain(agent));
+    }
+
     @GetMapping("/projects/{projectId}/agents/{agentId}")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public ResponseEntity<?> getProjectsAlarms(@Valid @PathVariable final Long projectId,
+    public ResponseEntity<?> getProjectAgent(@Valid @PathVariable final Long projectId,
                                                @Valid @PathVariable final Long agentId) {
         final User user = securityUtil.getLoggedUser();
 

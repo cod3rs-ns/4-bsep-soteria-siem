@@ -633,6 +633,63 @@
             "X-Auth-Token": []
           }
         ]
+      },
+      "post": {
+        "summary": "Create agent",
+        "description": "Create agent for specific project",
+        "operationId": "addAgentToProject",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "definition",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAgentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created agent",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
       }
     },
     "/projects/{project_id}/agents/{agent_id}": {
@@ -1302,6 +1359,82 @@
         "data"
       ]
     },
+    "CreateAgentRequest": {
+      "title": "Create agent request",
+      "description": "Request containing data about Agent entity",
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/AgentRequestData"
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "AgentRequestData": {
+      "title": "Agent request data",
+      "description": "Agent request data object",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "agents"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Agent's attributes",
+          "description": "Agent's attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Agent's name",
+              "example": "Agent 007"
+            },
+            "agent_type": {
+              "type": "string",
+              "enum": [
+                "LINUX_AGENT",
+                "OSX_AGENT",
+                "WINDOWS_AGENT"
+              ],
+              "description": "Type of agent",
+              "example": true
+            },
+            "description": {
+              "type": "string",
+              "description": "Additional agent's description",
+              "example": "This is alarm placed on server number 42"
+            },
+            "agent_version": {
+              "type": "string",
+              "description": "Version of agent script",
+              "example": "v1.0.1b"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "agent-type",
+            "agent-version"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/RequestRelationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "attributes",
+        "relationships"
+      ]
+    },
     "AgentResponse": {
       "title": "Agent Response",
       "description": "Response containing data about Agent entity",
@@ -1448,6 +1581,27 @@
       "required": [
         "links",
         "data"
+      ]
+    },
+    "RequestRelationship": {
+      "title": "Request relationship",
+      "description": "Relationships with other entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Entity's unique identifier",
+          "example": "21"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "projects"
+        }
+      },
+      "required": [
+        "type",
+        "id"
       ]
     },
     "CollectionRelationship": {

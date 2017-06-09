@@ -10,7 +10,7 @@ public class AgentResponseData extends ResourceResponseData {
     public static AgentResponseData fromDomain(final Agent agent) {
         final AgentResponseData data = new AgentResponseData();
         data.id = agent.getId();
-        data.type = ResourceTypes.ALARM_TYPE;
+        data.type = ResourceTypes.AGENT_TYPE;
         data.attributes = AgentResponseAttributes.fromDomain(agent);
         data.relationships = AgentResponseRelationships.fromDomain(agent);
         return data;

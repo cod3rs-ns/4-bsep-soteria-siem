@@ -11,7 +11,8 @@
         var service = {
             getProjectById: getProjectById,
             getLogs: getLogs,
-            getAgents: getAgents
+            getAgents: getAgents,
+            addAgent: addAgent
         };
 
         return service;
@@ -38,6 +39,16 @@
 
         function getAgents(url) {
             return $http.get(url)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function addAgent(id, agentData) {
+            return $http.post(CONFIG.SERVICE_URL + '/projects/' + id + '/agents', { 'data': agentData })
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
