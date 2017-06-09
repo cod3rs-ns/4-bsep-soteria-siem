@@ -90,7 +90,7 @@ public class AgentController extends StandardResponses {
     @GetMapping("/projects/{projectId}/agents/{agentId}")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public ResponseEntity<?> getProjectsAlarms(@Valid @PathVariable final Long projectId,
+    public ResponseEntity<?> getProjectAgent(@Valid @PathVariable final Long projectId,
                                                @Valid @PathVariable final Long agentId) {
         final User user = securityUtil.getLoggedUser();
 
