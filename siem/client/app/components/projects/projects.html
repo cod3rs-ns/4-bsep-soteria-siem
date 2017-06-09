@@ -8,7 +8,7 @@
                 <em>owned by you</em>
             </div>
 
-            <div class="widget" ng-repeat="project in projectsVm.ownedProjects">
+            <div class="widget" ng-repeat="project in projectsVm.ownedProjects.data">
                 <div class="widget-header">
                     <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
@@ -36,9 +36,9 @@
                 </div>
             </div>
 
-            <ul class="pager">
-                <li><a>&larr; Previous</a></li>
-                <li><a>Next &rarr;</a></li>
+            <ul class="pager" ng-if="projectsVm.ownedProjects.data.length > 0">
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.prev == null }"><a ng-click="projectsVm.prevOwnedProjects(projectsVm.ownedProjects.prev);">&larr; Previous</a></li>
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.next == null }"><a ng-click="projectsVm.nextOwnedProjects(projectsVm.ownedProjects.next);">Next &rarr;</a></li>
             </ul>
         </div>
 
@@ -55,7 +55,7 @@
                 <em>as operator</em>
             </div>
 
-            <div class="widget" ng-repeat="project in projectsVm.membershipProjects">
+            <div class="widget" ng-repeat="project in projectsVm.membershipProjects.data">
                 <div class="widget-header">
                     <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
@@ -83,9 +83,9 @@
                 </div>
             </div>
 
-            <ul class="pager">
-                <li><a>&larr; Previous</a></li>
-                <li><a>Next &rarr;</a></li>
+            <ul class="pager" ng-if="projectsVm.membershipProjects.data.length > 0">
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.prev == null }"><a ng-click="projectsVm.prevMembershipProjects(projectsVm.membershipProjects.prev);">&larr; Previous</a></li>
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.next == null }"><a ng-click="projectsVm.nextMembershipProjects(projectsVm.membershipProjects.next);">Next &rarr;</a></li>
             </ul>
         </div>
     </div>

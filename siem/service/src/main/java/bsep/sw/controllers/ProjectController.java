@@ -4,12 +4,15 @@ import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.project.ProjectCollectionResponse;
-import bsep.sw.hateoas.project.request.ProjectRequest;
 import bsep.sw.hateoas.project.ProjectResponse;
+import bsep.sw.hateoas.project.request.ProjectRequest;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -53,37 +55,44 @@ public class ProjectController extends StandardResponses {
     @GetMapping("/projects/owned")
     @ResponseBody
     @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
-    public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request) {
+    public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request,
+                                              @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
+                                              @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit) {
         final User user = securityUtil.getLoggedUser();
-        final List<Project> projects = projectService.findOwned(user);
+
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Page<Project> page = projectService.findOwned(user, pageable);
+
+        final String baseUrl = request.getRequestURL().toString();
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
+        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
 
         return ResponseEntity
                 .ok()
-                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+                .body(ProjectCollectionResponse.fromDomain(page.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @GetMapping("/projects/member-of")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request) {
+    public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request,
+                                                   @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
+                                                   @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit,
+                                                   @RequestParam(value = "filter[owner]", required = false, defaultValue = "false") final Boolean owner) {
         final User user = securityUtil.getLoggedUser();
-        final List<Project> projects = projectService.findAllByMembership(user);
+
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Page<Project> page = projectService.findAllByMembership(user, owner, pageable);
+
+        final String baseUrl = request.getRequestURL().toString();
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
+        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
 
         return ResponseEntity
                 .ok()
-                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
-    }
-
-    @GetMapping("/projects/only-member-of")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public ResponseEntity<?> getOnlyMembershipProjects(final HttpServletRequest request) {
-        final User user = securityUtil.getLoggedUser();
-        final List<Project> projects = projectService.findAllByMembershipWithoutOwned(user);
-
-        return ResponseEntity
-                .ok()
-                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+                .body(ProjectCollectionResponse.fromDomain(page.getContent(), new PaginationLinks(self, next, prev)));
     }
 
 
@@ -104,7 +113,7 @@ public class ProjectController extends StandardResponses {
 
     @DeleteMapping("/projects/{projectId}")
     @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
-    public ResponseEntity<?> deleteProject(@Valid @PathVariable Long projectId) {
+    public ResponseEntity<?> deleteProject(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
         if (!projectService.delete(user, projectId)) {

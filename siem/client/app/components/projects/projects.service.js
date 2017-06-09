@@ -5,9 +5,9 @@
         .module('soteria-app')
         .service('projectsService', projectsService);
 
-    projectsService.$inject = ['$http', '$log', 'CONFIG'];
+    projectsService.$inject = ['$http', '$log'];
 
-    function projectsService($http, $log, CONFIG) {
+    function projectsService($http, $log) {
         var service = {
           getOwnedProjects: getOwnedProjects,
           getMembershipProjects: getMembershipProjects
@@ -15,8 +15,8 @@
 
         return service;
 
-        function getOwnedProjects() {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/owned')
+        function getOwnedProjects(url) {
+            return $http.get(url)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
@@ -25,8 +25,8 @@
                 });
         };
 
-        function getMembershipProjects() {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/only-member-of')
+        function getMembershipProjects(url) {
+            return $http.get(url)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
