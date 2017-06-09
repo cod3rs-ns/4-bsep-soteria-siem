@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     angular
@@ -12,7 +12,8 @@
             getProjectById: getProjectById,
             getLogs: getLogs,
             getAgents: getAgents,
-            addAgent: addAgent
+            addAgent: addAgent,
+            createProject: createProject
         };
 
         return service;
@@ -49,6 +50,16 @@
 
         function addAgent(id, agentData) {
             return $http.post(CONFIG.SERVICE_URL + '/projects/' + id + '/agents', { 'data': agentData })
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function createProject(project) {
+            return $http.post(CONFIG.SERVICE_URL + '/projects', { 'data': project })
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {

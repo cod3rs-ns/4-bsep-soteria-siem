@@ -6,6 +6,8 @@
             <div class="main-header" style="margin-top: 20px">
                 <h2>Your projects</h2>
                 <em>owned by you</em>
+                
+                <button type="button" class="btn btn-success pull-right" ui-sref="create-project"><i class="fa fa-plus-square"></i> New project </button>                
             </div>
 
             <div class="widget" ng-repeat="project in projectsVm.ownedProjects.data">
