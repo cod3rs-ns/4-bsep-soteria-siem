@@ -45,6 +45,7 @@ public class User extends EntityMeta {
 
     @NotNull
     @Column(name = "u_role", nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Column(name = "u_image")
