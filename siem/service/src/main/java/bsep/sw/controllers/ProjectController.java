@@ -74,6 +74,19 @@ public class ProjectController extends StandardResponses {
                 .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
     }
 
+    @GetMapping("/projects/only-member-of")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> getOnlyMembershipProjects(final HttpServletRequest request) {
+        final User user = securityUtil.getLoggedUser();
+        final List<Project> projects = projectService.findAllByMembershipWithoutOwned(user);
+
+        return ResponseEntity
+                .ok()
+                .body(ProjectCollectionResponse.fromDomain(projects, new PaginationLinks(request.getRequestURL().toString())));
+    }
+
+
     @GetMapping("/projects/{projectId}")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")

@@ -8,9 +8,9 @@
                 <em>owned by you</em>
             </div>
 
-            <div class="widget" ng-repeat="j in [1,2]">
+            <div class="widget" ng-repeat="project in projectsVm.ownedProjects">
                 <div class="widget-header">
-                    <h3><i class="fa fa-newspaper-o"></i> Project name </h3>
+                    <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
                         <a href="#" title="Preview" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
                         <a href="#" title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-md-8">
                             <p>
-                                Description about project
+                                {{project.attributes.description}}
                             </p>
                         </div>
                     </div>
@@ -55,9 +55,9 @@
                 <em>as operator</em>
             </div>
 
-            <div class="widget" ng-repeat="j in [1,2,3]">
+            <div class="widget" ng-repeat="project in projectsVm.membershipProjects">
                 <div class="widget-header">
-                    <h3><i class="fa fa-newspaper-o"></i> Project name </h3>
+                    <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
                         <a href="#" title="Preview" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
                         <a href="#" title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-md-8">
                             <p>
-                                Description about project
+                                {{project.attributes.description}}
                             </p>
                         </div>
                     </div>

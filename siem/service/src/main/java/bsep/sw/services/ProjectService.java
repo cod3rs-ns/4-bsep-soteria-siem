@@ -60,4 +60,9 @@ public class ProjectService {
     public List<Project> findAllByMembership(final User user) {
         return repository.findProjectsByMembersContaining(user);
     }
+
+    public List<Project> findAllByMembershipWithoutOwned(final User user) {
+        return repository.findProjectsByMembersContainingAndOwnerNot(user, user);
+    }
+
 }
