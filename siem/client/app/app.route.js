@@ -89,6 +89,19 @@ angular
                         controllerAs: "projectVm"
                     }
                 }
+            })
+            .state('create-project', {
+                url: "/create-project",
+                data: {
+                    pageTitle: "Soteria | Create project"
+                },
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/project/project-creation.html",
+                        controller: "ProjectCreationController",
+                        controllerAs: "projectCreationVm"
+                    }
+                }
             });
 
         
