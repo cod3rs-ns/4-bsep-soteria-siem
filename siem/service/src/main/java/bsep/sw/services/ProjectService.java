@@ -53,11 +53,14 @@ public class ProjectService {
         return repository.findProjectsByMembersContainingAndId(user, id);
     }
 
-    public List<Project> findOwned(final User user) {
-        return repository.findProjectsByOwner(user);
+    public Page<Project> findOwned(final User user, final Pageable pageable) {
+        return repository.findProjectsByOwner(user, pageable);
     }
 
-    public List<Project> findAllByMembership(final User user) {
-        return repository.findProjectsByMembersContaining(user);
+    public Page<Project> findAllByMembership(final User user, final Boolean owner, final Pageable pageable) {
+        if (owner) {
+            return repository.findProjectsByMembersContaining(user, pageable);
+        }
+        return repository.findProjectsByMembersContainingAndOwnerNot(user, user, pageable);
     }
 }
