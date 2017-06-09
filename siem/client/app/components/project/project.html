@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-lg-6">
             <h2>
-                Project name
+                {{projectVm.info.attributes.name}}
             </h2>
         </div>
         <div class="col-lg-6">
@@ -37,64 +37,33 @@
                 </div>
                 <div class="widget-content">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-4" ng-repeat="agent in projectVm.agents.data">
                             <div class="widget quick-note-saved">
                                 <div class="widget-header">
-                                    <h3>Windows Agent</h3>
+                                    <h3>{{agent.attributes["name"]}}</h3>
                                 </div>
                                 <div class="widget-content">
                                     <dl class="dl-horizontal project-agent">
+                                        <dt>Type:</dt>
+                                        <dd>{{agent.attributes["agent-type"]}}</dd>
+
                                         <dt>Created at:</dt>
-                                        <dd>May 23, 2015</dd>
+                                        <dd>{{agent.meta["created-at"]}}</dd>
 
                                         <dt>Description:</dt>
-                                        <dd>This is simple agent blah blah...</dd>
+                                        <dd>{{agent.attributes["description"]}}</dd>
 
-                                        <dt>Another field:</dt>
-                                        <dd>Some field and</dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="widget quick-note-saved">
-                                <div class="widget-header">
-                                    <h3>OSX Agent</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <dl class="dl-horizontal project-agent">
-                                        <dt>Created at:</dt>
-                                        <dd>May 23, 2015</dd>
-
-                                        <dt>Description:</dt>
-                                        <dd>This is simple agent blah blah...</dd>
-
-                                        <dt>Another field:</dt>
-                                        <dd>Some field and</dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="widget quick-note-saved">
-                                <div class="widget-header">
-                                    <h3>Linux Agent</h3>
-                                </div>
-                                <div class="widget-content">
-                                    <dl class="dl-horizontal project-agent">
-                                        <dt>Created at:</dt>
-                                        <dd>May 23, 2015</dd>
-
-                                        <dt>Description:</dt>
-                                        <dd>This is simple agent blah blah...</dd>
-
-                                        <dt>Another field:</dt>
-                                        <dd>Some field and</dd>
+                                        <dt>Version:</dt>
+                                        <dd>{{agent.attributes["agent-version"]}}</dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <ul class="pager">
+                        <li ng-class="{ 'disabled': projectVm.agents.prev == null }"><a ng-click="projectVm.prevAgents(projectVm.agents.prev);">&larr; Previous</a></li>
+                        <li ng-class="{ 'disabled': projectVm.agents.next == null }"><a ng-click="projectVm.nextAgents(projectVm.agents.next);">Next &rarr;</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

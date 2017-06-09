@@ -5,14 +5,26 @@
         .module('soteria-app')
         .service('projectService', projectService);
 
-    projectService.$inject = ['$http', '$log'];
+    projectService.$inject = ['CONFIG', '$http', '$log'];
 
-    function projectService($http, $log) {
+    function projectService(CONFIG, $http, $log) {
         var service = {
-            getLogs: getLogs
+            getProjectById: getProjectById,
+            getLogs: getLogs,
+            getAgents: getAgents
         };
 
         return service;
+
+        function getProjectById(id) {
+            return $http.get(CONFIG.SERVICE_URL + '/projects/' + id)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
 
         function getLogs(url) {
             return $http.get(url)
@@ -22,6 +34,16 @@
                     $log.warn(response.data.detail);
                     throw response.data.detail;
                 });
-        };
+        }
+
+        function getAgents(url) {
+            return $http.get(url)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
     }
 })();
