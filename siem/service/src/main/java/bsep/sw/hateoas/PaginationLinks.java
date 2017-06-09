@@ -30,6 +30,12 @@ public class PaginationLinks {
         this.next = next;
     }
 
+    public PaginationLinks(final String self, final String next, final String prev) {
+        this.self = self;
+        this.next = next;
+        this.prev = prev;
+    }
+
     public PaginationLinks(final String self, final String first, final String prev, final String next, final String last) {
         this.self = self;
         this.first = first;

@@ -12,6 +12,8 @@ import bsep.sw.services.AgentService;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +43,9 @@ public class AgentController extends StandardResponses {
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getProjectAgents(final HttpServletRequest request,
-                                              @Valid @PathVariable final Long projectId) {
+                                              @Valid @PathVariable final Long projectId,
+                                              @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
+                                              @RequestParam(value = "page[limit]", required = false, defaultValue = "6") final Integer limit) {
         final User user = securityUtil.getLoggedUser();
 
         final Project project = projectService.findByMembershipAndId(user, projectId);
@@ -50,10 +54,18 @@ public class AgentController extends StandardResponses {
             return notFound("project");
         }
 
-        final List<Agent> agents = agentService.findAllByProject(project);
+        final String baseUrl = request.getRequestURL().toString();
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
+        // FIXME 'next' should be 'null' if there's no data presented
+        final String next = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit);
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
+
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+
+        final List<Agent> agents = agentService.findAllByProject(project, pageable);
         return ResponseEntity
                 .ok()
-                .body(AgentCollectionResponse.fromDomain(agents, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AgentCollectionResponse.fromDomain(agents, new PaginationLinks(self, next, prev)));
     }
 
     @GetMapping("/projects/{projectId}/agents/{agentId}")

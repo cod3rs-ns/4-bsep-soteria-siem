@@ -40,8 +40,8 @@ public class AgentService {
         repository.delete(id);
     }
 
-    public List<Agent> findAllByProject(final Project project) {
-        return repository.findAgentsByProject(project);
+    public List<Agent> findAllByProject(final Project project, final Pageable pageable) {
+        return repository.findAgentsByProject(project, pageable);
     }
 
     public Agent findOneByProjectAndId(final Project project, final Long agentId) {
