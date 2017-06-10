@@ -2,6 +2,7 @@ package bsep.sw.services;
 
 import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Project;
+import bsep.sw.domain.User;
 import bsep.sw.repositories.AlarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -46,6 +47,10 @@ public class AlarmService {
 
     public Alarm findOneByProjectAndId(final Project project, final Long alarmId) {
         return repository.findAlarmByDefinitionProjectAndId(project, alarmId);
+    }
+
+    public Page<Alarm> findAllByUser(final User user, final Pageable pageable) {
+        return repository.findAlarmsByDefinition_Project_Members_Containing(user, pageable);
     }
 
 }
