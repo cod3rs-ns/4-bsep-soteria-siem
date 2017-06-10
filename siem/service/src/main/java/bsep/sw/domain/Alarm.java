@@ -30,6 +30,9 @@ public class Alarm extends EntityMeta {
     @JoinColumn(name = "al_definition_id")
     private AlarmDefinition definition;
 
+    @Column(name = "al_log_id")
+    private String logId;
+
     public String getMessage() {
         return message;
     }
@@ -93,6 +96,14 @@ public class Alarm extends EntityMeta {
     public Alarm definition(AlarmDefinition definition) {
         this.definition = definition;
         return this;
+    }
+
+    public String getLogId() {
+        return logId;
+    }
+
+    public void setLogId(final String logId) {
+        this.logId = logId;
     }
 
     @Override

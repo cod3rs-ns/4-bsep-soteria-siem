@@ -2,11 +2,13 @@ package bsep.sw.controllers;
 
 
 import bsep.sw.domain.Alarm;
+import bsep.sw.domain.Log;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.alarm.AlarmCollectionResponse;
 import bsep.sw.hateoas.alarm.AlarmResponse;
+import bsep.sw.repositories.LogsRepository;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
@@ -29,19 +31,19 @@ import java.util.List;
 public class AlarmController extends StandardResponses {
 
     private final AlarmService alarmService;
-    private final AlarmDefinitionService alarmDefinitionService;
     private final ProjectService projectService;
     private final UserSecurityUtil securityUtil;
+    private final LogsRepository logsRepository;
 
     @Autowired
     public AlarmController(final AlarmService alarmService,
-                           final AlarmDefinitionService alarmDefinitionService,
                            final ProjectService projectService,
-                           final UserSecurityUtil securityUtil) {
+                           final UserSecurityUtil securityUtil,
+                           final LogsRepository logsRepository) {
         this.alarmService = alarmService;
-        this.alarmDefinitionService = alarmDefinitionService;
         this.projectService = projectService;
         this.securityUtil = securityUtil;
+        this.logsRepository = logsRepository;
     }
 
     @GetMapping("/projects/{projectId}/alarms")
@@ -60,7 +62,7 @@ public class AlarmController extends StandardResponses {
         final List<Alarm> alarms = alarmService.findAllByProject(project);
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(alarms, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmCollectionResponse.fromDomain(logsRepository, alarms, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}/alarms/{alarmId}")
@@ -77,9 +79,10 @@ public class AlarmController extends StandardResponses {
         }
 
         final Alarm alarm = alarmService.findOneByProjectAndId(project, alarmId);
+        final Log log = logsRepository.findOne(alarm.getLogId());
         return ResponseEntity
                 .ok()
-                .body(AlarmResponse.fromDomain(alarm));
+                .body(AlarmResponse.fromDomain(alarm, log));
     }
 
     @GetMapping("/alarms")
@@ -100,6 +103,6 @@ public class AlarmController extends StandardResponses {
 
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(page.getContent(), new PaginationLinks(self, next, prev)));
+                .body(AlarmCollectionResponse.fromDomain(logsRepository, page.getContent(), new PaginationLinks(self, next, prev)));
     }
 }
