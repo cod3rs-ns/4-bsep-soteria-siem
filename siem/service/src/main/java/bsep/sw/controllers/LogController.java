@@ -2,6 +2,7 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
+import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
@@ -44,6 +45,16 @@ public class LogController {
         final PaginationLinks links = new PaginationLinks(self, next);
 
         return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project, pageable), links));
+    }
+
+    @GetMapping("/logs/{logId}")
+    public ResponseEntity<?> retrieveSingleLog(@PathVariable("logId") final String logId) {
+        final Log log = logs.findOne(logId);
+        if (log == null) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("not exists", "Log does not exists", String.format("Log with id %s does not exists", logId)));
+        }
+
+        return ResponseEntity.ok(LogResponse.fromDomain(log));
     }
 
     @PostMapping("/logs")
