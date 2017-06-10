@@ -1,0 +1,59 @@
+<div class="containter">
+    <div class="row">
+        <div class="col-md-7 col-md-offset-1">
+            <div class="table-responsive">
+                <table class="table colored-header datatable project-list">
+                    <thead>
+                        <tr>
+                            <th>Message</th>
+                            <th>Project name</th>
+                            <th>Created at</th>
+                            <th>Host</th>
+                            <th>Level</th>
+                            <th>Resolved by</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="alarm in alarmsVm.resolvedAlarms.data">
+                            <td>{{alarm.attributes.message}}</td>
+                            <td>{{alarm.attributes.project.attributes.name}}</td>
+                            <td>{{alarm.attributes.log.attributes.time | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td>{{alarm.attributes.log.attributes.info.host}}</td>
+                            <td>{{alarm.attributes.log.attributes.level}}</td>
+                            <td>{{alarm.attributes['resolved-by']}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <ul class="pager" ng-if="alarmsVm.resolvedAlarms.data.length > 0">
+                    <li ng-class="{ 'disabled': alarmsVm.resolvedAlarms.prev == null }"><a ng-click="alarmsVm.prevResolvedAlarms(alarmsVm.resolvedAlarms.prev);">&larr; Previous</a></li>
+                    <li ng-class="{ 'disabled': alarmsVm.resolvedAlarms.next == null }"><a ng-click="alarmsVm.nextResolvedAlarms(alarmsVm.resolvedAlarms.next);">Next &rarr;</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="widget widget-hide-header widget-reminder" ng-repeat="alarm in alarmsVm.notResolvedAlarms.data">
+                <div class="widget-header hide">
+                    <h3>SIEM's alarms</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="today-reminder">
+                        <h4 class="reminder-title">{{alarm.attributes.project.attributes.name}}</h4>
+                        <p class="reminder-time"><i class="fa fa-clock-o"></i> {{alarm.attributes.log.attributes.time | date: 'HH:mm:ss'}} </p>
+                        <p class="reminder-place">{{alarm.attributes.log.attributes.level}}</p>
+                        <em class="reminder-notes">{{alarm.attributes.message}}</em>
+                        <i class="fa fa-bell"></i>
+                        <hr class="dashed" />
+                        <div class="text-center">
+						    <button type="button" class="btn btn-small btn-primary"><i class="fa fa-check"></i> Resolve alarm!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <ul class="pager" ng-if="alarmsVm.notResolvedAlarms.data.length > 0">
+                <li ng-class="{ 'disabled': alarmsVm.notResolvedAlarms.prev == null }"><a ng-click="alarmsVm.prevNotResolvedAlarms(alarmsVm.notResolvedAlarms.prev);">&larr; Previous</a></li>
+                <li ng-class="{ 'disabled': alarmsVm.notResolvedAlarms.next == null }"><a ng-click="alarmsVm.nextNotResolvedAlarms(alarmsVm.notResolvedAlarms.next);">Next &rarr;</a></li>
+            </ul>
+        </div>
+    </div>

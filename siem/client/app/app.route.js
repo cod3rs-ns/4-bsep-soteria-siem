@@ -102,6 +102,19 @@ angular
                         controllerAs: "projectCreationVm"
                     }
                 }
+            })
+            .state('alarms', {
+                url: "/alarms",
+                data: {
+                    pageTitle: "Soteria | Alarms"
+                },
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/alarms/alarms.html",
+                        controller: "AlarmsController",
+                        controllerAs: "alarmsVm"
+                    }
+                }
             });
 
         

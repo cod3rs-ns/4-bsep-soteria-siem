@@ -10,7 +10,6 @@ import bsep.sw.hateoas.alarm.AlarmCollectionResponse;
 import bsep.sw.hateoas.alarm.AlarmResponse;
 import bsep.sw.repositories.LogsRepository;
 import bsep.sw.security.UserSecurityUtil;
-import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
@@ -90,16 +89,17 @@ public class AlarmController extends StandardResponses {
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getAlarmsResponsibleFor(final HttpServletRequest request,
                                                      @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
-                                                     @RequestParam(value = "page[limit]", required = false, defaultValue = "10") final Integer limit) {
+                                                     @RequestParam(value = "page[limit]", required = false, defaultValue = "10") final Integer limit,
+                                                     @RequestParam(value = "filter[resolved]", required = false, defaultValue = "true") final Boolean resolved) {
         final User user = securityUtil.getLoggedUser();
 
         final Pageable pageable = new PageRequest(offset / limit, limit);
-        final Page<Alarm> page = alarmService.findAllByUser(user, pageable);
+        final Page<Alarm> page = alarmService.findAllByUserAndStatus(user, resolved, pageable);
 
         final String baseUrl = request.getRequestURL().toString();
-        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
-        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
-        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, offset, limit, resolved);
+        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, limit + offset, limit, resolved) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, offset - limit, limit, resolved) : null;
 
         return ResponseEntity
                 .ok()

@@ -49,8 +49,8 @@ public class AlarmService {
         return repository.findAlarmByDefinitionProjectAndId(project, alarmId);
     }
 
-    public Page<Alarm> findAllByUser(final User user, final Pageable pageable) {
-        return repository.findAlarmsByDefinition_Project_Members_Containing(user, pageable);
+    public Page<Alarm> findAllByUserAndStatus(final User user, final Boolean resolved, final Pageable pageable) {
+        return repository.findAlarmsByDefinition_Project_Members_ContainingAndResolvedOrderByResolvedAtDesc(user, resolved, pageable);
     }
 
 }

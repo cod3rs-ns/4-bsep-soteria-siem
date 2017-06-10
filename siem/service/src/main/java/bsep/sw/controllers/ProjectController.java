@@ -86,9 +86,9 @@ public class ProjectController extends StandardResponses {
         final Page<Project> page = projectService.findAllByMembership(user, owner, pageable);
 
         final String baseUrl = request.getRequestURL().toString();
-        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
-        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
-        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d&filter[owner]=%b", baseUrl, offset, limit, owner);
+        final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[owner]=%b", baseUrl, limit + offset, limit, owner) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[owner]=%b", baseUrl, offset - limit, limit, owner) : null;
 
         return ResponseEntity
                 .ok()
