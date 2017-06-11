@@ -46,6 +46,9 @@ public class AlarmDefinition extends EntityMeta {
     @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY)
     private Set<Alarm> alarms = new HashSet<>(0);
 
+    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER)
+    private Set<SingleRule> singleRules = new HashSet<>(0);
+
     public String getName() {
         return name;
     }
@@ -147,6 +150,19 @@ public class AlarmDefinition extends EntityMeta {
 
     public AlarmDefinition alarms(Set<Alarm> alarms) {
         this.alarms = alarms;
+        return this;
+    }
+
+    public Set<SingleRule> getSingleRules() {
+        return singleRules;
+    }
+
+    public void setSingleRules(Set<SingleRule> singleRules) {
+        this.singleRules = singleRules;
+    }
+
+    public AlarmDefinition singleRules(Set<SingleRule> singleRules) {
+        this.singleRules = singleRules;
         return this;
     }
 

@@ -4,9 +4,9 @@ import bsep.sw.domain.Log;
 
 import java.util.function.Supplier;
 
-class LogFieldSupplier {
+public class FieldSupplier {
 
-    Supplier<String> getField(Log log, LogFieldTypes fieldType) {
+    public Supplier<String> getField(final Log log, final FieldType fieldType) {
         switch (fieldType) {
             case MESSAGE:
                 return log::getMessage;

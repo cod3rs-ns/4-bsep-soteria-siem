@@ -1,10 +1,9 @@
 package bsep.sw.controllers;
 
-import bsep.sw.rule_engine.SingleLogRule;
-import bsep.sw.domain.Alarm;
-import bsep.sw.domain.Log;
-import bsep.sw.domain.Project;
-import bsep.sw.domain.User;
+import bsep.sw.domain.*;
+import bsep.sw.rule_engine.FieldType;
+import bsep.sw.rule_engine.MethodType;
+import bsep.sw.rule_engine.rules.SingleLogRule;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
@@ -72,27 +71,21 @@ public class LogController {
         final Log log = request.toDomain()
                 .id(UUID.randomUUID().toString());
 
-        // Drools engine should return alarm that will be triggered
-        final Alarm dummyAlarm = new Alarm()
-                .message("Same user try to log 3 times in a row")
-                .resolved(false);
-
-        final Project project = projectService.findOne(log.getProject());
-        for (final User user : project.getMembers()) {
-            // Send notifications through socket
-            template.convertAndSend(
-                    "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, log, dummyAlarm));
-        }
-
+        // TODO setup this and read from DB
         RulesEngine rulesEngine = RulesEngineBuilder
                 .aNewRulesEngine()
                 .named("Test rules engine")
                 .withSilentMode(true)
                 .build();
 
-        SingleLogRule logRule = new SingleLogRule();
-        logRule.underRule = log;
+        final AlarmDefinition ad = new AlarmDefinition()
+                .description("Some def")
+                .name("Some name");
+
+        ad.getSingleRules().add(new SingleRule().field(FieldType.LEVEL).method(MethodType.EQUALS).value("eRrOr"));
+        ad.getSingleRules().add(new SingleRule().field(FieldType.PID).method(MethodType.STARTS_WITH).value("P"));
+
+        SingleLogRule logRule = new SingleLogRule(log, ad, projectService, template);
         rulesEngine.registerRule(logRule);
         rulesEngine.fireRules();
 

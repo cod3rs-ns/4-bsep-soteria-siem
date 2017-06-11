@@ -5,18 +5,20 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.function.BiFunction;
 
 
-class StringMethodSupplier {
+public class RuleMethodSupplier {
 
-    BiFunction<String, String, Boolean> getMethod(StringRuleTypes methodType) {
+    public BiFunction<String, String, Boolean> getMethod(final MethodType methodType) {
         switch (methodType) {
             case CONTAINS:
                 return StringUtils::containsIgnoreCase;
             case EQUALS:
                 return StringUtils::equalsIgnoreCase;
-            case ENDSWITH:
+            case ENDS_WITH:
                 return StringUtils::endsWithIgnoreCase;
-            case STARTSWITH:
+            case STARTS_WITH:
                 return StringUtils::startsWithIgnoreCase;
+            case REGEX: // TODO
+                return null;
             default:
                 return null;
         }
