@@ -5,9 +5,9 @@
         .module('soteria-app')
         .controller('ProjectsController', ProjectsController);
 
-    ProjectsController.$inject = ['projectsService', 'CONFIG'];
+    ProjectsController.$inject = ['projectsService', 'CONFIG', '$log'];
 
-    function ProjectsController(projectsService, CONFIG) {
+    function ProjectsController(projectsService, CONFIG, $log) {
         var projectsVm = this;
         
         projectsVm.ownedProjects = {
