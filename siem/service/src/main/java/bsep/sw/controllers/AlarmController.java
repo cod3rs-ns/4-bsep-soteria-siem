@@ -5,6 +5,7 @@ import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
+import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.alarm.AlarmCollectionResponse;
 import bsep.sw.hateoas.alarm.AlarmResponse;
@@ -13,6 +14,7 @@ import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -104,5 +106,25 @@ public class AlarmController extends StandardResponses {
         return ResponseEntity
                 .ok()
                 .body(AlarmCollectionResponse.fromDomain(logsRepository, page.getContent(), new PaginationLinks(self, next, prev)));
+    }
+
+    @PutMapping("/alarms/{alarmId}/resolve")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> resolveAlarm(@Valid @PathVariable final Long alarmId) {
+        final User user = securityUtil.getLoggedUser();
+
+        final Alarm alarm = alarmService.findOne(alarmId);
+        if (alarm == null) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("404", "Not found", String.format("Alarm with id: %s does not exist", alarmId)));
+        }
+
+        alarm.setResolved(true);
+        alarm.setResolvedAt(new DateTime());
+        alarm.setResolvedBy(user.getFirstName() + " " + user.getLastName());
+
+        return ResponseEntity
+                .ok()
+                .body(AlarmResponse.fromDomain(alarmService.save(alarm), logsRepository.findOne(alarm.getLogId())));
     }
 }

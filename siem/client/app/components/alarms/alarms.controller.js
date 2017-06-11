@@ -22,10 +22,11 @@
             "prev": null
         }
 
-        alarmsVm.prevResolvedAlarms = getResolvedAlarms
-        alarmsVm.nextResolvedAlarms = getResolvedAlarms
-        alarmsVm.prevNotResolvedAlarms = getNotResolvedAlarms
-        alarmsVm.nextNotResolvedAlarms = getNotResolvedAlarms
+        alarmsVm.prevResolvedAlarms = getResolvedAlarms;
+        alarmsVm.nextResolvedAlarms = getResolvedAlarms;
+        alarmsVm.prevNotResolvedAlarms = getNotResolvedAlarms;
+        alarmsVm.nextNotResolvedAlarms = getNotResolvedAlarms;
+        alarmsVm.resolveAlarm = resolveAlarm;
 
         activate();
 
@@ -65,6 +66,16 @@
 
                     alarms.next = response.links.next;
                     alarms.prev = response.links.prev;
+                })
+                .catch(function (error) {
+                    $log.error(error);
+                });
+        }
+
+        function resolveAlarm(alarmId) {
+            alarmsService.resolveAlarm(alarmId)
+                .then(function (response) {
+                    activate();
                 })
                 .catch(function (error) {
                     $log.error(error);
