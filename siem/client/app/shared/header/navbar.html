@@ -13,15 +13,25 @@
 			<div class="pull-right right">
 				<!-- top-bar-right -->
 				<div class="top-bar-right">
-					<a ui-sref="projects">
+					<a ui-sref="projects" ng-if="!(headerVm.$storage.role === 'guest')">
                         <button type="button" id="nav-projects" class="btn btn-link">Projects</button>
                     </a>
-					<a ui-sref="project({id: 1})">
-                        <button type="button" id="nav-project" class="btn btn-link">Project</button>
+					<a ui-sref="alarms" ng-if="!(headerVm.$storage.role === 'guest')">
+                        <button type="button" id="nav-projects" class="btn btn-link">Alarms</button>
                     </a>
-					<button type="button" id="global-volume" class="btn btn-link btn-global-volume"><i class="fa"></i>
-                    </button>
-					<div class="notifications">
+					<a ui-sref="create-project" ng-if="!(headerVm.$storage.role === 'guest')">
+                        <button type="button" id="nav-projects" class="btn btn-link">Create project</button>
+                    </a>
+					<a  ng-if="!(headerVm.$storage.role === 'guest')">
+                        <button type="button" id="nav-projects" class="btn btn-link">Reports</button>
+                    </a>
+					<a ui-sref="login" ng-if="(headerVm.$storage.role === 'guest')">
+                        <button type="button" id="nav-login" class="btn btn-link">Login</button>
+                    </a>
+					<a ui-sref="register" ng-if="(headerVm.$storage.role === 'guest')">
+                    	<button type="button" id="nav-register" class="btn btn-link">Register</button>
+                	</a>
+					<div class="notifications" ng-if="!(headerVm.$storage.role === 'guest')">
 						<ul>
 							<li class="notification-item general" ng-click="headerVm.resetNotifications();">
 								<div class="btn-group">
@@ -31,7 +41,7 @@
 										<span class="circle"></span>
 									</a>
 									<ul class="dropdown-menu" role="menu">
-										<li  ng-if="headerVm.notifications.length != 0" class="notification-header">
+										<li ng-if="headerVm.notifications.length != 0" class="notification-header">
 											<em>You have {{headerVm.notificationsCount}} notifications</em>
 										</li>
 										<li ng-repeat="notification in headerVm.notifications">
@@ -47,11 +57,11 @@
 						</ul>
 					</div>
 					<!-- logged user and the menu -->
-					<div class="logged-user">
+					<div class="logged-user" ng-if="!(headerVm.$storage.role === 'guest')">
 						<div class="btn-group">
-							<a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                                <img src="../../../assets/images/user-avatar.png" alt="User Avatar"/>
-                                <span class="name">Sergio Ramos</span> <span class="caret"></span>
+							<a href="javascript:void(0);" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                                <img ng-src="{{headerVm.loggedInUser.attributes.imagePath}}" alt="User Avatar" style="height:25px; width:25px;"/>
+                                <span class="name">&nbsp;{{headerVm.$storage.user}}</span> <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
 								<li>
@@ -61,13 +71,7 @@
                                     </a>
 								</li>
 								<li>
-									<a href="#">
-                                        <i class="fa fa-cog"></i>
-                                        <span class="text">Settings</span>
-                                    </a>
-								</li>
-								<li>
-									<a href="#">
+									<a href="javascript:void(0);" ng-click="headerVm.logout();">
                                         <i class="fa fa-power-off"></i>
                                         <span class="text">Logout</span>
                                     </a>
