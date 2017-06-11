@@ -116,9 +116,17 @@ angular
                         controllerAs: "alarmsVm"
                     }
                 }
+            })
+            .state('pageNotFound', {
+                url: '/page-not-found',
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/error-templates/page-not-found.html",
+                    }
+                }
             });
 
-        
+
         $httpProvider.interceptors.push(['$q', '$location', '$localStorage', 'jwtHelper', '_', function ($q, $location, $localStorage, jwtHelper, _) {
             return {
                 // Set Header to Request if user is logged
@@ -141,8 +149,18 @@ angular
                         $localStorage.role = tokenPayload.role.authority;
                     }
                     return response;
+                },
+
+                // When try to get Unauthorized or Forbidden page
+                'responseError': function (response) {
+                    // If you get Unauthorized on login page you should just write message
+                    if ("/login" !== $location.path()) {
+                        if (response.status === 401 || response.status === 403) {
+                            $location.path('/page-not-found');
+                        }
+                        return $q.reject(response);
+                    }
                 }
             };
         }]);
     });
-    
