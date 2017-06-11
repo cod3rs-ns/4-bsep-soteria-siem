@@ -1,15 +1,15 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('soteria-app')
         .controller('LoginController', LoginController);
 
-    LoginController.$inject = ['loginService', '$log', '$state', '$http', '$localStorage', 'jwtHelper', 'CONFIG', '_'];
+    LoginController.$inject = ['$scope', 'loginService', '$log', '$state', '$http', '$localStorage', 'jwtHelper', 'CONFIG', '_'];
 
-    function LoginController(loginService, $log, $state, $http, $localStorage, jwtHelper, CONFIG, _) {
+    function LoginController($scope, loginService, $log, $state, $http, $localStorage, jwtHelper, CONFIG, _) {
         var loginVm = this;
-        
+
         loginVm.credentials = {};
         loginVm.badCredentials = false;
 
@@ -17,7 +17,7 @@
 
         function login() {
             loginService.auth(loginVm.credentials.username, loginVm.credentials.password)
-                .then(function(response) {
+                .then(function (response) {
                     var token = response.data.attributes.accessToken;
                     var tokenPayload = jwtHelper.decodeToken(token);
 
@@ -27,16 +27,17 @@
                         $localStorage.token = token;
                         $localStorage.user = tokenPayload.sub;
                         $localStorage.role = tokenPayload.role.authority;
-
+                        $scope.$emit('userLoggedIn', $localStorage.user)
+    
                         $state.go('home');
                     }
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     if (error === "Bad credentials") {
                         loginVm.credentials = {}
                         loginVm.badCredentials = true;
                     }
                 });
-        }     
+        }
     }
 })();

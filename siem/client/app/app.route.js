@@ -4,7 +4,8 @@ angular
         'angular-jwt',
         'ngStorage',
         'ngToast',
-        'ngStomp'
+        'ngStomp',
+        'angularMoment'
     ])
     .factory('_', ['$window',
         function ($window) {
