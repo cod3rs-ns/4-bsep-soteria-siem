@@ -146,7 +146,6 @@ public class ProjectController extends StandardResponses {
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> addCollaborator(@Valid @PathVariable final Long projectId, @Valid @PathVariable final Long userId) {
-
         final User user = securityUtil.getLoggedUser();
 
         final Project project = projectService.findByMembershipAndId(user, projectId);

@@ -14,14 +14,16 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a href="#" title="Preview" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
-                        <a href="#" title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
+                        <a data-toggle="modal" data-target="#projectCollaborators"
+                           ng-click="projectsVm.setDialogId(project.id);" title="Collaborators"
+                           class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
                     </div>
                 </div>
                 <div class="widget-content text-center">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px" class="img-circle" alt="Avatar" />
+                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px"
+                                 class="img-circle" alt="Avatar"/>
                         </div>
                         <div class="col-md-8">
                             <p>
@@ -39,8 +41,10 @@
             </div>
 
             <ul class="pager" ng-if="projectsVm.ownedProjects.data.length > 0">
-                <li ng-class="{ 'disabled': projectsVm.ownedProjects.prev == null }"><a ng-click="projectsVm.prevOwnedProjects(projectsVm.ownedProjects.prev);">&larr; Previous</a></li>
-                <li ng-class="{ 'disabled': projectsVm.ownedProjects.next == null }"><a ng-click="projectsVm.nextOwnedProjects(projectsVm.ownedProjects.next);">Next &rarr;</a></li>
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.prev == null }"><a
+                        ng-click="projectsVm.prevOwnedProjects(projectsVm.ownedProjects.prev);">&larr; Previous</a></li>
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.next == null }"><a
+                        ng-click="projectsVm.nextOwnedProjects(projectsVm.ownedProjects.next);">Next &rarr;</a></li>
             </ul>
         </div>
 
@@ -61,14 +65,15 @@
                 <div class="widget-header">
                     <h3><i class="fa fa-newspaper-o"></i> {{project.attributes.name}} </h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a href="#" title="Preview" class="btn-borderless btn-focus"><i class="fa fa-eye"></i></a>
-                        <a href="#" title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
+                        <button title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="widget-content text-center">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px" class="img-circle" alt="Avatar" />
+                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px"
+                                 class="img-circle" alt="Avatar"/>
                         </div>
                         <div class="col-md-8">
                             <p>
@@ -86,9 +91,56 @@
             </div>
 
             <ul class="pager" ng-if="projectsVm.membershipProjects.data.length > 0">
-                <li ng-class="{ 'disabled': projectsVm.membershipProjects.prev == null }"><a ng-click="projectsVm.prevMembershipProjects(projectsVm.membershipProjects.prev);">&larr; Previous</a></li>
-                <li ng-class="{ 'disabled': projectsVm.membershipProjects.next == null }"><a ng-click="projectsVm.nextMembershipProjects(projectsVm.membershipProjects.next);">Next &rarr;</a></li>
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.prev == null }"><a
+                        ng-click="projectsVm.prevMembershipProjects(projectsVm.membershipProjects.prev);">&larr;
+                    Previous</a></li>
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.next == null }"><a
+                        ng-click="projectsVm.nextMembershipProjects(projectsVm.membershipProjects.next);">Next
+                    &rarr;</a></li>
             </ul>
+        </div>
+    </div>
+
+    <!-- Project's dialog collaborators -->
+    <div class="modal fade" id="projectCollaborators" tabindex="-1" role="dialog"
+         aria-labelledby="projectCollaboratorsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Project collaborators</h4>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-unstyled activity-list">
+                        <li ng-repeat="collaborator in projectsVm.projectDialogInfo.collaborators">
+                            <div class="col-md-11">
+                                <img ng-src="{{collaborator.attributes.imagepath}}" width="" alt="Avatar"
+                                     class="img-circle pull-left avatar" width="32px" height="32px"/>
+                                <p>
+                                    {{collaborator.attributes.firstName + ' ' + collaborator.attributes.lastName}}
+                                    <span class="timestamp">{{collaborator.attributes.email}}</span>
+                                </p>
+                            </div>
+                            <div class="btn-group activity-actions col-md-1 pull-right">
+                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-angle-down"></i>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                    <li><a href="#">Remove</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="projectsVm.collaboratorEmail">
+                        <div class="input-group-btn">
+                            <button type="button" ng-click="projectsVm.addCollaborator(projectsVm.collaboratorEmail)" class="btn btn-warning" tabindex="-1">Add collaborator</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
