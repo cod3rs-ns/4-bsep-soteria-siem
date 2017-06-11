@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -61,9 +63,16 @@ public class AlarmController extends StandardResponses {
         }
 
         final List<Alarm> alarms = alarmService.findAllByProject(project);
+
+        List<String> logIds = alarms.stream()
+                .map(Alarm::getLogId)
+                .collect(Collectors.toList());
+        final ArrayList<Log> logs = new ArrayList<>();
+        logIds.forEach(l -> logs.add(logsRepository.findOne(l)));
+
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(logsRepository, alarms, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmCollectionResponse.fromDomain(logs, alarms, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}/alarms/{alarmId}")
@@ -103,9 +112,15 @@ public class AlarmController extends StandardResponses {
         final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, limit + offset, limit, resolved) : null;
         final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, offset - limit, limit, resolved) : null;
 
+        List<String> logIds = page.getContent().stream()
+                .map(Alarm::getLogId)
+                .collect(Collectors.toList());
+        final ArrayList<Log> logs = new ArrayList<>();
+        logIds.forEach(l -> logs.add(logsRepository.findOne(l)));
+
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(logsRepository, page.getContent(), new PaginationLinks(self, next, prev)));
+                .body(AlarmCollectionResponse.fromDomain(logs, page.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @PutMapping("/alarms/{alarmId}/resolve")
