@@ -5,23 +5,28 @@
         .module('soteria-app')
         .controller('HeaderController', HeaderController);
 
-    HeaderController.$inject = ['CONFIG', '$scope', '$localStorage', '$rootScope', '$log'];
+    HeaderController.$inject = ['CONFIG', 'loginService', '$scope', '$localStorage', '$rootScope', '$log', '$state'];
 
-    function HeaderController(CONFIG, $scope, $localStorage, $rootScope, $log) {
+    function HeaderController(CONFIG, loginService, $scope, $localStorage, $rootScope, $log, $state) {
         var headerVm = this;
 
         headerVm.notificationCount = 0;
         headerVm.notifications = [];
+        headerVm.$storage = $localStorage.$default({
+            role: 'guest'
+        });
+        headerVm.loggedInUser = {};
 
         headerVm.resetNotifications = resetNotifications;
+        headerVm.logout = logout;
 
         $rootScope.$on('userLoggedIn', function (event, message) {
             connect(message);
+            me();
         });
 
         function resetNotifications() {
             headerVm.notificationCount = 0;
-            $scope.$apply();
         }
 
         function connect(username) {
@@ -53,5 +58,23 @@
             }
         }
 
+        function logout() {
+            headerVm.notificationCount = 0;
+            headerVm.notifications = [];
+            disconnect();
+            $localStorage.$reset();
+            $localStorage.role = 'guest';
+            $state.go('login');
+        }
+
+        function me() {
+            loginService.loggedInUser()
+                .then(function (response) {
+                    headerVm.loggedInUser = response.data;
+                })
+                .catch(function (error) {
+                    $log.error(error);
+                });
+        }
     }
 })();
