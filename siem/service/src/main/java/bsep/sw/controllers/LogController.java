@@ -1,5 +1,6 @@
 package bsep.sw.controllers;
 
+import bsep.sw.rule_engine.SingleLogRule;
 import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
 import bsep.sw.domain.Project;
@@ -12,6 +13,8 @@ import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.AlarmNotification;
+import org.easyrules.api.RulesEngine;
+import org.easyrules.core.RulesEngineBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -81,6 +84,17 @@ public class LogController {
                     "/publish/threat/" + user.getUsername(),
                     new AlarmNotification(project, log, dummyAlarm));
         }
+
+        RulesEngine rulesEngine = RulesEngineBuilder
+                .aNewRulesEngine()
+                .named("Test rules engine")
+                .withSilentMode(true)
+                .build();
+
+        SingleLogRule logRule = new SingleLogRule();
+        logRule.underRule = log;
+        rulesEngine.registerRule(logRule);
+        rulesEngine.fireRules();
 
         return ResponseEntity.ok(LogResponse.fromDomain(logs.save(log)));
     }
