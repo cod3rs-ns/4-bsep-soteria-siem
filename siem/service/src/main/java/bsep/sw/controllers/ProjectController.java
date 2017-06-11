@@ -6,8 +6,11 @@ import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.project.ProjectCollectionResponse;
 import bsep.sw.hateoas.project.ProjectResponse;
 import bsep.sw.hateoas.project.request.ProjectRequest;
+import bsep.sw.hateoas.user.UserCollectionResponse;
+import bsep.sw.hateoas.user.UserResponse;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.ProjectService;
+import bsep.sw.services.UserService;
 import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,11 +30,13 @@ import java.net.URISyntaxException;
 public class ProjectController extends StandardResponses {
 
     private final ProjectService projectService;
+    private final UserService userService;
     private final UserSecurityUtil securityUtil;
 
     @Autowired
-    public ProjectController(final ProjectService projectService, final UserSecurityUtil securityUtil) {
+    public ProjectController(final ProjectService projectService, final UserService userService, final UserSecurityUtil securityUtil) {
         this.projectService = projectService;
+        this.userService = userService;
         this.securityUtil = securityUtil;
     }
 
@@ -121,6 +126,42 @@ public class ProjectController extends StandardResponses {
         }
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/projects/{projectId}/users")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> projectCollaborators(@Valid @PathVariable final Long projectId) {
+        final User user = securityUtil.getLoggedUser();
+
+        final Project project = projectService.findOne(projectId);
+        if (project == null) {
+            return notFound("project");
+        }
+
+        return ResponseEntity.ok().body(UserCollectionResponse.fromDomain(project.getMembers(), new PaginationLinks("self", "next")));
+    }
+
+    @PostMapping("/projects/{projectId}/users/{userId}")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> addCollaborator(@Valid @PathVariable final Long projectId, @Valid @PathVariable final Long userId) {
+        final User user = securityUtil.getLoggedUser();
+
+        final Project project = projectService.findByMembershipAndId(user, projectId);
+        if (project == null) {
+            return notFound("project");
+        }
+
+        final User collaborator = userService.findOne(userId);
+        if (collaborator == null) {
+            return notFound("user");
+        }
+
+        userService.save(collaborator.addProject(project));
+        projectService.save(project.addMember(collaborator));
+
+        return ResponseEntity.ok().body(UserResponse.fromDomain(collaborator));
     }
 
 }

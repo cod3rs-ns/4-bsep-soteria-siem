@@ -121,6 +121,11 @@ public class Project extends EntityMeta {
         return this;
     }
 
+    public Project addMember(final User member) {
+        this.members.add(member);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

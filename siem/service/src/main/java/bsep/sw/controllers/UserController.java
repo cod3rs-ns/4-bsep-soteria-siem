@@ -2,12 +2,13 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
+import bsep.sw.hateoas.user.AuthResponse;
 import bsep.sw.hateoas.user.AvailabilityResponse;
 import bsep.sw.hateoas.user.UserRequest;
 import bsep.sw.hateoas.user.UserResponse;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
-import bsep.sw.hateoas.user.AuthResponse;
+import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
+public class UserController extends StandardResponses {
 
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -94,5 +95,18 @@ public class UserController {
         }
 
         return ResponseEntity.ok(new AvailabilityResponse("email", true));
+    }
+
+    @GetMapping("/users/{email:.+}")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public ResponseEntity<?> getUserByEmail(@Valid @PathVariable final String email) {
+        final User user = userService.getUserByEmail(email);
+
+        if (user == null) {
+            return notFound("user");
+        }
+
+        return ResponseEntity.ok().body(UserResponse.fromDomain(user));
     }
 }
