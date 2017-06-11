@@ -24,10 +24,12 @@ public class SingleRule implements Serializable {
 
     @NotNull
     @Column(name = "sr_field", nullable = false)
+    @Enumerated(EnumType.STRING)
     private FieldType field;
 
     @NotNull
     @Column(name = "sr_method", nullable = false)
+    @Enumerated(EnumType.STRING)
     private MethodType method;
 
     @NotNull
@@ -100,5 +102,15 @@ public class SingleRule implements Serializable {
         this.definition = definition;
         return this;
     }
-    
+
+    @Override
+    public String toString() {
+        return "SingleRule{" +
+                "id=" + id +
+                ", value='" + value + '\'' +
+                ", field=" + field +
+                ", method=" + method +
+                '}';
+    }
+
 }

@@ -31,6 +31,7 @@ public class AlarmDefinition extends EntityMeta {
 
     @NotNull
     @Column(name = "ad_level", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AlarmLevel level;
 
     @Column(name = "ad_first_occurrence")
@@ -43,10 +44,10 @@ public class AlarmDefinition extends EntityMeta {
     @JoinColumn(name = "ad_project_id")
     private Project project;
 
-    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Alarm> alarms = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SingleRule> singleRules = new HashSet<>(0);
 
     public String getName() {

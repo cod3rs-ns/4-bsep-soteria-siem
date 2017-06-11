@@ -1,7 +1,10 @@
 package bsep.sw.hateoas.alarm_definition.request;
 
 import bsep.sw.domain.AlarmDefinition;
+import bsep.sw.domain.SingleRule;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.HashSet;
 
 public class AlarmDefinitionRequest {
 
@@ -9,7 +12,24 @@ public class AlarmDefinitionRequest {
     public AlarmDefinitionRequestData data;
 
     public AlarmDefinition toDomain() {
-        return new AlarmDefinition().name(data.attributes.name).description(data.attributes.description).level(data.attributes.level);
+        final AlarmDefinition ad = new AlarmDefinition()
+                .name(data.attributes.name)
+                .description(data.attributes.description)
+                .level(data.attributes.level);
+
+        final HashSet<SingleRule> rules = new HashSet<>();
+
+        for (SingleRuleRequest sr : data.relationships.singleRules) {
+            final SingleRule rule = new SingleRule()
+                    .field(sr.field)
+                    .method(sr.method)
+                    .value(sr.value)
+                    .definition(ad);
+            System.out.println(rule);
+            rules.add(rule);
+        }
+        ad.singleRules(rules);
+        return ad;
     }
 
 }

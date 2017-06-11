@@ -13,8 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static bsep.sw.hateoas.ResourceTypes.ALARM_TYPE;
-import static bsep.sw.hateoas.ResourceTypes.PROJECTS_TYPE;
+import static bsep.sw.hateoas.ResourceTypes.*;
 
 public class AlarmDefinitionResponseRelationships extends ResourceResponseRelationships {
 
@@ -23,6 +22,9 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
 
     @JsonProperty("alarms")
     public ResponseCollectionRelationship alarms;
+
+    @JsonProperty("single-rules")
+    public ResponseCollectionRelationship singleRules;
 
     public static AlarmDefinitionResponseRelationships fromDomain(final AlarmDefinition alarmDefinition) {
         final AlarmDefinitionResponseRelationships relationships = new AlarmDefinitionResponseRelationships();
@@ -34,9 +36,17 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
         final RelationshipLinks alarmsLinks = new RelationshipLinks(LinkGenerator.generateAlarmsLink(alarmDefinition));
         final List<RelationshipData> alarmsData = new ArrayList<>(alarmDefinition.getAlarms()
                 .stream()
-                .map(a -> new RelationshipData(ALARM_TYPE,a.getId().toString()))
+                .map(a -> new RelationshipData(ALARM_TYPE, a.getId().toString()))
                 .collect(Collectors.toList()));
         relationships.alarms = new ResponseCollectionRelationship(alarmsLinks, alarmsData);
+
+        final RelationshipLinks rulesLinks = new RelationshipLinks("not-existing");
+        final List<RelationshipData> rulesData = new ArrayList<>(alarmDefinition.getSingleRules()
+                .stream()
+                .map(a -> new RuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
+                .collect(Collectors.toList()));
+        relationships.singleRules = new ResponseCollectionRelationship(rulesLinks, rulesData);
+
 
         return relationships;
     }

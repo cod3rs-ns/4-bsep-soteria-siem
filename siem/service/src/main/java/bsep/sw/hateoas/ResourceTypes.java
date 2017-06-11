@@ -9,6 +9,7 @@ public final class ResourceTypes {
     public static String ALARM_DEFINITION_TYPE = "alarm-definitions";
     public static String ALARM_TYPE = "alarms";
     public static String AGENT_TYPE = "agents";
+    public static String SINGLE_RULE_TYPE = "single-rules";
 
     private ResourceTypes() {
         super();

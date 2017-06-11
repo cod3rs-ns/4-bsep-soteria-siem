@@ -1072,7 +1072,7 @@
                 "alarm-definitions"
               ],
               "description": "Represents entity type",
-              "example": "projects"
+              "example": "alarm-definitions"
             },
             "attributes": {
               "type": "object",
@@ -1111,16 +1111,79 @@
                 "description",
                 "level"
               ]
+            },
+            "relationships": {
+              "type": "object",
+              "properties": {
+                "single-rules": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CreateSingleRuleRequest"
+                  }
+                }
+              },
+              "required": [
+                "single-rules"
+              ]
             }
           },
           "required": [
             "type",
-            "attributes"
+            "attributes",
+            "relationships"
           ]
         }
       },
       "required": [
         "data"
+      ]
+    },
+    "CreateSingleRuleRequest": {
+      "title": "Create single rule request",
+      "description": "Request to create new single rule",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "single-rules"
+          ],
+          "description": "Represents entity type",
+          "example": "single-rules"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value to compare field to",
+          "example": "error"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "CONTAINS",
+            "EQUALS",
+            "ENDS_WITH",
+            "STARTS_WITH",
+            "REGEX"
+          ],
+          "example": "EQUALS"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "MESSAGE",
+            "HOST",
+            "LEVEL",
+            "PID",
+            "UID",
+            "GID"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "value",
+        "field",
+        "method"
       ]
     },
     "AlarmDefinitionResponse": {

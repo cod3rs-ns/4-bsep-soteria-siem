@@ -10,4 +10,7 @@ public class AlarmDefinitionRequestData {
     @JsonProperty("attributes")
     public AlarmDefinitionRequestAttributes attributes;
 
+    @JsonProperty("relationships")
+    public AlarmDefinitionRequestRelationships relationships;
+
 }
