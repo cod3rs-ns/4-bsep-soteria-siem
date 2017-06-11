@@ -158,9 +158,8 @@ public class ProjectController extends StandardResponses {
             return notFound("user");
         }
 
-        // TODO Implement real database saving
-        userService.save(user);
-        projectService.save(project);
+        userService.save(collaborator.addProject(project));
+        projectService.save(project.addMember(collaborator));
 
         return ResponseEntity.ok().body(UserResponse.fromDomain(collaborator));
     }

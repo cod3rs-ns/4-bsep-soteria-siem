@@ -203,8 +203,9 @@ public class User extends EntityMeta {
         return this;
     }
 
-    public boolean addProject(final Project project) {
-        return this.projects.add(project);
+    public User addProject(final Project project) {
+        this.projects.add(project);
+        return this;
     }
 
     @Override
