@@ -1,47 +1,61 @@
 <html lang="en" ng-app="soteria-app">
-	<head>
-		<title>Soteria SIEP</title>
 
-		<meta charset="UTF-8">
-		<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/main.css" rel="stylesheet" type="text/css">
-		<link href="assets/css/my-custom-styles.css" rel="stylesheet" type="text/css">
-		<link rel="stylesheet" href="assets/libs/ngToast/dist/ngToast.min.css">
+<head>
+	<title>Soteria SIEP</title>
 
-		<script src="assets/libs/angular/angular.min.js"></script>
-		<script src="assets/libs/angular-ui-router/release/angular-ui-router.min.js"></script>
-		<script src="assets/libs/angular-sanitize/angular-sanitize.min.js"></script>
+	<meta charset="UTF-8">
+	<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/main.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/my-custom-styles.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="assets/libs/ngToast/dist/ngToast.min.css">
 
-  		<script src="assets/libs/angular-jwt/dist/angular-jwt.js"></script>
-  		<script src="assets/libs/ngstorage/ngStorage.min.js"></script>
-		<script src="assets/libs/lodash/dist/lodash.min.js"></script>
-		<script src="assets/libs/ngToast/dist/ngToast.min.js"></script>
+	<script src="assets/libs/angular/angular.min.js"></script>
+	<script src="assets/libs/angular-ui-router/release/angular-ui-router.min.js"></script>
+	<script src="assets/libs/angular-sanitize/angular-sanitize.min.js"></script>
 
-		<!-- Sockets -->
- 		<script src="assets/libs/sockjs/sockjs.min.js"></script>
-  		<script src="assets/libs/stomp-websocket/lib/stomp.min.js"></script>
-		<script src="assets/libs/ng-stomp/dist/ng-stomp.min.js"></script>
-	</head>
-	<body>
-        <header id="header" ng-include="'app/shared/header/navbar.html'"></header>
-		<toast style="margin-top: 54px;"></toast>
-		<section id="main" ui-view="content"></section>
+	<script src="assets/libs/angular-jwt/dist/angular-jwt.js"></script>
+	<script src="assets/libs/ngstorage/ngStorage.min.js"></script>
+	<script src="assets/libs/lodash/dist/lodash.min.js"></script>
+	<script src="assets/libs/ngToast/dist/ngToast.min.js"></script>
 
-		<!-- TODO: Minimize all imports into one .js file -->
-		<script src="app/app.module.js"></script>
-  		<script src="app/app.route.js"></script>
+	<!-- Sockets -->
+	<script src="assets/libs/sockjs/sockjs.min.js"></script>
+	<script src="assets/libs/stomp-websocket/lib/stomp.min.js"></script>
+	<script src="assets/libs/ng-stomp/dist/ng-stomp.min.js"></script>
 
-  		<script src="app/components/login/login.controller.js"></script>
-		<script src="app/components/login/login.service.js"></script>
-		<script src="app/components/register/field-unique.directive.js"></script>
-  		<script src="app/components/register/register.controller.js"></script>
-		<script src="app/components/register/register.service.js"></script>
-		<script src="app/components/project/project.controller.js"></script>
-		<script src="app/components/project/project-creation.controller.js"></script>
-		<script src="app/components/project/project.service.js"></script>
-        <script src="app/components/projects/projects.controller.js"></script>
-		<script src="app/components/projects/projects.service.js"></script>
-        <script src="app/components/home/home.controller.js"></script>
-	</body>
+	<script src="assets/libs/moment/moment.js"></script>
+	<script src="assets/libs/angular-moment/angular-moment.js"></script>
+</head>
+
+<body>
+	<header id="header" ng-include="'app/shared/header/navbar.html'"></header>
+	<toast style="margin-top: 54px;"></toast>
+	<section id="main" ui-view="content"></section>
+
+	<!-- TODO: Minimize all imports into one .js file -->
+	<script src="app/app.module.js"></script>
+	<script src="app/app.route.js"></script>
+
+	<script src="app/shared/header/header.controller.js"></script>
+
+	<script src="app/components/login/login.controller.js"></script>
+	<script src="app/components/login/login.service.js"></script>
+	<script src="app/components/register/field-unique.directive.js"></script>
+	<script src="app/components/register/register.controller.js"></script>
+	<script src="app/components/register/register.service.js"></script>
+	<script src="app/components/project/project.controller.js"></script>
+	<script src="app/components/project/project-creation.controller.js"></script>
+	<script src="app/components/project/project.service.js"></script>
+	<script src="app/components/projects/projects.controller.js"></script>
+	<script src="app/components/projects/projects.service.js"></script>
+	<script src="app/components/home/home.controller.js"></script>
+	<script src="app/components/alarms/alarms.controller.js"></script>
+	<script src="app/components/alarms/alarms.service.js"></script>
+
+	<!-- NEEDED FOR THEME TO WORK -->
+	<script src="assets/libs/jquery/dist/jquery.min.js"></script>
+	<script src="assets/libs/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+
 </html>

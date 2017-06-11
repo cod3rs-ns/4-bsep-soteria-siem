@@ -1,89 +1,85 @@
-<div class="top-bar navbar-fixed-top">
-    <div class="container">
-        <div class="clearfix">
-            <a href="#" class="pull-left toggle-sidebar-collapse"><i class="fa fa-bars"></i></a>
-            <!-- logo -->
-            <div class="pull-left left app-logo">
-                <a ui-sref="home"><img src="../../../assets/images/logo.png"
+<div class="top-bar navbar-fixed-top" ng-controller="HeaderController as headerVm">
+	<div class="container">
+		<div class="clearfix">
+			<a href="#" class="pull-left toggle-sidebar-collapse"><i class="fa fa-bars"></i></a>
+			<!-- logo -->
+			<div class="pull-left left app-logo">
+				<a ui-sref="home"><img src="../../../assets/images/logo.png"
                                        alt="Soteria Application"/></a>
-                <h1 class="sr-only">Soteria Application</h1>
-            </div>
-            <!-- end logo -->
+				<h1 class="sr-only">Soteria Application</h1>
+			</div>
+			<!-- end logo -->
 
-            <div class="pull-right right">
-                <!-- top-bar-right -->
-                <div class="top-bar-right">
-                    <a ui-sref="projects">
+			<div class="pull-right right">
+				<!-- top-bar-right -->
+				<div class="top-bar-right">
+					<a ui-sref="projects">
                         <button type="button" id="nav-projects" class="btn btn-link">Projects</button>
                     </a>
-                    <a ui-sref="project({id: 1})">
+					<a ui-sref="project({id: 1})">
                         <button type="button" id="nav-project" class="btn btn-link">Project</button>
                     </a>
-                    <button type="button" id="global-volume" class="btn btn-link btn-global-volume"><i class="fa"></i>
+					<button type="button" id="global-volume" class="btn btn-link btn-global-volume"><i class="fa"></i>
                     </button>
-                    <div class="notifications">
-                        <ul>
-                            <!-- notification: general -->
-                            <li class="notification-item general">
-                                <div class="btn-group">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="fa fa-bell"></i><span class="count">1</span>
-                                        <span class="circle"></span>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li class="notification-header">
-                                            <em>You have 1 notifications</em>
-                                        </li>
-                                        <li>
-                                            <a href="#">
-                                                <i class="fa fa-comment green-font"></i>
-                                                <span class="text">New comment on the blog post</span>
-                                                <span class="timestamp">1 minute ago</span>
-                                            </a>
-                                        </li>
-                                        <li class="notification-footer">
-                                            <a href="#">View All Notifications</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <!-- end notification: general -->
-                        </ul>
-                    </div>
-                    <!-- logged user and the menu -->
-                    <div class="logged-user">
-                        <div class="btn-group">
-                            <a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
+					<div class="notifications">
+						<ul>
+							<li class="notification-item general" ng-click="headerVm.resetNotifications();">
+								<div class="btn-group">
+									<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+										<i class="fa fa-bell"></i>
+										<span ng-if="headerVm.notificationCount" class="count">{{headerVm.notificationCount}}</span>
+										<span class="circle"></span>
+									</a>
+									<ul class="dropdown-menu" role="menu">
+										<li  ng-if="headerVm.notifications.length != 0" class="notification-header">
+											<em>You have {{headerVm.notificationsCount}} notifications</em>
+										</li>
+										<li ng-repeat="notification in headerVm.notifications">
+											<a href="#">
+												<i class="fa fa-comment green-font"></i>
+												<span class="text">{{notification.alarm.message}}</span>
+												<span class="timestamp" am-time-ago="notification.log.time"></span>
+											</a>
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<!-- logged user and the menu -->
+					<div class="logged-user">
+						<div class="btn-group">
+							<a href="#" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
                                 <img src="../../../assets/images/user-avatar.png" alt="User Avatar"/>
                                 <span class="name">Sergio Ramos</span> <span class="caret"></span>
                             </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a href="#">
+							<ul class="dropdown-menu" role="menu">
+								<li>
+									<a href="#">
                                         <i class="fa fa-user"></i>
                                         <span class="text">Profile</span>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="#">
+								</li>
+								<li>
+									<a href="#">
                                         <i class="fa fa-cog"></i>
                                         <span class="text">Settings</span>
                                     </a>
-                                </li>
-                                <li>
-                                    <a href="#">
+								</li>
+								<li>
+									<a href="#">
                                         <i class="fa fa-power-off"></i>
                                         <span class="text">Logout</span>
                                     </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- end logged user and the menu -->
-                </div>
-                <!-- end top-bar-right -->
-            </div>
-        </div>
-    </div>
-    <!-- /container -->
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!-- end logged user and the menu -->
+				</div>
+				<!-- end top-bar-right -->
+			</div>
+		</div>
+	</div>
+	<!-- /container -->
 </div>

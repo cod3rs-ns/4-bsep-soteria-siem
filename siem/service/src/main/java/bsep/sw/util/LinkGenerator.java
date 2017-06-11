@@ -1,10 +1,7 @@
 package bsep.sw.util;
 
 
-import bsep.sw.domain.Agent;
-import bsep.sw.domain.Alarm;
-import bsep.sw.domain.AlarmDefinition;
-import bsep.sw.domain.Project;
+import bsep.sw.domain.*;
 
 public class LinkGenerator {
 
@@ -67,4 +64,10 @@ public class LinkGenerator {
                 .toString();
     }
 
+    public static String generateLogLink(final Log log) {
+        return new StringBuilder()
+                .append("/api/logs/")
+                .append(log.getId())
+                .toString();
+    }
 }

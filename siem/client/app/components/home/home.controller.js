@@ -1,23 +1,29 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('soteria-app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$log', 'CONFIG'];
+    HomeController.$inject = ['$log', 'CONFIG', '$localStorage', '$scope'];
 
-    function HomeController($log, CONFIG) {
+    function HomeController($log, CONFIG, $localStorage, $scope) {
         var homeVm = this;
 
-        connect(1);
+        homeVm.alarm = null
 
-        function connect(projectId) {
+        activate();
+
+        function activate() {
+            connect($localStorage.user);
+        }
+
+        function connect(username) {
             var socket = new SockJS(CONFIG.SUBSCRIPTION_URL);
             homeVm.stompClient = Stomp.over(socket);
-            homeVm.stompClient.connect({}, function(frame) {
+            homeVm.stompClient.connect({}, function (frame) {
                 $log.info('Connected: ' + frame);
-                homeVm.stompClient.subscribe('/publish/threat/' + projectId, function(response) {
+                homeVm.stompClient.subscribe('/publish/threat/' + username, function (response) {
                     showAlarm(JSON.parse(response.body));
                 });
             });
@@ -32,7 +38,8 @@
 
         function showAlarm(data) {
             if (data) {
-                $log.info('Alarm triggered: ' + data);
+                homeVm.alarm = data;
+                $scope.$apply();
             }
         }
     }

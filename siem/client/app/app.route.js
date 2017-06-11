@@ -4,7 +4,8 @@ angular
         'angular-jwt',
         'ngStorage',
         'ngToast',
-        'ngStomp'
+        'ngStomp',
+        'angularMoment'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -100,6 +101,19 @@ angular
                         templateUrl: "app/components/project/project-creation.html",
                         controller: "ProjectCreationController",
                         controllerAs: "projectCreationVm"
+                    }
+                }
+            })
+            .state('alarms', {
+                url: "/alarms",
+                data: {
+                    pageTitle: "Soteria | Alarms"
+                },
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/alarms/alarms.html",
+                        controller: "AlarmsController",
+                        controllerAs: "alarmsVm"
                     }
                 }
             });

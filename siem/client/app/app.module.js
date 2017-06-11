@@ -4,5 +4,6 @@ angular
         'angular-jwt',
         'ngStorage',
         'ngToast',
-        'ngStomp'
+        'ngStomp',
+        'angularMoment'
     ]);
