@@ -203,6 +203,10 @@ public class User extends EntityMeta {
         return this;
     }
 
+    public boolean addProject(final Project project) {
+        return this.projects.add(project);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
