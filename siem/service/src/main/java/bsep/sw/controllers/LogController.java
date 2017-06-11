@@ -2,12 +2,16 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
+import bsep.sw.domain.Project;
+import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
+import bsep.sw.services.ProjectService;
+import bsep.sw.util.AlarmNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,11 +28,13 @@ public class LogController {
 
     private final LogsRepository logs;
     private final SimpMessagingTemplate template;
+    private final ProjectService projectService;
 
     @Autowired
-    public LogController(final LogsRepository logs, final SimpMessagingTemplate template) {
+    public LogController(final LogsRepository logs, final SimpMessagingTemplate template, final ProjectService projectService) {
         this.logs = logs;
         this.template = template;
+        this.projectService = projectService;
     }
 
     @GetMapping("/projects/{projectId}/logs")
@@ -68,8 +74,13 @@ public class LogController {
                 .message("Same user try to log 3 times in a row")
                 .resolved(false);
 
-        // Send notifications through socket
-        template.convertAndSend("/publish/threat/" + log.getProject(), dummyAlarm);
+        final Project project = projectService.findOne(log.getProject());
+        for (final User user : project.getMembers()) {
+            // Send notifications through socket
+            template.convertAndSend(
+                    "/publish/threat/" + user.getUsername(),
+                    new AlarmNotification(project, log, dummyAlarm));
+        }
 
         return ResponseEntity.ok(LogResponse.fromDomain(logs.save(log)));
     }

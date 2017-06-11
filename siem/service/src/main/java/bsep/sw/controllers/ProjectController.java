@@ -99,7 +99,7 @@ public class ProjectController extends StandardResponses {
     @GetMapping("/projects/{projectId}")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public ResponseEntity<?> getProject(@Valid @PathVariable Long projectId) {
+    public ResponseEntity<?> getProject(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
         final Project result = projectService.findByMembershipAndId(user, projectId);

@@ -5,9 +5,9 @@
         .module('soteria-app')
         .controller('AlarmsController', AlarmsController);
 
-    AlarmsController.$inject = ['alarmsService', 'projectService', 'CONFIG', '$log', '_'];
+    AlarmsController.$inject = ['alarmsService', 'projectService', 'projectsService', 'CONFIG', '$log', '$localStorage', '_'];
 
-    function AlarmsController(alarmsService, projectService, CONFIG, $log, _) {
+    function AlarmsController(alarmsService, projectService, projectsService, CONFIG, $log, $localStorage, _) {
         var alarmsVm = this;
 
         alarmsVm.resolvedAlarms = {
@@ -33,6 +33,7 @@
         function activate() {
             getUserAlarms(CONFIG.SERVICE_URL + '/alarms', alarmsVm.resolvedAlarms);
             getUserAlarms(CONFIG.SERVICE_URL + '/alarms?page[offset]=0&page[limit]=3&filter[resolved]=false', alarmsVm.notResolvedAlarms);
+            connect($localStorage.user);
         }
 
         function getResolvedAlarms(url) {
@@ -80,6 +81,30 @@
                 .catch(function (error) {
                     $log.error(error);
                 });
+        }
+
+        function connect(username) {
+            var socket = new SockJS(CONFIG.SUBSCRIPTION_URL);
+            alarmsVm.stompClient = Stomp.over(socket);
+            alarmsVm.stompClient.connect({}, function (frame) {
+                alarmsVm.stompClient.subscribe('/publish/threat/' + username, function (response) {
+                    showAlarm(JSON.parse(response.body));
+                });
+            });
+        }
+
+        function disconnect() {
+            if (alarmsVm.stompClient != null) {
+                alarmsVm.stompClient.disconnect();
+            }
+            $log.info("Disconnected");
+        }
+
+        function showAlarm(data) {
+            if (data) {
+                $log.info('Alarm triggered: ' + data);
+                getUserAlarms(CONFIG.SERVICE_URL + '/alarms?page[offset]=0&page[limit]=3&filter[resolved]=false', alarmsVm.notResolvedAlarms);
+            }
         }
     }
 })();
