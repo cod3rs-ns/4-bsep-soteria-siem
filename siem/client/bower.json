@@ -28,19 +28,6 @@
     "stomp-websocket": "^2.3.4",
     "jquery": "2.1.0",
     "bootstrap": "^3.3.7",
-    "angular-moment": "^1.0.1",
-    "bootstrap-colorpicker": "latest",
-    "bootstrap-contextmenu": "latest",
-    "bootstrap-datepicker": "latest",
-    "bootstrap-editable": "latest",
-    "bootstrap-multiselect": "latest",
-    "bootstrap-progressbar": "latest",
-    "bootstrap-slider": "latest",
-    "bootstrap-switch": "latest",
-    "bootstrap-tagsinput": "latest",
-    "bootstrap-touchspin": "latest",
-    "bootstrap-tour": "latest",
-    "jquery-maskedinput": "latest",
-    "select2": "latest"
+    "angular-moment": "^1.0.1"
   }
 }

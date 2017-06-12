@@ -5,7 +5,8 @@ angular
         'ngStorage',
         'ngToast',
         'ngStomp',
-        'angularMoment'
+        'angularMoment',
+        'ngSanitize'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -121,7 +122,21 @@ angular
                 url: '/page-not-found',
                 views: {
                     'content@': {
-                        templateUrl: "app/components/error-templates/page-not-found.html",
+                        templateUrl: "app/components/error-templates/page-not-found.html"
+                    }
+                }
+            })
+            .state('project.alarm-definitions', {
+                parent: "project",
+                url: "/alarm-definitions",
+                data: {
+                    pageTitle: "Soteria | Alarms"
+                },
+                views: {
+                    'content@': {
+                        templateUrl: "app/components/alarm-definitions/alarm-definitions.html",
+                        controller: "AlarmDefinitionsController",
+                        controllerAs: "defVm"
                     }
                 }
             });

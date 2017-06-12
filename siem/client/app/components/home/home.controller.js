@@ -10,7 +10,7 @@
     function HomeController($log, CONFIG, $localStorage, $scope) {
         var homeVm = this;
 
-        homeVm.alarm = null
+        homeVm.alarm = null;
 
         activate();
 
@@ -40,7 +40,19 @@
             if (data) {
                 homeVm.alarm = data;
                 $scope.$apply();
+
+                var ringSound = new Audio();
+
+                if ( navigator.userAgent.match("Firefox/") ) {
+                    ringSound.src = "assets/audio/bell-ringing.ogg";
+                }else {
+                    ringSound.src = "assets/audio/bell-ringing.mp3";
+                }
+
+                ringSound.play();
+
             }
+
         }
     }
 })();

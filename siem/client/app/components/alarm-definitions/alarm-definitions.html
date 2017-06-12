@@ -1,0 +1,160 @@
+<div class="container">
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Alarm definitions</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="row">
+                        <div class="col-md-4" ng-repeat="alarmDefinition in defVm.definitions.data">
+                            <div class="widget quick-note-saved">
+                                <div class="widget-header">
+                                    <h3>{{alarmDefinition.attributes["name"]}}</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <dl class="dl-horizontal project-agent">
+                                        <dt>Level:</dt>
+                                        <dd>{{alarmDefinition.attributes["level"]}}</dd>
+
+                                        <dt>Created at:</dt>
+                                        <dd>{{alarmDefinition.meta["created-at"]}}</dd>
+
+                                        <dt>Description:</dt>
+                                        <dd>{{alarmDefinition.attributes["description"]}}</dd>
+
+                                        <dt>Triggers count:</dt>
+                                        <dd>{{alarmDefinition.attributes["triggers"]}}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="pager">
+                        <li ng-class="{ 'disabled': defVm.definitions.prev == null }"><a
+                                ng-click="defVm.prevDefs(defVm.definitions.prev);">&larr; Previous</a></li>
+                        <li ng-class="{ 'disabled': defVm.definitions.next == null }"><a
+                                ng-click="defVm.nextDefs(defVm.definitions.next);">Next &rarr;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Create new definition</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            General alarm data
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <form class="form-horizontal label-left">
+                                            <div class="panel-body">
+                                                <div class="form-group" style="margin: 10px;">
+                                                    <label for="definition-name"
+                                                           class="col-sm-3 control-label">Name:</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" name="definition-name"
+                                                               id="definition-name"
+                                                               placeholder="Alarm definition's name"
+                                                               ng-model="defVm.newDefinition.name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" style="margin: 10px;">
+                                                    <label for="definition-description" class="col-sm-3 control-label">Description:</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control"
+                                                               name="definition-description" id="definition-description"
+                                                               placeholder="Alarm definition's description"
+                                                               ng-model="defVm.newDefinition.description">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            Alarm level
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <form class="form-horizontal label-left">
+                                            <div class="panel-body">
+                                                <div class="col-md-12">
+                                                    <div class="form-group" id="definition-level">
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" name="level" value="INFO"
+                                                                   ng-model="defVm.newDefinition.level">
+                                                            <span><i></i>Info</span>
+                                                        </label>
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" name="level" value="LOW"
+                                                                   ng-model="defVm.newDefinition.level">
+                                                            <span><i></i>Low</span>
+                                                        </label>
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" name="level" value="MEDIUM"
+                                                                   ng-model="defVm.newDefinition.level">
+                                                            <span><i></i>Medium</span>
+                                                        </label>
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" name="level" value="HIGH"
+                                                                   ng-model="defVm.newDefinition.level">
+                                                            <span><i></i>High</span>
+                                                        </label>
+                                                        <label class="fancy-radio">
+                                                            <input type="radio" name="level" value="SEVERE"
+                                                                   ng-model="defVm.newDefinition.level">
+                                                            <span><i></i>Severe</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            Rules
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Provide custom rules
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in defVm.config.paths" type="text"
+                                                           autocomplete="off" class="input form-control agent-field"
+                                                           id="{{'paths' + field.id}}" ng-model="field.value"/>
+                                                    <button class="btn btn-primary btn-add-field" type="button"
+                                                            ng-click="defVm.addField('paths')">Add another field
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-primary" ng-click="defVm.saveAgent();" type="button"
+                            style="width: 100%;">Save definition!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
