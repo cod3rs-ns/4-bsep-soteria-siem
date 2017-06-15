@@ -1,24 +1,17 @@
 package bsep.sw.controllers;
 
-import bsep.sw.domain.*;
-import bsep.sw.rule_engine.FieldType;
-import bsep.sw.rule_engine.MethodType;
-import bsep.sw.rule_engine.rules.SingleLogRule;
+import bsep.sw.domain.Log;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
-import bsep.sw.services.ProjectService;
-import bsep.sw.util.AlarmNotification;
-import org.easyrules.api.RulesEngine;
-import org.easyrules.core.RulesEngineBuilder;
+import bsep.sw.rule_engine.rules.RulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,14 +22,13 @@ import java.util.UUID;
 public class LogController {
 
     private final LogsRepository logs;
-    private final SimpMessagingTemplate template;
-    private final ProjectService projectService;
+    private final RulesService rulesService;
 
     @Autowired
-    public LogController(final LogsRepository logs, final SimpMessagingTemplate template, final ProjectService projectService) {
+    public LogController(final LogsRepository logs,
+                         final RulesService rulesService) {
         this.logs = logs;
-        this.template = template;
-        this.projectService = projectService;
+        this.rulesService = rulesService;
     }
 
     @GetMapping("/projects/{projectId}/logs")
@@ -71,25 +63,14 @@ public class LogController {
         final Log log = request.toDomain()
                 .id(UUID.randomUUID().toString());
 
-        // TODO setup this and read from DB
-        RulesEngine rulesEngine = RulesEngineBuilder
-                .aNewRulesEngine()
-                .named("Test rules engine")
-                .withSilentMode(true)
-                .build();
+        // TODO maybe not bad idea to check for project existence!!!
 
-        final AlarmDefinition ad = new AlarmDefinition()
-                .description("Some def")
-                .name("Some name");
+        final Log savedLog = logs.save(log);
 
-        ad.getSingleRules().add(new SingleRule().field(FieldType.LEVEL).method(MethodType.EQUALS).value("eRrOr"));
-        ad.getSingleRules().add(new SingleRule().field(FieldType.PID).method(MethodType.STARTS_WITH).value("P"));
+        // push to rules evaluation
+        rulesService.evaluateNewLog(savedLog);
 
-        SingleLogRule logRule = new SingleLogRule(log, ad, projectService, template);
-        rulesEngine.registerRule(logRule);
-        rulesEngine.fireRules();
-
-        return ResponseEntity.ok(LogResponse.fromDomain(logs.save(log)));
+        return ResponseEntity.ok(LogResponse.fromDomain(savedLog));
     }
 
 }

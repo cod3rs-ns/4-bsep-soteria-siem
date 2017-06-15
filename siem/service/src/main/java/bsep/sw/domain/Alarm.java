@@ -106,6 +106,11 @@ public class Alarm extends EntityMeta {
         this.logId = logId;
     }
 
+    public Alarm log(final String log) {
+        this.logId = logId;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

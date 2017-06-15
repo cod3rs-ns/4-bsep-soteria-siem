@@ -197,4 +197,16 @@ public class AlarmDefinition extends EntityMeta {
                 .toHashCode();
     }
 
+    @Override
+    public String toString() {
+        return "AlarmDefinition{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", triggeredCount=" + triggeredCount +
+                ", level=" + level +
+                ", firstOccurrence=" + firstOccurrence +
+                ", lastOccurrence=" + lastOccurrence +
+                ", project=" + project +
+                '}';
+    }
 }
