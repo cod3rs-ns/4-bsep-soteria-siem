@@ -103,6 +103,8 @@
                 }
             };
 
+            console.log(data);
+
             projectService.addAgent(projectId, data)
                 .then(function(response) {
                     if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {

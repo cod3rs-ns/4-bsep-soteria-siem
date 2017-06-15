@@ -28,6 +28,7 @@
         function getAlarmDefinitions(project_id) {
             return $http.get(CONFIG.SERVICE_URL + '/projects/' + project_id + '/alarm-definitions')
                 .then(function successCallback(response) {
+                    console.log(response.data);
                     return response.data;
                 }, function errorCallback(response) {
                     $log.warn(response.data.detail);

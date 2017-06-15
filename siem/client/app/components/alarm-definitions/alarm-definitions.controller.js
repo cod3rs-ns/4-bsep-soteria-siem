@@ -10,36 +10,28 @@
     function AlarmDefinitionsController(CONFIG, $stateParams, $log, definitionService, _, $scope) {
         var defVm = this;
 
-        defVm.possibleLevels = [
-            'INFO',
-            'LOW',
-            'MEDIUM',
-            'HIGH',
-            'SEVERE'
-        ];
-
         defVm.definitions = {
             'data': [],
             'next': null,
             'prev': null
         };
 
-        defVm.newDefintion = {
-            'name': null,
-            'description': null,
-            'level': null,
-            'rules': []
+        defVm.newDefinition = {
+            name: null,
+            description: null,
+            level: 'INFO',
+            rules: []
         };
 
         defVm.loadAlarmDefinitions = loadAlarmDefinitions;
-        //defVm.createAlarmDefinition = createAlarmDefinition;
+        defVm.saveAlarmDefinition = saveDefinition;
         defVm.addSingleRule = addSingleRule;
 
         activate();
 
         function activate () {
-            var id = $stateParams.id;
-            defVm.loadAlarmDefinitions(id);
+            var project_id = $stateParams.id;
+            defVm.loadAlarmDefinitions(project_id);
         }
 
         function loadAlarmDefinitions(project_id) {
@@ -47,32 +39,34 @@
                 .then(function(response) {
                     defVm.definitions.data = _.concat(defVm.definitions.data, response.data);
                     defVm.definitions.next = response.links.next;
+                    defVm.definitions.prev = response.links.prev;
                 })
                 .catch(function(error) {
                     $log.error(error);
                 });
         }
 
-        function saveAgent() {
+        function saveDefinition() {
             var projectId = $stateParams.id;
             var data = {
-                'type': 'agents',
+                'type': 'alarm-definitions',
                 'attributes': {
-                    'name': defVm.config.name,
-                    'description': defVm.config.description,
-                    'agent_version': defVm.config.version,
-                    'agent_type': defVm.config.os
+                    'name': defVm.newDefinition.name,
+                    'description': defVm.newDefinition.description,
+                    'level': defVm.newDefinition.level
                 },
                 'relationships': {
-                    'type': 'projects',
-                    'id': projectId
+                    'single-rules': defVm.newDefinition.rules
                 }
             };
+            console.log(data);
 
-            definitionService.addAgent(projectId, data)
+
+            definitionService.create(projectId, data)
                 .then(function(response) {
-                    if (_.size(defVm.agents.data) < CONFIG.AGENTS_LIMIT) {
-                        defVm.agents.data.push(response.data);
+                    if (_.size(defVm.definitions.data) < CONFIG.AGENTS_LIMIT + 21) {
+                        defVm.definitions.data.push(response.data);
+                        console.info(response.data);
                     }
                     // TODO Download with provided configuration
                 })
@@ -81,9 +75,9 @@
                 });
         }
 
-        function addSingleRule(group) {
-            var index = _.size(defVm.config[group]) + 1;
-            defVm.config[group].push({'id': index, value: ''});
+        function addSingleRule() {
+            var index = _.size(defVm.newDefinition.rules) + 1;
+            defVm.newDefinition.rules.push({id: index, value: '', method: 'EQUALS', field: 'MESSAGE', type: 'single-rules'});
         }
     }
 })();
