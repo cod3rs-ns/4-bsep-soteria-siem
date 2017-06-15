@@ -26,6 +26,9 @@ public class AlarmDefinitionResponseAttributes extends ResourceResponseAttribute
     @JsonProperty("last-occurrence")
     public DateTime lastOccurrence;
 
+    @JsonProperty("message")
+    public String message;
+
 
     public static AlarmDefinitionResponseAttributes fromDomain(final AlarmDefinition definition) {
         final AlarmDefinitionResponseAttributes attributes = new AlarmDefinitionResponseAttributes();
@@ -35,6 +38,7 @@ public class AlarmDefinitionResponseAttributes extends ResourceResponseAttribute
         attributes.triggeredCount = definition.getTriggeredCount();
         attributes.firstOcurrence = definition.getFirstOccurrence();
         attributes.lastOccurrence = definition.getLastOccurrence();
+        attributes.message = definition.getMessage();
         return attributes;
     }
 

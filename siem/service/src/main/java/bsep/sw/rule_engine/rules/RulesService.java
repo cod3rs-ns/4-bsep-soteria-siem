@@ -14,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RulesService {
@@ -35,10 +36,9 @@ public class RulesService {
     }
 
     public void evaluateNewLog(final Log log) {
-        // TODO setup this and read from DB
         final RulesEngine rulesEngine = RulesEngineBuilder
                 .aNewRulesEngine()
-                .named("Simple rules engine")
+                .named(UUID.randomUUID().toString())
                 .withSkipOnFirstAppliedRule(false)
                 .withSkipOnFirstNonTriggeredRule(false)
                 .withSkipOnFirstFailedRule(false)

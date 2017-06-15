@@ -14,4 +14,7 @@ public class AlarmDefinitionRequestAttributes {
     @JsonProperty("level")
     public AlarmLevel level;
 
+    @JsonProperty("message")
+    public String message;
+
 }

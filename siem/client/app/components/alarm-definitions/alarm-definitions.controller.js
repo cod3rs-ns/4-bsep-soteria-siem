@@ -20,6 +20,7 @@
             name: null,
             description: null,
             level: 'INFO',
+            message: null,
             rules: []
         };
 
@@ -53,7 +54,8 @@
                 'attributes': {
                     'name': defVm.newDefinition.name,
                     'description': defVm.newDefinition.description,
-                    'level': defVm.newDefinition.level
+                    'level': defVm.newDefinition.level,
+                    'message': defVm.newDefinition.message
                 },
                 'relationships': {
                     'single-rules': defVm.newDefinition.rules

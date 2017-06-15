@@ -15,7 +15,8 @@ public class AlarmDefinitionRequest {
         final AlarmDefinition ad = new AlarmDefinition()
                 .name(data.attributes.name)
                 .description(data.attributes.description)
-                .level(data.attributes.level);
+                .level(data.attributes.level)
+                .message(data.attributes.message);
 
         final HashSet<SingleRule> rules = new HashSet<>();
 

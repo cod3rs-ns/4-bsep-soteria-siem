@@ -21,8 +21,15 @@
 										<dt>Description:</dt>
 										<dd>{{alarmDefinition.attributes["description"]}}</dd>
 										
-										<dt>Trigger:</dt>
+										<dt>Occurs:</dt>
 										<dd>{{alarmDefinition.attributes["triggers"]}}</dd>
+										
+										<dt>First time:</dt>
+										<dd>{{alarmDefinition.attributes["first-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</dd>
+										
+										<dt>Last time:</dt>
+										<dd>{{alarmDefinition.attributes["last-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</dd>
+									
 									</dl>
 								</div>
 							</div>
@@ -72,6 +79,15 @@
 														       name="definition-description" id="definition-description"
 														       placeholder="Alarm definition's description"
 														       ng-model="defVm.newDefinition.description">
+													</div>
+												</div>
+												<div class="form-group" style="margin: 10px">
+													<label for="definition-message" class="col-sm-3 control-label">Message:</label>
+													<div class="col-sm-9">
+														<input type="text" class="form-control"
+														       name="definition-message" id="definition-message"
+														       placeholder="Message to show in Alarm instance"
+														       ng-model="defVm.newDefinition.message">
 													</div>
 												</div>
 												<div class="form-group" style="margin: 10px">

@@ -34,6 +34,11 @@ public class AlarmDefinition extends EntityMeta {
     @Enumerated(EnumType.STRING)
     private AlarmLevel level;
 
+    @NotNull
+    @Column(name = "ad_message", nullable = false)
+    @Size(min = 1, max = 255)
+    private String message;
+
     @Column(name = "ad_first_occurrence")
     private DateTime firstOccurrence;
 
@@ -49,6 +54,20 @@ public class AlarmDefinition extends EntityMeta {
 
     @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SingleRule> singleRules = new HashSet<>(0);
+
+    /**
+     * Updates Alarm-Definition's statistics when new Alarm occurs.
+     *
+     * @param alarm Alarm that occurred.
+     */
+    public void updateWithAlarm(final Alarm alarm) {
+        this.alarms.add(alarm);
+        if (this.firstOccurrence == null) {
+            this.firstOccurrence = alarm.getCreatedAt();
+        }
+        this.triggeredCount += 1;
+        this.lastOccurrence = alarm.getCreatedAt();
+    }
 
     public String getName() {
         return name;
@@ -99,6 +118,19 @@ public class AlarmDefinition extends EntityMeta {
 
     public AlarmDefinition level(AlarmLevel level) {
         this.level = level;
+        return this;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public AlarmDefinition message(String message) {
+        this.message = message;
         return this;
     }
 
@@ -204,6 +236,7 @@ public class AlarmDefinition extends EntityMeta {
                 ", description='" + description + '\'' +
                 ", triggeredCount=" + triggeredCount +
                 ", level=" + level +
+                ", message='" + message + '\'' +
                 ", firstOccurrence=" + firstOccurrence +
                 ", lastOccurrence=" + lastOccurrence +
                 ", project=" + project +

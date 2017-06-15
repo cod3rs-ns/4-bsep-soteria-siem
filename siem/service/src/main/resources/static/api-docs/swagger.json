@@ -1093,6 +1093,13 @@
                   "minLength": 1,
                   "maxLength": 60
                 },
+                "message": {
+                  "type": "string",
+                  "description": "Alarm definition's message - will be applied to alarms",
+                  "example": "This occurred!",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
                 "level": {
                   "type": "string",
                   "description": "Alarm definition importance (priority)",
@@ -1233,6 +1240,11 @@
               "type": "string",
               "description": "Alarm definition's description",
               "example": "This is some very important alarm"
+            },
+            "message": {
+              "type": "string",
+              "description": "Alarm definition's description",
+              "example": "This occurred!"
             },
             "level": {
               "type": "string",

@@ -9,18 +9,22 @@ import bsep.sw.services.ProjectService;
 import bsep.sw.util.AlarmNotification;
 import org.apache.log4j.Logger;
 import org.easyrules.core.BasicRule;
+import org.joda.time.DateTime;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.Date;
 import java.util.UUID;
 
 public class SingleLogRule extends BasicRule {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
     private final SimpMessagingTemplate template;
+
     // possibly should be injected
     private ProjectService projectService;
     private AlarmDefinitionService alarmDefinitionService;
     private AlarmService alarmService;
+
     // perform rule on
     private Log log;
     private AlarmDefinition alarmDefinition;
@@ -45,7 +49,6 @@ public class SingleLogRule extends BasicRule {
     @Override
     public boolean evaluate() {
         for (final SingleRule rule : alarmDefinition.getSingleRules()) {
-            System.out.println(rule);
             if (!methodSupplier
                     .getMethod(rule.getMethod())
                     .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
@@ -60,15 +63,15 @@ public class SingleLogRule extends BasicRule {
         // TODO real alarm name
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
-                .message("This happened! Within rule engine! Yeah madafaka!")
+                .message(alarmDefinition.getMessage())
                 .resolved(false)
                 .log(log.getId());
 
         logger.info(alarm);
 
-        // save alarm
-        alarmService.save(alarm);
-        alarmDefinition.getAlarms().add(alarm);
+        // save alarm and update definition stats
+        final Alarm savedAlarm = alarmService.save(alarm);
+        alarmDefinition.updateWithAlarm(savedAlarm);
         alarmDefinitionService.save(alarmDefinition);
 
         // Send notifications through socket
