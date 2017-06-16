@@ -75,11 +75,15 @@ public class CSRUtil {
             final byte[] signature = Base64.decodeBase64(matcher.group(4).trim());
 
             if (verify(cipherData, signature, keyStoreUtil.readPublicKey(username))) {
-                final String decrypted = new String(decrypt(cipherData, secretKey));
-                final ObjectMapper mapper = new ObjectMapper();
-                mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                mapper.registerModule(new JodaModule());
-                return mapper.readValue(decrypted, LogRequest.class);
+                try {
+                    final String decrypted = new String(decrypt(cipherData, secretKey));
+                    final ObjectMapper mapper = new ObjectMapper();
+                    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                    mapper.registerModule(new JodaModule());
+                    return mapper.readValue(decrypted, LogRequest.class);
+                } catch (final Exception e) {
+                    logger.debug("Error occurred while validating request", e);
+                }
             }
         }
         return null;

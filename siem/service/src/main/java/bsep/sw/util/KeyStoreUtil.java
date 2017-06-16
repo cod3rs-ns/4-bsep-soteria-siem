@@ -1,5 +1,6 @@
 package bsep.sw.util;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -112,4 +113,11 @@ public class KeyStoreUtil {
         }
     }
 
+    public AgentKeys findKeys(final String username) throws Exception {
+        final String privateKey = Base64.encodeBase64String(readPrivateKey(username).getEncoded());
+        final String publicKey = Base64.encodeBase64String(readPublicKey(username).getEncoded());
+        final String secretKey = Base64.encodeBase64String(loadSecretAsymmetricKey().getEncoded());
+
+        return new AgentKeys(privateKey, publicKey, secretKey);
+    }
 }
