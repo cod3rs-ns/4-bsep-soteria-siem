@@ -13,4 +13,5 @@ namespace WinAgent.model
         public string Errno { get; set; }
         public string Stack { get; set; }
     }
+
 }

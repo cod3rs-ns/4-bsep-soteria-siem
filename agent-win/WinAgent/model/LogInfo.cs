@@ -27,4 +27,5 @@ namespace WinAgent.model
             this.Errors = new List<LogError>();
         }
     }
+
 }

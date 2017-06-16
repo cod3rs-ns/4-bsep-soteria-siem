@@ -10,9 +10,7 @@ namespace WinAgent.model
     {
         public LogRequestData Data { get; set; }
 
-        public LogRequest()
-        {
-        }
+        public LogRequest() { }
 
         public LogRequest(Log log)
         {

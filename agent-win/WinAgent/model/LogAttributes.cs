@@ -16,9 +16,7 @@ namespace WinAgent.model
         public LogInfo Info { get; set; }
         public string Message { get; set; }
 
-        public LogAttributes()
-        {
-        }
+        public LogAttributes() { }
 
         public LogAttributes(Log log)
         {
@@ -27,5 +25,6 @@ namespace WinAgent.model
             this.Info = new LogInfo(log);
             this.Time = log.Time.ToString("yyyy-MM-dd'T'HH:mm:ssZ");
         }
+
     }
 }

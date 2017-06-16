@@ -12,9 +12,7 @@ namespace WinAgent.model
         public LogAttributes Attributes { get; set; }
         public LogRequestRelationships Relationships { get; set; }
 
-        public LogRequestData()
-        {
-        }
+        public LogRequestData() { }
 
         public LogRequestData(Log log)
         {
@@ -22,5 +20,6 @@ namespace WinAgent.model
             this.Attributes = new LogAttributes(log);
             this.Relationships = new LogRequestRelationships();
         }
+
     }
 }
