@@ -12,6 +12,7 @@ import org.easyrules.core.BasicRule;
 import org.joda.time.DateTime;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -63,8 +64,12 @@ public class SingleLogRule extends BasicRule {
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
-                .resolved(false)
-                .log(log.getId());
+                .resolved(false);
+
+        final LogAlarmPair lap = new LogAlarmPair().alarm(alarm).log(log.getId());
+        final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
+        logPairs.add(lap);
+        alarm.logs(logPairs);
 
         logger.info(alarm);
 

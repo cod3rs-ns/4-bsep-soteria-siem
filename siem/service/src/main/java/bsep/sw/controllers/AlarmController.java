@@ -64,15 +64,9 @@ public class AlarmController extends StandardResponses {
 
         final List<Alarm> alarms = alarmService.findAllByProject(project);
 
-        List<String> logIds = alarms.stream()
-                .map(Alarm::getLogId)
-                .collect(Collectors.toList());
-        final ArrayList<Log> logs = new ArrayList<>();
-        logIds.forEach(l -> logs.add(logsRepository.findOne(l)));
-
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(logs, alarms, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmCollectionResponse.fromDomain(alarms, new PaginationLinks(request.getRequestURL().toString())));
     }
 
     @GetMapping("/projects/{projectId}/alarms/{alarmId}")
@@ -89,10 +83,13 @@ public class AlarmController extends StandardResponses {
         }
 
         final Alarm alarm = alarmService.findOneByProjectAndId(project, alarmId);
-        final Log log = logsRepository.findOne(alarm.getLogId());
+
+        if (alarm == null) {
+            return notFound("alarm");
+        }
         return ResponseEntity
                 .ok()
-                .body(AlarmResponse.fromDomain(alarm, log));
+                .body(AlarmResponse.fromDomain(alarm));
     }
 
     @GetMapping("/alarms")
@@ -112,19 +109,9 @@ public class AlarmController extends StandardResponses {
         final String next = page.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, limit + offset, limit, resolved) : null;
         final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d&filter[resolved]=%b", baseUrl, offset - limit, limit, resolved) : null;
 
-        List<String> logIds = page.getContent().stream()
-                .map(Alarm::getLogId)
-                .collect(Collectors.toList());
-        final ArrayList<Log> logs = new ArrayList<>();
-        logIds.forEach(l -> {
-            if (l != null) {
-                logs.add(logsRepository.findOne(l));
-            }
-        });
-
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(logs, page.getContent(), new PaginationLinks(self, next, prev)));
+                .body(AlarmCollectionResponse.fromDomain(page.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @PutMapping("/alarms/{alarmId}/resolve")
@@ -144,6 +131,6 @@ public class AlarmController extends StandardResponses {
 
         return ResponseEntity
                 .ok()
-                .body(AlarmResponse.fromDomain(alarmService.save(alarm), logsRepository.findOne(alarm.getLogId())));
+                .body(AlarmResponse.fromDomain(alarmService.save(alarm)));
     }
 }

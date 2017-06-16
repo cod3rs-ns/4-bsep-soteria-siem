@@ -1,6 +1,7 @@
 package bsep.sw.hateoas.alarm_definition;
 
 import bsep.sw.domain.AlarmDefinition;
+import bsep.sw.domain.AlarmDefinitionType;
 import bsep.sw.domain.AlarmLevel;
 import bsep.sw.hateoas.resource.response.ResourceResponseAttributes;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,6 +30,9 @@ public class AlarmDefinitionResponseAttributes extends ResourceResponseAttribute
     @JsonProperty("message")
     public String message;
 
+    @JsonProperty("type")
+    public AlarmDefinitionType type;
+
 
     public static AlarmDefinitionResponseAttributes fromDomain(final AlarmDefinition definition) {
         final AlarmDefinitionResponseAttributes attributes = new AlarmDefinitionResponseAttributes();
@@ -39,6 +43,7 @@ public class AlarmDefinitionResponseAttributes extends ResourceResponseAttribute
         attributes.firstOcurrence = definition.getFirstOccurrence();
         attributes.lastOccurrence = definition.getLastOccurrence();
         attributes.message = definition.getMessage();
+        attributes.type = definition.getDefinitionType();
         return attributes;
     }
 

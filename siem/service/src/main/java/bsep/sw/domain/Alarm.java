@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "alarms")
@@ -30,8 +31,8 @@ public class Alarm extends EntityMeta {
     @JoinColumn(name = "al_definition_id")
     private AlarmDefinition definition;
 
-    @Column(name = "al_log_id")
-    private String logId;
+    @OneToMany(mappedBy = "alarm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<LogAlarmPair> logs;
 
     public String getMessage() {
         return message;
@@ -98,16 +99,16 @@ public class Alarm extends EntityMeta {
         return this;
     }
 
-    public String getLogId() {
-        return logId;
+    public List<LogAlarmPair> getLogs() {
+        return logs;
     }
 
-    public void setLogId(final String logId) {
-        this.logId = logId;
+    public void setLogs(List<LogAlarmPair> logs) {
+        this.logs = logs;
     }
 
-    public Alarm log(final String log) {
-        this.logId = logId;
+    public Alarm logs(final List<LogAlarmPair> logs) {
+        this.logs = logs;
         return this;
     }
 
