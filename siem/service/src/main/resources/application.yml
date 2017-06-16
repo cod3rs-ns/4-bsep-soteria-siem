@@ -42,6 +42,12 @@ security:
     secret: SECRET-KEY
     expiration: 3600000
 
+keystore:
+  path: C:\Users\Korisnik\Desktop\keystore.jks
+  password: soteria
+
+secretStore:
+  path: C:\Users\Korisnik\Desktop\secretStore.jceks
 
 logging:
   level:
