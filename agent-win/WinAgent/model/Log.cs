@@ -16,7 +16,7 @@ namespace WinAgent.model
         public string Message { get; set; }
         public string Host { get; set; }
         public string Source { get; set; }
-        
+
         public Log(LogLevel level, DateTime time, string message, string host, string source)
         {
             this.Level = level;
