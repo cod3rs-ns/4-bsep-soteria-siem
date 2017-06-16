@@ -1072,7 +1072,7 @@
                 "alarm-definitions"
               ],
               "description": "Represents entity type",
-              "example": "projects"
+              "example": "alarm-definitions"
             },
             "attributes": {
               "type": "object",
@@ -1093,6 +1093,13 @@
                   "minLength": 1,
                   "maxLength": 60
                 },
+                "message": {
+                  "type": "string",
+                  "description": "Alarm definition's message - will be applied to alarms",
+                  "example": "This occurred!",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
                 "level": {
                   "type": "string",
                   "description": "Alarm definition importance (priority)",
@@ -1104,23 +1111,133 @@
                     "SEVERE"
                   ],
                   "example": "MEDIUM"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Represents type of definition",
+                  "example": "SINGLE",
+                  "enum": [
+                    "SINGLE",
+                    "MULTI"
+                  ]
                 }
               },
               "required": [
                 "name",
                 "description",
-                "level"
+                "level",
+                "message",
+                "type"
+              ]
+            },
+            "relationships": {
+              "type": "object",
+              "properties": {
+                "single-rules": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CreateSingleRuleRequest"
+                  }
+                },
+                "multi-rule": {
+                  "$ref": "#/definitions/CreateMultiRuleRequest"
+                }
+              },
+              "required": [
+                "single-rules",
+                "multi-rule"
               ]
             }
           },
           "required": [
             "type",
-            "attributes"
+            "attributes",
+            "relationships"
           ]
         }
       },
       "required": [
         "data"
+      ]
+    },
+    "CreateSingleRuleRequest": {
+      "title": "Create single rule request",
+      "description": "Request to create new single rule",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "single-rules"
+          ],
+          "description": "Represents entity type",
+          "example": "single-rules"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value to compare field to",
+          "example": "error"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "CONTAINS",
+            "EQUALS",
+            "ENDS_WITH",
+            "STARTS_WITH",
+            "REGEX"
+          ],
+          "example": "EQUALS"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "MESSAGE",
+            "HOST",
+            "LEVEL",
+            "PID",
+            "UID",
+            "GID"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "value",
+        "field",
+        "method"
+      ]
+    },
+    "CreateMultiRuleRequest": {
+      "title": "Create multi rule request",
+      "description": "Request to create new multi rule",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "multi-rules"
+          ],
+          "description": "Represents entity type",
+          "example": "multi-rules"
+        },
+        "interval": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of seconds to look back into logs history",
+          "example": 600
+        },
+        "repetition-trigger": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of logs necessary to trigger alarm",
+          "example": 10
+        }
+      },
+      "required": [
+        "type",
+        "interval",
+        "repetition-trigger"
       ]
     },
     "AlarmDefinitionResponse": {
@@ -1170,6 +1287,11 @@
               "type": "string",
               "description": "Alarm definition's description",
               "example": "This is some very important alarm"
+            },
+            "message": {
+              "type": "string",
+              "description": "Alarm definition's description",
+              "example": "This occurred!"
             },
             "level": {
               "type": "string",

@@ -31,7 +31,13 @@ public class AlarmDefinition extends EntityMeta {
 
     @NotNull
     @Column(name = "ad_level", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AlarmLevel level;
+
+    @NotNull
+    @Column(name = "ad_message", nullable = false)
+    @Size(min = 1, max = 255)
+    private String message;
 
     @Column(name = "ad_first_occurrence")
     private DateTime firstOccurrence;
@@ -43,8 +49,35 @@ public class AlarmDefinition extends EntityMeta {
     @JoinColumn(name = "ad_project_id")
     private Project project;
 
-    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Alarm> alarms = new HashSet<>(0);
+
+    // ----->> RULES <<----- //
+
+    @NotNull
+    @Column(name = "ad_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AlarmDefinitionType definitionType; // determines which set of rules will be used
+
+    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<SingleRule> singleRules = new HashSet<>(0);
+
+    @OneToOne(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private MultiRule multiRule;
+
+    /**
+     * Updates Alarm-Definition's statistics when new Alarm occurs.
+     *
+     * @param alarm Alarm that occurred.
+     */
+    public void updateWithAlarm(final Alarm alarm) {
+        this.alarms.add(alarm);
+        if (this.firstOccurrence == null) {
+            this.firstOccurrence = alarm.getCreatedAt();
+        }
+        this.triggeredCount += 1;
+        this.lastOccurrence = alarm.getCreatedAt();
+    }
 
     public String getName() {
         return name;
@@ -95,6 +128,19 @@ public class AlarmDefinition extends EntityMeta {
 
     public AlarmDefinition level(AlarmLevel level) {
         this.level = level;
+        return this;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public AlarmDefinition message(String message) {
+        this.message = message;
         return this;
     }
 
@@ -150,6 +196,45 @@ public class AlarmDefinition extends EntityMeta {
         return this;
     }
 
+    public AlarmDefinitionType getDefinitionType() {
+        return definitionType;
+    }
+
+    public void setDefinitionType(AlarmDefinitionType definitionType) {
+        this.definitionType = definitionType;
+    }
+
+    public AlarmDefinition type(AlarmDefinitionType alarmDefinitionType) {
+        this.definitionType = alarmDefinitionType;
+        return this;
+    }
+
+    public Set<SingleRule> getSingleRules() {
+        return singleRules;
+    }
+
+    public void setSingleRules(Set<SingleRule> singleRules) {
+        this.singleRules = singleRules;
+    }
+
+    public AlarmDefinition singleRules(Set<SingleRule> singleRules) {
+        this.singleRules = singleRules;
+        return this;
+    }
+
+    public MultiRule getMultiRule() {
+        return multiRule;
+    }
+
+    public void setMultiRules(MultiRule multiRule) {
+        this.multiRule = multiRule;
+    }
+
+    public AlarmDefinition multiRule(MultiRule multiRule) {
+        this.multiRule = multiRule;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -180,4 +265,18 @@ public class AlarmDefinition extends EntityMeta {
                 .toHashCode();
     }
 
+    @Override
+    public String toString() {
+        return "AlarmDefinition{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", triggeredCount=" + triggeredCount +
+                ", level=" + level +
+                ", message='" + message + '\'' +
+                ", firstOccurrence=" + firstOccurrence +
+                ", lastOccurrence=" + lastOccurrence +
+                ", project=" + project +
+                ", definitionType=" + definitionType +
+                '}';
+    }
 }

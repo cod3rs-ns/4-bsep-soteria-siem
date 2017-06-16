@@ -5,5 +5,6 @@ angular
         'ngStorage',
         'ngToast',
         'ngStomp',
-        'angularMoment'
+        'angularMoment',
+        'ngSanitize'
     ]);

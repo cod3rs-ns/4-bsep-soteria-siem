@@ -9,14 +9,13 @@ import bsep.sw.hateoas.resource.response.ResourceCollectionResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AlarmCollectionResponse extends ResourceCollectionResponse {
 
-    public static AlarmCollectionResponse fromDomain(final ArrayList<Log> logs, final List<Alarm> alarms, final PaginationLinks links) {
+    public static AlarmCollectionResponse fromDomain(final List<Alarm> alarms, final PaginationLinks links) {
         final AlarmCollectionResponse response = new AlarmCollectionResponse();
-        for (int i = 0; i < alarms.size(); i++) {
-            response.data.add(AlarmResponseData.fromDomain(alarms.get(i), logs.get(i)));
-        }
+        response.data.addAll(alarms.stream().map(AlarmResponseData::fromDomain).collect(Collectors.toList()));
         response.links = links;
         response.meta = new PaginationResponseMeta(null, alarms.size(), null);
         return response;

@@ -78,7 +78,7 @@ public class AlarmDefinitionController extends StandardResponses {
         final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
         return ResponseEntity
                 .ok()
-                .body(AlarmDefinitionCollectionResponse.fromDomain(definitions, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmDefinitionCollectionResponse.fromDomain(definitions, new PaginationLinks(request.getRequestURL().toString(), "next", "prev")));
     }
 
     @GetMapping("/projects/{projectId}/alarm-definitions/{definitionId}")

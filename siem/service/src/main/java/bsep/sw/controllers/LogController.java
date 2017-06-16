@@ -1,22 +1,17 @@
 package bsep.sw.controllers;
 
-import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
-import bsep.sw.domain.Project;
-import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
-import bsep.sw.services.ProjectService;
-import bsep.sw.util.AlarmNotification;
+import bsep.sw.rule_engine.rules.RulesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,14 +22,13 @@ import java.util.UUID;
 public class LogController {
 
     private final LogsRepository logs;
-    private final SimpMessagingTemplate template;
-    private final ProjectService projectService;
+    private final RulesService rulesService;
 
     @Autowired
-    public LogController(final LogsRepository logs, final SimpMessagingTemplate template, final ProjectService projectService) {
+    public LogController(final LogsRepository logs,
+                         final RulesService rulesService) {
         this.logs = logs;
-        this.template = template;
-        this.projectService = projectService;
+        this.rulesService = rulesService;
     }
 
     @GetMapping("/projects/{projectId}/logs")
@@ -69,20 +63,14 @@ public class LogController {
         final Log log = request.toDomain()
                 .id(UUID.randomUUID().toString());
 
-        // Drools engine should return alarm that will be triggered
-        final Alarm dummyAlarm = new Alarm()
-                .message("Same user try to log 3 times in a row")
-                .resolved(false);
+        // TODO maybe not bad idea to check for project existence!!!
 
-        final Project project = projectService.findOne(log.getProject());
-        for (final User user : project.getMembers()) {
-            // Send notifications through socket
-            template.convertAndSend(
-                    "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, log, dummyAlarm));
-        }
+        final Log savedLog = logs.save(log);
 
-        return ResponseEntity.ok(LogResponse.fromDomain(logs.save(log)));
+        // push to rules evaluation
+        rulesService.evaluateNewLog(savedLog);
+
+        return ResponseEntity.ok(LogResponse.fromDomain(savedLog));
     }
 
 }
