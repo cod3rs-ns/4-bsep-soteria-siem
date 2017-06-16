@@ -52,11 +52,18 @@ public class AlarmDefinition extends EntityMeta {
     @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Alarm> alarms = new HashSet<>(0);
 
+    // ----->> RULES <<----- //
+
+    @NotNull
+    @Column(name = "ad_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AlarmDefinitionType definitionType; // determines which set of rules will be used
+
     @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SingleRule> singleRules = new HashSet<>(0);
 
-    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<MultiRule> multiRules = new HashSet<>(0);
+    @OneToOne(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private MultiRule multiRule;
 
     /**
      * Updates Alarm-Definition's statistics when new Alarm occurs.
@@ -189,6 +196,19 @@ public class AlarmDefinition extends EntityMeta {
         return this;
     }
 
+    public AlarmDefinitionType getDefinitionType() {
+        return definitionType;
+    }
+
+    public void setDefinitionType(AlarmDefinitionType definitionType) {
+        this.definitionType = definitionType;
+    }
+
+    public AlarmDefinition type(AlarmDefinitionType alarmDefinitionType) {
+        this.definitionType = alarmDefinitionType;
+        return this;
+    }
+
     public Set<SingleRule> getSingleRules() {
         return singleRules;
     }
@@ -202,16 +222,16 @@ public class AlarmDefinition extends EntityMeta {
         return this;
     }
 
-    public Set<MultiRule> getMultiRules() {
-        return multiRules;
+    public MultiRule getMultiRule() {
+        return multiRule;
     }
 
-    public void setMultiRules(Set<MultiRule> multiRules) {
-        this.multiRules = multiRules;
+    public void setMultiRules(MultiRule multiRule) {
+        this.multiRule = multiRule;
     }
 
-    public AlarmDefinition multiRules(Set<MultiRule> multiRules) {
-        this.multiRules = multiRules;
+    public AlarmDefinition multiRule(MultiRule multiRule) {
+        this.multiRule = multiRule;
         return this;
     }
 
@@ -256,6 +276,7 @@ public class AlarmDefinition extends EntityMeta {
                 ", firstOccurrence=" + firstOccurrence +
                 ", lastOccurrence=" + lastOccurrence +
                 ", project=" + project +
+                ", definitionType=" + definitionType +
                 '}';
     }
 }

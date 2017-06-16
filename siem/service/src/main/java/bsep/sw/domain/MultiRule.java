@@ -30,13 +30,12 @@ public class MultiRule implements Serializable {
     private Integer interval; // in seconds
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sr_definition_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mr_definition_id")
     private AlarmDefinition definition;
 
-    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parentRule", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SingleRule> singleRules = new HashSet<>(0);
-
 
     public Long getId() {
         return id;

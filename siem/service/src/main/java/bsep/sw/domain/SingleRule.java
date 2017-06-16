@@ -32,10 +32,9 @@ public class SingleRule implements Serializable {
     @Enumerated(EnumType.STRING)
     private MethodType method;
 
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sr_definition_id")
-    private AlarmDefinition definition;
+    private AlarmDefinition definition; // can be null if rule is part of multi rule
 
     // nullable in case where this rule is top level rule,
     // directly under AlarmDefinition

@@ -1,6 +1,7 @@
 package bsep.sw.hateoas.alarm_definition;
 
 import bsep.sw.domain.AlarmDefinition;
+import bsep.sw.domain.AlarmDefinitionType;
 import bsep.sw.hateoas.relationships.RelationshipData;
 import bsep.sw.hateoas.relationships.RelationshipLinks;
 import bsep.sw.hateoas.relationships.ResponseCollectionRelationship;
@@ -26,6 +27,9 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
     @JsonProperty("single-rules")
     public ResponseCollectionRelationship singleRules;
 
+    @JsonProperty("multi-rule")
+    public ResponseRelationship multiRule;
+
     public static AlarmDefinitionResponseRelationships fromDomain(final AlarmDefinition alarmDefinition) {
         final AlarmDefinitionResponseRelationships relationships = new AlarmDefinitionResponseRelationships();
 
@@ -40,13 +44,38 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
                 .collect(Collectors.toList()));
         relationships.alarms = new ResponseCollectionRelationship(alarmsLinks, alarmsData);
 
-        final RelationshipLinks rulesLinks = new RelationshipLinks("not-existing");
-        final List<RelationshipData> rulesData = new ArrayList<>(alarmDefinition.getSingleRules()
-                .stream()
-                .map(a -> new RuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
-                .collect(Collectors.toList()));
-        relationships.singleRules = new ResponseCollectionRelationship(rulesLinks, rulesData);
+        if (alarmDefinition.getDefinitionType() == AlarmDefinitionType.MULTI) {
+            final RelationshipData multiRuleData = new MultiRuleRelationshipData(
+                    MULTI_RULE_TYPE,
+                    alarmDefinition.getMultiRule().getId().toString(),
+                    alarmDefinition.getMultiRule().getRepetitionTrigger(),
+                    alarmDefinition.getMultiRule().getInterval());
+            final RelationshipLinks multiRuleLinks = new RelationshipLinks("non-existing");
+            relationships.multiRule = new ResponseRelationship(multiRuleLinks, multiRuleData);
 
+
+            final RelationshipLinks singleRulesLinks = new RelationshipLinks("non-existing");
+            System.out.println(alarmDefinition.getMultiRule().getSingleRules().size());
+            final List<RelationshipData> singleRulesData = new ArrayList<>(alarmDefinition.getMultiRule().getSingleRules()
+                    .stream()
+                    .map(a -> new SingleRuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
+                    .collect(Collectors.toList()));
+            relationships.singleRules = new ResponseCollectionRelationship(singleRulesLinks, singleRulesData);
+
+
+        } else {
+            final RelationshipData multiRuleData = new RelationshipData(MULTI_RULE_TYPE, null);
+            final RelationshipLinks multiRuleLinks = new RelationshipLinks("non-existing");
+            relationships.multiRule = new ResponseRelationship(multiRuleLinks, multiRuleData);
+
+            final RelationshipLinks singleRulesLinks = new RelationshipLinks("non-existing");
+            final List<RelationshipData> singleRulesData = new ArrayList<>(alarmDefinition.getSingleRules()
+                    .stream()
+                    .map(a -> new SingleRuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
+                    .collect(Collectors.toList()));
+            relationships.singleRules = new ResponseCollectionRelationship(singleRulesLinks, singleRulesData);
+
+        }
 
         return relationships;
     }

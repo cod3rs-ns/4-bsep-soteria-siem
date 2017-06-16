@@ -4,13 +4,13 @@ import bsep.sw.hateoas.relationships.RelationshipData;
 import bsep.sw.rule_engine.FieldType;
 import bsep.sw.rule_engine.MethodType;
 
-public class RuleRelationshipData extends RelationshipData {
+public class SingleRuleRelationshipData extends RelationshipData {
 
     public MethodType method;
     public FieldType field;
     public String value;
 
-    public RuleRelationshipData(String type, String id, MethodType method, FieldType field, String value) {
+    public SingleRuleRelationshipData(String type, String id, MethodType method, FieldType field, String value) {
         super(type, id);
         this.method = method;
         this.field = field;
