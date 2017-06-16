@@ -37,6 +37,11 @@ public class SingleRule implements Serializable {
     @JoinColumn(name = "sr_definition_id")
     private AlarmDefinition definition;
 
+    // nullable in case where this rule is top level rule,
+    // directly under AlarmDefinition
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sr_multi_rule_id")
+    private MultiRule parentRule;
 
     public Long getId() {
         return id;
@@ -100,6 +105,19 @@ public class SingleRule implements Serializable {
 
     public SingleRule definition(AlarmDefinition definition) {
         this.definition = definition;
+        return this;
+    }
+
+    public MultiRule getParentRule() {
+        return parentRule;
+    }
+
+    public void setParentRule(MultiRule parentRule) {
+        this.parentRule = parentRule;
+    }
+
+    public SingleRule parent(MultiRule multiRule) {
+        this.parentRule = multiRule;
         return this;
     }
 

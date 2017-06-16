@@ -55,6 +55,9 @@ public class AlarmDefinition extends EntityMeta {
     @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<SingleRule> singleRules = new HashSet<>(0);
 
+    @OneToMany(mappedBy = "definition", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<MultiRule> multiRules = new HashSet<>(0);
+
     /**
      * Updates Alarm-Definition's statistics when new Alarm occurs.
      *
@@ -196,6 +199,19 @@ public class AlarmDefinition extends EntityMeta {
 
     public AlarmDefinition singleRules(Set<SingleRule> singleRules) {
         this.singleRules = singleRules;
+        return this;
+    }
+
+    public Set<MultiRule> getMultiRules() {
+        return multiRules;
+    }
+
+    public void setMultiRules(Set<MultiRule> multiRules) {
+        this.multiRules = multiRules;
+    }
+
+    public AlarmDefinition multiRules(Set<MultiRule> multiRules) {
+        this.multiRules = multiRules;
         return this;
     }
 
