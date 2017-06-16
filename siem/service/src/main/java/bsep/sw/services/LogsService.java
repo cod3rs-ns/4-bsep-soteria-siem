@@ -44,9 +44,8 @@ public class LogsService {
 //        query.addCriteria(Criteria.where("time").lt(to).and("time").gt(from));
 
         for (final String name: filters.keySet()) {
-            for (final String value: filters.get(name)) {
-                query.addCriteria(Criteria.where(name).regex(value, "i"));
-            }
+            // FIXME to set or when delimited with ','
+            query.addCriteria(Criteria.where(name).regex(String.join(",", filters.get(name)), "i"));
         }
 
         return operations.find(query, Log.class, "logs");
