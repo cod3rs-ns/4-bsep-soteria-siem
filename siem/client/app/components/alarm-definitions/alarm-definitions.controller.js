@@ -21,6 +21,12 @@
             description: null,
             level: 'INFO',
             message: null,
+            type: 'SINGLE',
+            multiRule: {
+                type: 'multi-rule',
+                interval: null,
+                'repetition-trigger': null
+            },
             rules: []
         };
 
@@ -55,10 +61,12 @@
                     'name': defVm.newDefinition.name,
                     'description': defVm.newDefinition.description,
                     'level': defVm.newDefinition.level,
-                    'message': defVm.newDefinition.message
+                    'message': defVm.newDefinition.message,
+                    'type': defVm.newDefinition.type
                 },
                 'relationships': {
-                    'single-rules': defVm.newDefinition.rules
+                    'single-rules': defVm.newDefinition.rules,
+                    'multi-rule': defVm.newDefinition.multiRule
                 }
             };
             console.log(data);
@@ -68,9 +76,7 @@
                 .then(function(response) {
                     if (_.size(defVm.definitions.data) < CONFIG.AGENTS_LIMIT + 21) {
                         defVm.definitions.data.push(response.data);
-                        console.info(response.data);
                     }
-                    // TODO Download with provided configuration
                 })
                 .catch(function(error) {
                     $log.error(error);

@@ -105,11 +105,58 @@
 														</select>
 													</div>
 												</div>
+												<div class="form-group" style="margin: 10px">
+													<label for="definition-type"
+													       class="col-md-3 control-label">Type: </label>
+													<div class="col-sm-9">
+														<select id="definition-type"
+														        ng-model="defVm.newDefinition.type"
+														        class="form-control">
+															<option value="SINGLE">Single</option>
+															<option value="MULTI">Multi</option>
+														</select>
+													</div>
+												</div>
 											</div>
 										</form>
 									</div>
 								</div>
 								
+								<div class="panel panel-default" ng-show="defVm.newDefinition.type === 'MULTI'">
+									<div class="panel-heading">
+										<h4 class="panel-title agent-config-header">
+											Multi rules definition
+										</h4>
+									</div>
+									<div class="panel-collapse collapse in">
+										<div class="panel-body">
+											<p style="margin-bottom: 10px;"><em>Set up multi rule definition... </em></p>
+											<form class="form-horizontal label-left row">
+												<div class="col-md-12">
+													<div class="form-group" style="margin: 10px">
+														<label for="definition-multi-rule-interval" class="col-sm-3 control-label">Interval:</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control"
+															       name="definition-description" id="definition-multi-rule-interval"
+															       placeholder="Seconds into logs history"
+															       ng-model="defVm.newDefinition.multiRule.interval">
+														</div>
+													</div>
+													<div class="form-group" style="margin: 10px">
+														<label for="definition-multi-rule-trigger" class="col-sm-3 control-label">Repetition:</label>
+														<div class="col-sm-9">
+															<input type="text" class="form-control"
+															       name="definition-message" id="definition-multi-rule-trigger"
+															       placeholder="Number of logs to match rules"
+															       ng-model="defVm.newDefinition.multiRule['repetition-trigger']">
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+								<!-- SINGLE RULES -->
 								<div class="panel panel-default">
 									<div class="panel-heading">
 										<h4 class="panel-title agent-config-header">

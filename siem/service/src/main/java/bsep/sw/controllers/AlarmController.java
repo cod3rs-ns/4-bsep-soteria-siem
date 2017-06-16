@@ -116,7 +116,11 @@ public class AlarmController extends StandardResponses {
                 .map(Alarm::getLogId)
                 .collect(Collectors.toList());
         final ArrayList<Log> logs = new ArrayList<>();
-        logIds.forEach(l -> logs.add(logsRepository.findOne(l)));
+        logIds.forEach(l -> {
+            if (l != null) {
+                logs.add(logsRepository.findOne(l));
+            }
+        });
 
         return ResponseEntity
                 .ok()
