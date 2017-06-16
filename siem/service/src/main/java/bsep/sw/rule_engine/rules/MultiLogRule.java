@@ -9,13 +9,14 @@ import bsep.sw.services.ProjectService;
 import bsep.sw.util.AlarmNotification;
 import org.apache.log4j.Logger;
 import org.easyrules.core.BasicRule;
-import org.joda.time.DateTime;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-public class SingleLogRule extends BasicRule {
+
+public class MultiLogRule extends BasicRule {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
     private final SimpMessagingTemplate template;
@@ -26,19 +27,21 @@ public class SingleLogRule extends BasicRule {
     private final AlarmService alarmService;
 
     // perform rule on
-    private final Log log;
+    private final List<Log> logs;
     private final AlarmDefinition alarmDefinition;
     private final FieldSupplier fieldSupplier = new FieldSupplier();
     private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
 
-    public SingleLogRule(final Log log,
-                         final AlarmDefinition alarmDefinition,
-                         final ProjectService projectService,
-                         final AlarmService alarmService,
-                         final AlarmDefinitionService alarmDefinitionService,
-                         final SimpMessagingTemplate template) {
+    private final List<AlarmedLogs> possibleTriggeredPairs = new ArrayList<>();
+
+    public MultiLogRule(final List<Log> logs,
+                        final AlarmDefinition alarmDefinition,
+                        final ProjectService projectService,
+                        final AlarmService alarmService,
+                        final AlarmDefinitionService alarmDefinitionService,
+                        final SimpMessagingTemplate template) {
         super(UUID.randomUUID().toString(), UUID.randomUUID().toString());
-        this.log = log;
+        this.logs = logs;
         this.alarmDefinition = alarmDefinition;
         this.projectService = projectService;
         this.alarmService = alarmService;
@@ -46,16 +49,21 @@ public class SingleLogRule extends BasicRule {
         this.template = template;
     }
 
+
     @Override
     public boolean evaluate() {
-        for (final SingleRule rule : alarmDefinition.getSingleRules()) {
-            if (!methodSupplier
-                    .getMethod(rule.getMethod())
-                    .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
-                return false;
+        for (final Log log : logs) {
+            for (final SingleRule rule : alarmDefinition.getMultiRule().getSingleRules()) {
+                if (!methodSupplier
+                        .getMethod(rule.getMethod())
+                        .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
+                    break;
+                }
             }
+            possibleTriggeredPairs.add(new AlarmedLogs().definition(alarmDefinition.getId()).log(log.getId()));
         }
-        return true;
+        final Integer totalMatchingLogs = possibleTriggeredPairs.size();
+        return totalMatchingLogs >= alarmDefinition.getMultiRule().getRepetitionTrigger();
     }
 
     @Override
@@ -64,7 +72,7 @@ public class SingleLogRule extends BasicRule {
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
                 .resolved(false)
-                .log(log.getId());
+                .log("some_log"); // TODO extend to logs list
 
         logger.info(alarm);
 
@@ -74,11 +82,11 @@ public class SingleLogRule extends BasicRule {
         alarmDefinitionService.save(alarmDefinition);
 
         // Send notifications through socket
-        final Project project = projectService.findOne(log.getProject());
+        final Project project = projectService.findOne(alarmDefinition.getProject().getId());
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, log, alarm));
+                    new AlarmNotification(project, logs.get(0), alarm)); // TODO extend notification
         }
     }
 }

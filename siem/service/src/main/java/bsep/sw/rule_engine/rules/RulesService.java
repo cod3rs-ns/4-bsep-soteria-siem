@@ -2,6 +2,7 @@ package bsep.sw.rule_engine.rules;
 
 
 import bsep.sw.domain.AlarmDefinition;
+import bsep.sw.domain.AlarmDefinitionType;
 import bsep.sw.domain.Log;
 import bsep.sw.domain.Project;
 import bsep.sw.services.AlarmDefinitionService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -53,8 +55,14 @@ public class RulesService {
         final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
 
         for (final AlarmDefinition definition : definitions) {
-            final SingleLogRule logRule = new SingleLogRule(log, definition, projectService, alarmService, alarmDefinitionService, template);
-            rulesEngine.registerRule(logRule);
+            if (definition.getDefinitionType() == AlarmDefinitionType.SINGLE) {
+                final SingleLogRule logRule = new SingleLogRule(log, definition, projectService, alarmService, alarmDefinitionService, template);
+                rulesEngine.registerRule(logRule);
+            } else {
+                // TODO gather logs
+                final MultiLogRule logRule = new MultiLogRule(new ArrayList<Log>(), definition, projectService, alarmService, alarmDefinitionService, template);
+            }
+
         }
 
         rulesEngine.fireRules();
