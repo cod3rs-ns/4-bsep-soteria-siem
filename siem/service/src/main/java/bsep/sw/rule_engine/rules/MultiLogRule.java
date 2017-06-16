@@ -1,6 +1,7 @@
 package bsep.sw.rule_engine.rules;
 
 import bsep.sw.domain.*;
+import bsep.sw.repositories.AlarmedLogsRepository;
 import bsep.sw.rule_engine.FieldSupplier;
 import bsep.sw.rule_engine.RuleMethodSupplier;
 import bsep.sw.services.AlarmDefinitionService;
@@ -33,13 +34,15 @@ public class MultiLogRule extends BasicRule {
     private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
 
     private final List<AlarmedLogs> possibleTriggeredPairs = new ArrayList<>();
+    private final AlarmedLogsRepository alarmedLogsRepository;
 
     public MultiLogRule(final List<Log> logs,
                         final AlarmDefinition alarmDefinition,
                         final ProjectService projectService,
                         final AlarmService alarmService,
                         final AlarmDefinitionService alarmDefinitionService,
-                        final SimpMessagingTemplate template) {
+                        final SimpMessagingTemplate template,
+                        final AlarmedLogsRepository alarmedLogsRepository) {
         super(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         this.logs = logs;
         this.alarmDefinition = alarmDefinition;
@@ -47,6 +50,7 @@ public class MultiLogRule extends BasicRule {
         this.alarmService = alarmService;
         this.alarmDefinitionService = alarmDefinitionService;
         this.template = template;
+        this.alarmedLogsRepository = alarmedLogsRepository;
     }
 
 
@@ -80,6 +84,10 @@ public class MultiLogRule extends BasicRule {
         final Alarm savedAlarm = alarmService.save(alarm);
         alarmDefinition.updateWithAlarm(savedAlarm);
         alarmDefinitionService.save(alarmDefinition);
+
+        if (alarmDefinition.getDefinitionType() == AlarmDefinitionType.MULTI) {
+            alarmedLogsRepository.save(possibleTriggeredPairs);
+        }
 
         // Send notifications through socket
         final Project project = projectService.findOne(alarmDefinition.getProject().getId());
