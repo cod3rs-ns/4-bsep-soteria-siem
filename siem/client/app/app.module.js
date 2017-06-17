@@ -6,5 +6,6 @@ angular
         'ngToast',
         'ngStomp',
         'angularMoment',
-        'ngSanitize'
+        'ngSanitize',
+        'easypiechart'
     ]);

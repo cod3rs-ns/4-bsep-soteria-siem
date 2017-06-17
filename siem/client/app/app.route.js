@@ -6,7 +6,8 @@ angular
         'ngToast',
         'ngStomp',
         'angularMoment',
-        'ngSanitize'
+        'ngSanitize',
+        'easypiechart'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -24,97 +25,97 @@ angular
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
         // For any unmatched url, redirect to /login
-        $urlRouterProvider.otherwise("/login");
+        $urlRouterProvider.otherwise('/login');
 
         $stateProvider
             .state('home', {
-                url: "/home",
+                url: '/home',
                 data: {
-                    pageTitle: "Soteria | Home"
+                    pageTitle: 'Soteria | Home'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/home/home.html",
-                        controller: "HomeController",
-                        controllerAs: "homeVm"
+                        templateUrl: 'app/components/home/home.html',
+                        controller: 'HomeController',
+                        controllerAs: 'homeVm'
                     }
                 }
             })
             .state('login', {
-                url: "/login",
+                url: '/login',
                 data: {
-                    pageTitle: "Soteria | Sign In"
+                    pageTitle: 'Soteria | Sign In'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/login/login.html",
-                        controller: "LoginController",
-                        controllerAs: "loginVm"
+                        templateUrl: 'app/components/login/login.html',
+                        controller: 'LoginController',
+                        controllerAs: 'loginVm'
                     }
                 }
             })
             .state('register', {
-                url: "/register",
+                url: '/register',
                 data: {
-                    pageTitle: "Soteria | Sign Up"
+                    pageTitle: 'Soteria | Sign Up'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/register/register.html",
-                        controller: "RegisterController",
-                        controllerAs: "registerVm"
+                        templateUrl: 'app/components/register/register.html',
+                        controller: 'RegisterController',
+                        controllerAs: 'registerVm'
                     }
                 }
             })
             .state('projects', {
-                url: "/projects",
+                url: '/projects',
                 data: {
-                    pageTitle: "Soteria | Your projects"
+                    pageTitle: 'Soteria | Your projects'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/projects/projects.html",
-                        controller: "ProjectsController",
-                        controllerAs: "projectsVm"
+                        templateUrl: 'app/components/projects/projects.html',
+                        controller: 'ProjectsController',
+                        controllerAs: 'projectsVm'
                     }
                 }
             })
             .state('project', {
-                url: "/project/:id",
+                url: '/project/:id',
                 data: {
-                    pageTitle: "Soteria | Project details"
+                    pageTitle: 'Soteria | Project details'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/project/project.html",
-                        controller: "ProjectController",
-                        controllerAs: "projectVm"
+                        templateUrl: 'app/components/project/project.html',
+                        controller: 'ProjectController',
+                        controllerAs: 'projectVm'
                     }
                 }
             })
             .state('create-project', {
-                url: "/create-project",
+                url: '/create-project',
                 data: {
-                    pageTitle: "Soteria | Create project"
+                    pageTitle: 'Soteria | Create project'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/project/project-creation.html",
-                        controller: "ProjectCreationController",
-                        controllerAs: "projectCreationVm"
+                        templateUrl: 'app/components/project/project-creation.html',
+                        controller: 'ProjectCreationController',
+                        controllerAs: 'projectCreationVm'
                     }
                 }
             })
             .state('alarms', {
-                url: "/alarms",
+                url: '/alarms',
                 data: {
-                    pageTitle: "Soteria | Alarms"
+                    pageTitle: 'Soteria | Alarms'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/alarms/alarms.html",
-                        controller: "AlarmsController",
-                        controllerAs: "alarmsVm"
+                        templateUrl: 'app/components/alarms/alarms.html',
+                        controller: 'AlarmsController',
+                        controllerAs: 'alarmsVm'
                     }
                 }
             })
@@ -122,21 +123,35 @@ angular
                 url: '/page-not-found',
                 views: {
                     'content@': {
-                        templateUrl: "app/components/error-templates/page-not-found.html"
+                        templateUrl: 'app/components/error-templates/page-not-found.html'
                     }
                 }
             })
             .state('project.alarm-definitions', {
-                parent: "project",
-                url: "/alarm-definitions",
+                parent: 'project',
+                url: '/alarm-definitions',
                 data: {
-                    pageTitle: "Soteria | Alarms"
+                    pageTitle: 'Soteria | Alarm Definitions'
                 },
                 views: {
                     'content@': {
-                        templateUrl: "app/components/alarm-definitions/alarm-definitions.html",
-                        controller: "AlarmDefinitionsController",
-                        controllerAs: "defVm"
+                        templateUrl: 'app/components/alarm-definitions/alarm-definitions.html',
+                        controller: 'AlarmDefinitionsController',
+                        controllerAs: 'defVm'
+                    }
+                }
+            })
+            .state('project.alarm-definition', {
+                parent: 'project',
+                url: '/alarm-definition/:definition_id',
+                data: {
+                    pageTitle: 'Soteria | Alarm Definition'
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/alarm-definitions/alarm-definition-preview.html',
+                        controller: 'AlarmDefinitionPreviewController',
+                        controllerAs: 'defPreviewVm'
                     }
                 }
             });
@@ -148,7 +163,7 @@ angular
                 'request': function (config) {
                     var token = $localStorage.token;
 
-                    if (token != "null") {
+                    if (token != 'null') {
                         config.headers['X-Auth-Token'] = token;
                     }
                     return config;
@@ -169,7 +184,7 @@ angular
                 // When try to get Unauthorized or Forbidden page
                 'responseError': function (response) {
                     // If you get Unauthorized on login page you should just write message
-                    if ("/login" !== $location.path()) {
+                    if ('/login' !== $location.path()) {
                         if (response.status === 401 || response.status === 403) {
                             $location.path('/page-not-found');
                         }
