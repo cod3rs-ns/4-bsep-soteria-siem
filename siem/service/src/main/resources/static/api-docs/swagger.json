@@ -1195,9 +1195,14 @@
             "MESSAGE",
             "HOST",
             "LEVEL",
+            "SOURCE",
             "PID",
             "UID",
-            "GID"
+            "GID",
+            "ERROR_TYPE",
+            "ERROR",
+            "ERROR_NO",
+            "STACK"
           ]
         }
       },

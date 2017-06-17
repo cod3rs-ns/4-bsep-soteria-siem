@@ -1,6 +1,7 @@
 package bsep.sw.rule_engine;
 
 import bsep.sw.domain.Log;
+import bsep.sw.domain.LogError;
 
 import java.util.function.Supplier;
 
@@ -14,6 +15,8 @@ public class FieldSupplier {
                 return log.getInfo()::getHost;
             case LEVEL:
                 return log.getLevel()::toString;
+            case SOURCE:
+                return log.getInfo()::getSource;
             case PID:
                 return log.getInfo()::getPid;
             case UID:
@@ -25,4 +28,18 @@ public class FieldSupplier {
         }
     }
 
+    public Supplier<String> getErrorField(final Log log, final FieldType fieldType, final LogError errorError) {
+        switch (fieldType) {
+            case ERROR_TYPE:
+                return errorError::getType;
+            case ERROR:
+                return errorError::getError;
+            case ERROR_NO:
+                return errorError::getErrno;
+            case STACK:
+                return errorError::getStack;
+            default:
+                return null;
+        }
+    }
 }
