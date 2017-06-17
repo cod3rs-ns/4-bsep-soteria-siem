@@ -53,10 +53,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="model\Log.cs" />
+    <Compile Include="model\LogAttributes.cs" />
+    <Compile Include="model\LogError.cs" />
+    <Compile Include="model\LogInfo.cs" />
     <Compile Include="model\LogLevel.cs" />
+    <Compile Include="model\LogRequest.cs" />
+    <Compile Include="model\LogRequestData.cs" />
+    <Compile Include="model\LogRequestRelationships.cs" />
+    <Compile Include="model\RelationshipData.cs" />
+    <Compile Include="model\RequestRelationship.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleJson.cs" />
+    <Compile Include="util\CryptoUtil.cs" />
     <Compile Include="util\EnvUtil.cs" />
     <Compile Include="util\HttpClient.cs" />
     <Compile Include="util\LogMonitoring.cs" />

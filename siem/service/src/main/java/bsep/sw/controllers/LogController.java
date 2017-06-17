@@ -8,9 +8,12 @@ import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.repositories.LogsRepository;
 import bsep.sw.rule_engine.rules.RulesService;
+import bsep.sw.util.CSRUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,12 +26,15 @@ public class LogController {
 
     private final LogsRepository logs;
     private final RulesService rulesService;
+    private final CSRUtil csrUtil;
 
     @Autowired
     public LogController(final LogsRepository logs,
-                         final RulesService rulesService) {
+                         final RulesService rulesService,
+                         final CSRUtil csrUtil) {
         this.logs = logs;
         this.rulesService = rulesService;
+        this.csrUtil = csrUtil;
     }
 
     @GetMapping("/projects/{projectId}/logs")
@@ -57,9 +63,13 @@ public class LogController {
         return ResponseEntity.ok(LogResponse.fromDomain(log));
     }
 
-    @PostMapping("/logs")
+    @PostMapping(value = "/logs", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> storeLog(@RequestBody final LogRequest request) {
+    public ResponseEntity<?> storeLog(final HttpEntity<String> httpEntity) throws Exception {
+        final String body = httpEntity.getBody();
+        // TODO: add username in path - (should be IP address of agent)
+        final LogRequest request = csrUtil.parseRequest(body, "username");
+
         final Log log = request.toDomain()
                 .id(UUID.randomUUID().toString());
 
