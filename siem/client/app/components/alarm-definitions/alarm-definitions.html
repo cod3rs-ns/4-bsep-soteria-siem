@@ -11,7 +11,7 @@
 						<div class="col-md-4" ng-repeat="alarmDefinition in defVm.definitions.data">
 							<div class="widget quick-note-saved">
 								<div class="widget-header">
-									<h3>{{alarmDefinition.attributes["name"]}}</h3>
+									<h3><a ui-sref="project.alarm-definition({'definition_id': alarmDefinition.id})">{{alarmDefinition.attributes["name"]}}</a></h3>
 								</div>
 								<div class="widget-content">
 									<dl class="dl-horizontal project-agent">
