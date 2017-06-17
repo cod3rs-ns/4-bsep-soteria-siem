@@ -43,11 +43,10 @@ public class LogsService {
         query.addCriteria(Criteria.where("project").is(project)).limit(limit).skip(offset);
         query.addCriteria(Criteria.where("time").lt(to).gt(from));
 
-        // Remove 'from' and 'to'
         for (final String name: filters.keySet()) {
-            System.out.println(name);
-            // FIXME to set or when delimited with ','
-            query.addCriteria(Criteria.where(name).regex(String.join(",", filters.get(name)), "i"));
+            final Criteria criteria = Criteria.where(name);
+            criteria.regex(String.join("|", filters.get(name)));
+            query.addCriteria(criteria);
         }
 
         return operations.find(query, Log.class, "logs");
