@@ -118,17 +118,21 @@ public class AgentController extends StandardResponses {
     @PostMapping(value = "/agents", produces = "application/zip", consumes = "application/json")
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public void downloadAgentWithConfiguration(final HttpServletResponse response,  @RequestBody final AgentConfigRequest request) throws IOException {
-        // FIXME Only example added
+
+        final boolean windows = "WINDOWS_AGENT".equalsIgnoreCase(request.getData().getAttributes().getOs());
+
         final ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
 
         // Set headers
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"agent.zip\"");
 
+        request.toJsonFile();
+
         // Provide agent and config file to zip
         final ArrayList<File> files = new ArrayList<>(2);
         files.add(new File("README.md"));
-        files.add(new File(request.toYmlFile()));
+        files.add(new File((windows) ? request.toJsonFile() : request.toYmlFile()));
 
         // Add files to '.zip'
         for (final File file: files) {

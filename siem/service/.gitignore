@@ -215,3 +215,4 @@ $RECYCLE.BIN/
 *.lnk
 
 config.yml
+config.json
