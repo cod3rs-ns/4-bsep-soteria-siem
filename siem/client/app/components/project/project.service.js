@@ -13,7 +13,8 @@
             getLogs: getLogs,
             getAgents: getAgents,
             addAgent: addAgent,
-            createProject: createProject
+            createProject: createProject,
+            downloadAgent: downloadAgent
         };
 
         return service;
@@ -62,6 +63,20 @@
             return $http.post(CONFIG.SERVICE_URL + '/projects', { 'data': project })
                 .then(function successCallback(response) {
                     return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function downloadAgent(agentConfigData) {
+            return $http.post(CONFIG.SERVICE_URL + '/agents', { 'data': agentConfigData }, { responseType: 'arraybuffer' })
+                .then(function successCallback(response) {
+                    var a = document.createElement('a');
+                    var blob = new Blob([response.data], {'type':"application/octet-stream"});
+                    a.href = URL.createObjectURL(blob);
+                    a.download = "agent.zip";
+                    a.click();
                 }, function errorCallback(response) {
                     $log.warn(response.data.detail);
                     throw response.data.detail;

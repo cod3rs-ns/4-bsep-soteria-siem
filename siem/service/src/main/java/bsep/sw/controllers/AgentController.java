@@ -8,10 +8,12 @@ import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.agent.AgentCollectionResponse;
 import bsep.sw.hateoas.agent.AgentRequest;
 import bsep.sw.hateoas.agent.AgentResponse;
+import bsep.sw.hateoas.agent_config.AgentConfigRequest;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AgentService;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.StandardResponses;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +22,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/api")
@@ -106,4 +115,34 @@ public class AgentController extends StandardResponses {
                 .body(AgentResponse.fromDomain(agent));
     }
 
+    @PostMapping(value = "/agents", produces = "application/zip", consumes = "application/json")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    public void downloadAgentWithConfiguration(final HttpServletResponse response,  @RequestBody final AgentConfigRequest request) throws IOException {
+        // FIXME Only example added
+        final ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
+
+        // Set headers
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("Content-Disposition", "attachment; filename=\"agent.zip\"");
+
+        // Provide agent and config file to zip
+        final ArrayList<File> files = new ArrayList<>(2);
+        files.add(new File("README.md"));
+
+        // TODO Create .yml config file
+        request.toYmlFile();
+
+        // Add files to '.zip'
+        for (final File file: files) {
+            zip.putNextEntry(new ZipEntry(file.getName()));
+            final FileInputStream fileInputStream = new FileInputStream(file);
+
+            IOUtils.copy(fileInputStream, zip);
+
+            fileInputStream.close();
+            zip.closeEntry();
+        }
+
+        zip.close();
+    }
 }
