@@ -7,6 +7,7 @@ import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.LogsService;
 import bsep.sw.services.ProjectService;
+import org.apache.log4j.Logger;
 import org.easyrules.api.RulesEngine;
 import org.easyrules.core.RulesEngineBuilder;
 import org.joda.time.DateTime;
@@ -20,6 +21,8 @@ import java.util.UUID;
 
 @Service
 public class RulesService {
+
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     private final SimpMessagingTemplate template;
     private final AlarmService alarmService;
@@ -73,6 +76,7 @@ public class RulesService {
             }
         }
         rulesEngine.fireRules();
+        logger.info("Rules engine fired rules evaluation.");
     }
 
     private ArrayList<Log> gatherNonProcessedLogs(final AlarmDefinition definition) {
@@ -96,6 +100,7 @@ public class RulesService {
             }
         });
         allLogsInInterval.removeAll(toRemove);
+        logger.info("Total number of logs to evaluate: " + allLogsInInterval.size());
         return new ArrayList<>(allLogsInInterval);
     }
 }

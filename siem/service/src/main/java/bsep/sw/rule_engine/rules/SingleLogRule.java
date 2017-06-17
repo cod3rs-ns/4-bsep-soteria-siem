@@ -64,7 +64,8 @@ public class SingleLogRule extends BasicRule {
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
-                .resolved(false);
+                .resolved(false)
+                .level(alarmDefinition.getLevel());
 
         final LogAlarmPair lap = new LogAlarmPair().alarm(alarm).log(log.getId());
         final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
