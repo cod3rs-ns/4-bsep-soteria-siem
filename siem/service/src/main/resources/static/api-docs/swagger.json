@@ -1,0 +1,1771 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Soteria - take care of your logs.",
+    "version": "0.0.1",
+    "title": "Soteria API",
+    "contact": {
+      "email": "soteria@gmail.com"
+    }
+  },
+  "host": "localhost:9091",
+  "basePath": "/api",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "tags": [
+    {
+      "name": "Projects",
+      "description": "API for maintaining projects"
+    },
+    {
+      "name": "Alarm Definitions",
+      "description": "API for maintaining alarm definitions"
+    },
+    {
+      "name": "Logs",
+      "description": "API for maintaining logs"
+    },
+    {
+      "name": "Users",
+      "description": "API for maintaining users"
+    },
+    {
+      "name": "Alarms",
+      "description": "API for maintaining alarms"
+    },
+    {
+      "name": "Agents",
+      "description": "API for maintaining agents"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/projects": {
+      "post": {
+        "summary": "Create new project",
+        "description": "This action creates new Project entity",
+        "operationId": "createProject",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "project",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProjectRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Project created",
+            "schema": {
+              "$ref": "#/definitions/ProjectResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}": {
+      "get": {
+        "summary": "Retrieve project",
+        "description": "This action retrieves single project",
+        "operationId": "retrieveProject",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true,
+            "default": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved project",
+            "schema": {
+              "$ref": "#/definitions/ProjectResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete project",
+        "description": "This action deletes project",
+        "operationId": "deleteProject",
+        "consumes": [],
+        "produces": [],
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully removed project"
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/owned": {
+      "get": {
+        "summary": "Retrieve own projects",
+        "description": "Retrieve projects in which user has owner status",
+        "operationId": "retrieveOwnProjects",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved projects",
+            "schema": {
+              "$ref": "#/definitions/ProjectCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/member-of": {
+      "get": {
+        "summary": "Retrieve all projects (member)",
+        "description": "Retrieve projects in which user has membership status",
+        "operationId": "retrieveMembershipProjects",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved projects",
+            "schema": {
+              "$ref": "#/definitions/ProjectCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarm-definitions": {
+      "post": {
+        "summary": "Create alarm definition",
+        "description": "Create new alarm definitions for selected project",
+        "operationId": "createAlarmDefinitions",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "definition",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAlarmDefinitionRequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Alarm definition created",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Retrieve all alarm definitions",
+        "description": "Retrieve all alarm definitions within single project",
+        "operationId": "getAlarmDefinitions",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm definitions",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarm-definitions/{definition_id}": {
+      "get": {
+        "summary": "Retrieve alarm definition",
+        "description": "Retrieve alarm definition from selected project",
+        "operationId": "getAlarmDefinition",
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "definition_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the alarm definition",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm definition",
+            "schema": {
+              "$ref": "#/definitions/AlarmDefinitionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete alarm definition",
+        "description": "This action deletes alarm definition",
+        "operationId": "deleteAlarmDefinition",
+        "consumes": [],
+        "produces": [],
+        "tags": [
+          "Alarm Definitions"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "definition_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the alarm definition",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully removed alarm definition"
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarms": {
+      "get": {
+        "summary": "Retrieve alarms",
+        "description": "Retrieve alarms from selected project",
+        "operationId": "getAlarms",
+        "tags": [
+          "Alarms"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm ",
+            "schema": {
+              "$ref": "#/definitions/AlarmCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/alarms/{alarm_id}": {
+      "get": {
+        "summary": "Retrieve alarm ",
+        "description": "Retrieve alarm from selected project",
+        "operationId": "getAlarm",
+        "tags": [
+          "Alarms"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "alarm_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the alarm",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved alarm",
+            "schema": {
+              "$ref": "#/definitions/AlarmResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/agents": {
+      "get": {
+        "summary": "Retrieve agents",
+        "description": "Retrieve agents from selected project",
+        "operationId": "getAgents",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved agent",
+            "schema": {
+              "$ref": "#/definitions/AgentCollectionResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create agent",
+        "description": "Create agent for specific project",
+        "operationId": "addAgentToProject",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "definition",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateAgentRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created agent",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found (project)",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    },
+    "/projects/{project_id}/agents/{agent_id}": {
+      "get": {
+        "summary": "Retrieve agent",
+        "description": "Retrieve alarm from selected project",
+        "operationId": "getAgent",
+        "tags": [
+          "Agents"
+        ],
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the project",
+            "required": true
+          },
+          {
+            "name": "agent_id",
+            "in": "path",
+            "type": "integer",
+            "format": "int64",
+            "description": "Unique identifier of the agent",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved agent",
+            "schema": {
+              "$ref": "#/definitions/AgentResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "X-Auth-Token": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "X-Auth-Token": {
+      "type": "apiKey",
+      "name": "X-Auth-Token",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "ResponseMeta": {
+      "title": "Response meta",
+      "description": "Standard response meta data",
+      "type": "object",
+      "properties": {
+        "created-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Time of entity creation in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        },
+        "updated-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last time of entity updated in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        },
+        "created-by": {
+          "type": "string",
+          "description": "Name of the entity's author",
+          "example": "Chandler Bing"
+        },
+        "updated-by": {
+          "type": "string",
+          "description": "Name of the last user that changed this entity",
+          "example": "Joey Tribbiani"
+        }
+      },
+      "required": [
+        "created-at",
+        "updated-at",
+        "created-by",
+        "updated-by"
+      ]
+    },
+    "SimpleErrorMeta": {
+      "title": "Simple error meta",
+      "description": "Simple error meta response data",
+      "properties": {
+        "created-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Time of error occurrence in UTC (ISO-8601 format)",
+          "example": "2017-05-30T17:57:40.797+02:00"
+        }
+      },
+      "required": [
+        "created-at"
+      ]
+    },
+    "ErrorResponse": {
+      "title": "Error response",
+      "description": "Standard error response",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/SimpleErrorMeta"
+        },
+        "code": {
+          "type": "string",
+          "description": "Custom application error code",
+          "example": "STA-1001"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the occurred error",
+          "example": "Something bad happened"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Additional details describing occurred error",
+          "example": "This error happened because of bad luck"
+        }
+      },
+      "required": [
+        "meta",
+        "code",
+        "title",
+        "detail"
+      ]
+    },
+    "CreateProjectRequest": {
+      "title": "Create project request",
+      "description": "Request to create new project",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "projects"
+              ],
+              "description": "Represents entity type",
+              "example": "projects"
+            },
+            "attributes": {
+              "type": "object",
+              "title": "Project Request Attributes",
+              "description": "Project request attributes",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Project's name",
+                  "example": "Super cool project",
+                  "minLength": 3,
+                  "maxLength": 30
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Project's description",
+                  "example": "This is some super cool project",
+                  "minLength": 1,
+                  "maxLength": 60
+                }
+              },
+              "required": [
+                "name",
+                "description"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "attributes"
+          ]
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Data about project",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Project's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "projects"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Project Request Attributes",
+          "description": "Project request attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Project's name",
+              "example": "Super cool project"
+            },
+            "description": {
+              "type": "string",
+              "description": "Project's description",
+              "example": "This is some super cool project"
+            }
+          },
+          "required": [
+            "name",
+            "description"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "owner": {
+              "$ref": "#/definitions/Relationship"
+            },
+            "members": {
+              "$ref": "#/definitions/CollectionRelationship"
+            },
+            "alarm-definitions": {
+              "$ref": "#/definitions/CollectionRelationship"
+            },
+            "agents": {
+              "$ref": "#/definitions/CollectionRelationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ]
+    },
+    "ProjectResponse": {
+      "title": "Project Response",
+      "description": "Response containing data about Project entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/Project"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "ProjectCollectionResponse": {
+      "title": "Project Collection Response",
+      "description": "Collection of projects with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Project"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
+      ]
+    },
+    "PaginationLinks": {
+      "title": "Pagination Links",
+      "description": "Additional links to rest of the data with same criteria",
+      "type": "object",
+      "properties": {
+        "self": {
+          "type": "string",
+          "description": "Link to itself",
+          "example": "http://soteria.com/api/projects?page[offset]=10&page[limit]=10"
+        },
+        "next": {
+          "type": "string",
+          "description": "Link to next element or group of elements",
+          "example": "http://soteria.com/api/projects?page[offset]=20&page[limit]=10"
+        },
+        "prev": {
+          "type": "string",
+          "description": "Link to previous element or group of elements",
+          "example": "http://soteria.com/api/projects?page[offset]=0&page[limit]=10"
+        },
+        "first": {
+          "type": "string",
+          "description": "Link to first element or group of elements",
+          "example": "http://soteria.com/api/projects?page[offset]=0&page[limit]=10"
+        },
+        "last": {
+          "type": "string",
+          "description": "Link to last element or group of elements",
+          "example": "http://soteria.com/api/projects?page[offset]=90&page[limit]=10"
+        }
+      },
+      "required": [
+        "self"
+      ]
+    },
+    "PaginationMeta": {
+      "title": "Pagination Meta",
+      "description": "Additional info about entities in response",
+      "type": "object",
+      "properties": {
+        "total-pages": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of pages",
+          "example": 28
+        },
+        "total-items": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items",
+          "example": 999
+        },
+        "items-per-page": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Total number of items per each page",
+          "example": 10
+        }
+      },
+      "required": [
+        "total-items"
+      ]
+    },
+    "CreateAlarmDefinitionRequest": {
+      "title": "Create alarm definition request",
+      "description": "Request to create new alarm definition",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "alarm-definitions"
+              ],
+              "description": "Represents entity type",
+              "example": "alarm-definitions"
+            },
+            "attributes": {
+              "type": "object",
+              "title": "Alarm definition Request Attributes",
+              "description": "Alarm definition request attributes",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Alarm definition's name",
+                  "example": "Some important alarm",
+                  "minLength": 3,
+                  "maxLength": 30
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Alarm definition's description",
+                  "example": "This is some very important alarm",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Alarm definition's message - will be applied to alarms",
+                  "example": "This occurred!",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "level": {
+                  "type": "string",
+                  "description": "Alarm definition importance (priority)",
+                  "enum": [
+                    "INFO",
+                    "LOW",
+                    "MEDIUM",
+                    "HIGH",
+                    "SEVERE"
+                  ],
+                  "example": "MEDIUM"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Represents type of definition",
+                  "example": "SINGLE",
+                  "enum": [
+                    "SINGLE",
+                    "MULTI"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "description",
+                "level",
+                "message",
+                "type"
+              ]
+            },
+            "relationships": {
+              "type": "object",
+              "properties": {
+                "single-rules": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/CreateSingleRuleRequest"
+                  }
+                },
+                "multi-rule": {
+                  "$ref": "#/definitions/CreateMultiRuleRequest"
+                }
+              },
+              "required": [
+                "single-rules",
+                "multi-rule"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "attributes",
+            "relationships"
+          ]
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "CreateSingleRuleRequest": {
+      "title": "Create single rule request",
+      "description": "Request to create new single rule",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "single-rules"
+          ],
+          "description": "Represents entity type",
+          "example": "single-rules"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value to compare field to",
+          "example": "error"
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "CONTAINS",
+            "EQUALS",
+            "ENDS_WITH",
+            "STARTS_WITH",
+            "REGEX"
+          ],
+          "example": "EQUALS"
+        },
+        "field": {
+          "type": "string",
+          "enum": [
+            "MESSAGE",
+            "HOST",
+            "LEVEL",
+            "PID",
+            "UID",
+            "GID"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "value",
+        "field",
+        "method"
+      ]
+    },
+    "CreateMultiRuleRequest": {
+      "title": "Create multi rule request",
+      "description": "Request to create new multi rule",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "multi-rules"
+          ],
+          "description": "Represents entity type",
+          "example": "multi-rules"
+        },
+        "interval": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of seconds to look back into logs history",
+          "example": 600
+        },
+        "repetition-trigger": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Number of logs necessary to trigger alarm",
+          "example": 10
+        }
+      },
+      "required": [
+        "type",
+        "interval",
+        "repetition-trigger"
+      ]
+    },
+    "AlarmDefinitionResponse": {
+      "title": "AlarmDefinition Response",
+      "description": "Response containing data about AlarmDefinition entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/AlarmDefinition"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "AlarmDefinition": {
+      "title": "Alarm Definition",
+      "description": "Data about Alarm definition",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Alarm definition's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "alarm-definitions"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Alarm definition's attributes",
+          "description": "Alarm definition's attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Alarm definition's name",
+              "example": "Some important alarm"
+            },
+            "description": {
+              "type": "string",
+              "description": "Alarm definition's description",
+              "example": "This is some very important alarm"
+            },
+            "message": {
+              "type": "string",
+              "description": "Alarm definition's description",
+              "example": "This occurred!"
+            },
+            "level": {
+              "type": "string",
+              "description": "Alarm definition's importance (priority)",
+              "enum": [
+                "INFO",
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "SEVERE"
+              ],
+              "example": "MEDIUM"
+            },
+            "triggers": {
+              "type": "integer",
+              "format": "int32",
+              "description": "Total number of triggered alarm within this definition",
+              "example": 100
+            },
+            "first-occurrence": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Time of the first occurrence of Alarm within this definition in UTC (ISO-8601 format)",
+              "example": "2017-05-30T17:57:40.797+02:00"
+            },
+            "last-occurrence": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Time of the last occurrence of Alarm within this definition in UTC (ISO-8601 format)",
+              "example": "2017-05-30T17:57:40.797+02:00"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "level",
+            "triggers",
+            "first-occurrence",
+            "last-occurrence"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/Relationship"
+            },
+            "alarms": {
+              "$ref": "#/definitions/CollectionRelationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ]
+    },
+    "AlarmDefinitionCollectionResponse": {
+      "title": "Alarm Definition Collection Response",
+      "description": "Collection of Alarm definition with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlarmDefinition"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
+      ]
+    },
+    "AlarmResponse": {
+      "title": "Alarm Response",
+      "description": "Response containing data about Alarm entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/Alarm"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "Alarm": {
+      "title": "Alarm",
+      "description": "Data about Alarm",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Alarm's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "alarms"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Alarm's attributes",
+          "description": "Alarm's attributes",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "Alarm's name",
+              "example": "Some important alarm"
+            },
+            "resolved": {
+              "type": "boolean",
+              "description": "Flag indicating whether this Alarm is resolved",
+              "example": true
+            },
+            "resolved-by": {
+              "type": "string",
+              "description": "Name of the alarm's resolver",
+              "example": "Chandler Bing"
+            },
+            "resolved-at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Time when Alarm was resolved in UTC (ISO-8601 format)",
+              "example": "2017-05-30T17:57:40.797+02:00"
+            }
+          },
+          "required": [
+            "message",
+            "resolved",
+            "resolved-by",
+            "resolved-at"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "alarm-definition": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ]
+    },
+    "AlarmCollectionResponse": {
+      "title": "Alarm Collection Response",
+      "description": "Collection of alarms with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Alarm"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
+      ]
+    },
+    "CreateAgentRequest": {
+      "title": "Create agent request",
+      "description": "Request containing data about Agent entity",
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/AgentRequestData"
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "AgentRequestData": {
+      "title": "Agent request data",
+      "description": "Agent request data object",
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "agents"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Agent's attributes",
+          "description": "Agent's attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Agent's name",
+              "example": "Agent 007"
+            },
+            "agent_type": {
+              "type": "string",
+              "enum": [
+                "LINUX_AGENT",
+                "OSX_AGENT",
+                "WINDOWS_AGENT"
+              ],
+              "description": "Type of agent",
+              "example": true
+            },
+            "description": {
+              "type": "string",
+              "description": "Additional agent's description",
+              "example": "This is alarm placed on server number 42"
+            },
+            "agent_version": {
+              "type": "string",
+              "description": "Version of agent script",
+              "example": "v1.0.1b"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "agent-type",
+            "agent-version"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/RequestRelationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "attributes",
+        "relationships"
+      ]
+    },
+    "AgentResponse": {
+      "title": "Agent Response",
+      "description": "Response containing data about Agent entity",
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        },
+        "data": {
+          "$ref": "#/definitions/Agent"
+        }
+      },
+      "required": [
+        "meta",
+        "data"
+      ]
+    },
+    "Agent": {
+      "title": "Agent",
+      "description": "Data about Agent",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Agent's unique identifier",
+          "example": 1001
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "agents"
+        },
+        "attributes": {
+          "type": "object",
+          "title": "Agent's attributes",
+          "description": "Agent's attributes",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Agent's name",
+              "example": "Some specific alarm"
+            },
+            "agent-type": {
+              "type": "string",
+              "enum": [
+                "LINUX_AGENT",
+                "OSX_AGENT",
+                "WINDOWS_AGENT"
+              ],
+              "description": "Type of agent",
+              "example": true
+            },
+            "description": {
+              "type": "string",
+              "description": "Additional alarm's description",
+              "example": "This is alarm placed on server number 42"
+            },
+            "agent-version": {
+              "type": "string",
+              "description": "Version of agent script",
+              "example": "v1.0.1b"
+            }
+          },
+          "required": [
+            "name",
+            "description",
+            "agent-type",
+            "agent-version"
+          ]
+        },
+        "relationships": {
+          "type": "object",
+          "properties": {
+            "project": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "attributes"
+      ]
+    },
+    "AgentCollectionResponse": {
+      "title": "Agent Collection Response",
+      "description": "Collection of agent with additional meta data.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "$ref": "#/definitions/PaginationLinks"
+        },
+        "meta": {
+          "$ref": "#/definitions/PaginationMeta"
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Agent"
+          }
+        }
+      },
+      "required": [
+        "links",
+        "meta",
+        "data"
+      ]
+    },
+    "Relationship": {
+      "title": "Relationship",
+      "description": "Relationship with other entity",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "description": "Links to other entities",
+          "properties": {
+            "related": {
+              "type": "string",
+              "description": "URL to this resource",
+              "example": "/api/entity/1"
+            }
+          }
+        },
+        "data": {
+          "type": "object",
+          "description": "Meta data about entity",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Entity's unique identifier",
+              "example": "100"
+            },
+            "type": {
+              "type": "string",
+              "description": "Type of the entity",
+              "example": "car"
+            }
+          }
+        }
+      },
+      "required": [
+        "links",
+        "data"
+      ]
+    },
+    "RequestRelationship": {
+      "title": "Request relationship",
+      "description": "Relationships with other entity",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Entity's unique identifier",
+          "example": "21"
+        },
+        "type": {
+          "type": "string",
+          "description": "Type of the entity",
+          "example": "projects"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ]
+    },
+    "CollectionRelationship": {
+      "title": "Collection Relationship",
+      "description": "Relationships with other entity",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "description": "Links to other entities",
+          "properties": {
+            "related": {
+              "type": "string",
+              "description": "URL to this resource",
+              "example": "/api/entity/1"
+            }
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "description": "Meta data about entity",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Entity's unique identifier",
+                "example": "100"
+              },
+              "type": {
+                "type": "string",
+                "description": "Type of the entity",
+                "example": "car"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "links",
+        "data"
+      ]
+    }
+  }
+}

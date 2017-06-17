@@ -1,0 +1,57 @@
+spring:
+    application:
+        name: soteria
+
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/soteria?verifyServerCertificate=false&useSSL=false&requireSSL=false
+        username: soteria
+        password: soteria
+
+    data:
+      mongodb:
+        host: localhost
+        port: 27017
+        database: test
+
+    jpa:
+        properties:
+            jadira:
+              usertype:
+                  autoRegisterUserTypes: true
+        hibernate:
+          naming:
+            strategy: org.hibernate.cfg.DefaultNamingStrategy
+          ddlAuto: update
+    jackson:
+        date-format: yyyy-MM-dd'T'HH:mm:ssZ
+
+    social:
+      facebook:
+        app-id: 380680235662631
+        app-secret: dc431f53170612aaae626a7915edd723
+        dialog-url: https://www.facebook.com/dialog/oauth/
+        redirect-uri: http://localhost:9091/api/social/facebook/access-token
+        access-token-url: https://graph.facebook.com/v2.9/oauth/access_token
+        user-info-url: https://graph.facebook.com/me
+        scope: email,user_about_me
+
+security:
+  token:
+    header: X-Auth-Token
+    secret: SECRET-KEY
+    expiration: 3600000
+
+keystore:
+  path: C:\Users\Korisnik\Desktop\keystore.jks
+  password: soteria
+
+secretStore:
+  path: C:\Users\Korisnik\Desktop\secretStore.jceks
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+server:
+    port: 9091

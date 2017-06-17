@@ -1,0 +1,194 @@
+<div class="container">
+	<div class="main-header">
+		<h2>Alarm definition</h2>
+		<em>This definition triggered total of <span class="label label-warning">{{defPreviewVm.alarms.length + ' alarm(s)'}}</span>, by its <span
+				class="label label-info">{{defPreviewVm.rules.length + ' rule(s)'}}</span></em>
+	</div>
+	<div class="main-content">
+		<div class="row" style="margin-right: 10px;">
+			<div class="col-md-7">
+				<div class="widget">
+					<div class="widget-header">
+						<h3>{{defPreviewVm.definition.attributes.name}}</h3>
+					</div>
+					<div class="widget-content">
+						<div class="row">
+							<div class="col-sm-9">
+								<div class="basic-info">
+									<p class="data-row">
+										<span class="data-name">Created at:</span>
+										<span class="data-value"><em>{{defPreviewVm.meta['created-at'] | date: 'dd-MM-yyyy HH:mm'}}<em></em></span>
+									</p>
+									
+									<p class="data-row">
+										<span class="data-name">Created by</span>
+										<span class="data-value">{{defPreviewVm.meta['created-by']}}</span>
+									</p>
+									
+									<p class="data-row">
+										<span class="data-name">Last update</span>
+										<span
+												class="data-value"><em>{{defPreviewVm.meta['updated-at'] | date: 'dd-MM-yyyy HH:mm'}}</em></span>
+									</p>
+									
+									<p class="data-row">
+										<span class="data-name">Last update by</span>
+										<span class="data-value">{{defPreviewVm.meta['updated-by']}}</span>
+									</p>
+									
+									<p class="data-row" style="margin-bottom: 2px;">
+										<span class="data-name">Priority</span>
+										<span class="data-value" style="margin-top: 3px"><span class="label label-danger">{{defPreviewVm.definition.attributes.level}}</span></span>
+									</p>
+									
+									<p class="data-row" style="margin-bottom: 2px;">
+										<span class="data-name">Type</span>
+										<span class="data-value" style="margin-top: 3px"><span class="label label-danger">{{defPreviewVm.definition.attributes.type}}</span></span>
+									</p>
+									
+									<p class="data-row">
+										<span class="data-name">Default message</span>
+										<span class="data-value"><em>{{defPreviewVm.definition.attributes.message}}</em></span>
+									</p>
+									
+									<p class="data-row" style="margin-bottom: 2px;">
+										<span class="data-name">Total alarms</span>
+										<span class="data-value" style="margin-top: 3px;"><span class="label label-info">{{defPreviewVm.definition.attributes.triggers}}</span></span>
+									</p>
+									<p class="data-row">
+										<span class="data-name">First alarm occurrence</span>
+										<span class="data-value"><em>{{defPreviewVm.definition.attributes['first-occurrence'] | date: 'dd-MM-yyyy HH:mm'}}</em></span>
+									</p>
+									<p class="data-row">
+										<span class="data-name">Last alarm occurence</span>
+										<span class="data-value"><em>{{defPreviewVm.definition.attributes['last-occurrence'] | date: 'dd-MM-yyyy HH:mm'}}</em></span>
+									</p>
+								</div>
+							</div>
+							<div class="col-sm-3">
+								<div class="project-progress text-center bottom-30px">
+									<div easypiechart percent="defPreviewVm.resolvedPercentage" options="defPreviewVm.chartOptions"><b
+											class="percent">{{defPreviewVm.resolvedPercentage + '%'}}</b></canvas></div>
+									<span class="chart-title">RESOLVED ALARMS</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="widget-footer">
+						<p>{{defPreviewVm.definition.attributes.description}}</p>
+					</div>
+				</div>
+				<div class="project-section activity">
+					<div class="widget">
+						<div class="widget-header">
+							<h3>Alarms</h3>
+						</div>
+						<div class="widget-content">
+							
+							<table class="table invoice-table" style="font-size: 90%">
+								<thead>
+								<tr>
+									<th>#ID</th>
+									<th>Message</th>
+									<th>Created at</th>
+									<th>Resolved</th>
+									<th>Resolved at</th>
+									<th>Resolved by</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="alarm in defPreviewVm.alarms track by $index">
+									<td><a href="#">{{alarm.id}}</a></td>
+									<td>{{alarm.attributes.message}}</td>
+									<td>some data</td>
+									<td>{{alarm.attributes.resolved}}</td>
+									<td>{{alarm.attributes['resolved-at'] | date: 'dd-MM-yyyy HH:mm'}}</td>
+									<td>{{alarm.attributes['resolved-by']}}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="widget-footer">
+							Details about alarms
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-warning red-font"></i>
+							<p class="pull-right"><span> TOTAL ALARMS</span>{{defPreviewVm.alarms.length}}</p>
+						</div>
+					</div>
+					
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-check-circle"></i>
+							<p class="pull-right"><span> RESOLVED ALARMS</span>{{defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-close"></i>
+							<p class="pull-right"><span> NOT RESOLVED</span>{{defPreviewVm.alarms.length - defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+				</div>
+				<div class="row" ng-show="defPreviewVm.multiRule.id != null">
+					<div class="widget">
+						<div class="widget-header">
+							<h3>Multi rule info</h3>
+						</div>
+						<div class="widget-content">
+							<div class="basic-info">
+								<p class="data-row">
+									<span class="data-name">Interval</span>
+									<span class="data-value">{{defPreviewVm.multiRule.interval + ' seconds'}}</span>
+								</p>
+								<p class="data-row">
+									<span class="data-name">Repetition</span>
+									<span class="data-value">{{defPreviewVm.multiRule['repetition-trigger'] + ' logs'}}</span>
+								</p>
+							</div>
+						</div>
+						<div class="widget-footer">
+							Multi rule detailed info
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="widget">
+						<div class="widget-header">
+							<h3>Single rules</h3>
+						</div>
+						<div class="widget-content">
+							<table class="table invoice-table" style="font-size: 90%">
+								<thead>
+								<tr>
+									<th>#</th>
+									<th>Field</th>
+									<th>Method</th>
+									<th>Value</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="rule in defPreviewVm.rules track by $index">
+									<td>{{$index}}</td>
+									<td>{{rule.field}}</td>
+									<td>{{rule.method}}</td>
+									<td style="text-align: left">{{rule.value}}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="widget-footer">
+							Single rules detailed information
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

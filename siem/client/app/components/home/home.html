@@ -1,0 +1,44 @@
+<div>
+    <div class="col-md-9">
+        <div class="widget">
+            <div class="widget-header">
+                <h3><i class="fa fa-tasks"></i> My Projects</h3>
+            </div>
+            <div class="widget-content">
+                <ul class="task-list">
+                    <li>
+                        <h3>My First Project</h3>
+                        <p>
+                            Need to use some existing component to make this better. :)
+                        </p>
+                        <hr/>
+                    </li>
+                    <li>
+                        <h3>My Second Project</h3>
+                        <p>
+                            We can put project description here or list of all agents we have in project or whatever... :)
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div ng-show="homeVm.alarm">
+            <div class="widget widget-hide-header widget-reminder">
+                <div class="widget-header hide">
+                    <h3>SIEM's alarms</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="today-reminder">
+                        <h4 class="reminder-title">{{homeVm.alarm.project.name}}</h4>
+                        <p class="reminder-time"><i class="fa fa-clock-o"></i> {{homeVm.alarm.log.time | date: 'HH:mm:ss'}}</p>
+                        <p class="reminder-place">{{homeVm.alarm.log.level}}</p>
+                        <em class="reminder-notes">{{homeVm.alarm.alarm.message}}</em>
+                        <i class="fa fa-bell"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
