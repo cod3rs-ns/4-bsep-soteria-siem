@@ -32,6 +32,10 @@ public class LogsService {
         return repository.save(log);
     }
 
+    public List<Log> findByProjectAndTimeAfter(final Long projectId, final Long time) {
+        return repository.findAllByProjectAndTimeAfter(projectId, time);
+    }
+
     public List<Log> findByProject(final Long project, final Map<String, String[]> filters, final Integer limit, final Integer offset) {
 
         final Long from = new DateTime(filters.getOrDefault("from", new String[]{DateTime.now().minusYears(1).toString()})[0]).getMillis();

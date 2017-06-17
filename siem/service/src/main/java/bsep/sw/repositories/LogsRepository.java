@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface LogsRepository extends MongoRepository<Log, String> {
 
-    List<Log> findAllByProjectAndTimeAfter(final Long project, final DateTime dateTime);
+    List<Log> findAllByProjectAndTimeAfter(final Long project, final Long dateTime);
 
 }
