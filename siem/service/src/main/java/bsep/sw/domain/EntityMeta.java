@@ -1,5 +1,6 @@
 package bsep.sw.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.DateTime;
@@ -43,6 +44,12 @@ public abstract class EntityMeta implements Serializable {
 
     @Column(name = "active", nullable = false)
     private Boolean active = true;
+
+    @JsonIgnore
+    public void setByAttributes(final User user) {
+        this.createdBy = user.getName();
+        this.updatedBy = user.getName();
+    }
 
     public Long getId() {
         return id;

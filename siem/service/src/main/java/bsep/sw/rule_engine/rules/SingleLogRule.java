@@ -9,11 +9,9 @@ import bsep.sw.services.ProjectService;
 import bsep.sw.util.AlarmNotification;
 import org.apache.log4j.Logger;
 import org.easyrules.core.BasicRule;
-import org.joda.time.DateTime;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class SingleLogRule extends BasicRule {
@@ -21,7 +19,6 @@ public class SingleLogRule extends BasicRule {
     private final Logger logger = Logger.getLogger(getClass().getName());
     private final SimpMessagingTemplate template;
 
-    // possibly should be injected
     private final ProjectService projectService;
     private final AlarmDefinitionService alarmDefinitionService;
     private final AlarmService alarmService;
@@ -29,15 +26,16 @@ public class SingleLogRule extends BasicRule {
     // perform rule on
     private final Log log;
     private final AlarmDefinition alarmDefinition;
+
     private final FieldSupplier fieldSupplier = new FieldSupplier();
     private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
 
-    public SingleLogRule(final Log log,
-                         final AlarmDefinition alarmDefinition,
-                         final ProjectService projectService,
-                         final AlarmService alarmService,
-                         final AlarmDefinitionService alarmDefinitionService,
-                         final SimpMessagingTemplate template) {
+    SingleLogRule(final Log log,
+                  final AlarmDefinition alarmDefinition,
+                  final ProjectService projectService,
+                  final AlarmService alarmService,
+                  final AlarmDefinitionService alarmDefinitionService,
+                  final SimpMessagingTemplate template) {
         super(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         this.log = log;
         this.alarmDefinition = alarmDefinition;
@@ -86,4 +84,5 @@ public class SingleLogRule extends BasicRule {
                     new AlarmNotification(project, log, alarm));
         }
     }
+
 }

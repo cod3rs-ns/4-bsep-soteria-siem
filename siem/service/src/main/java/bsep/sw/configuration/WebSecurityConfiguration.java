@@ -104,7 +104,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                // Anyone can see API provided by Swagger
                 .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users**").permitAll();
         // Custom JWT based authentication
