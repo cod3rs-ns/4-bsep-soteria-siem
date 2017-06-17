@@ -1,6 +1,7 @@
 package bsep.sw.services;
 
 import bsep.sw.domain.Alarm;
+import bsep.sw.domain.AlarmDefinition;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.repositories.AlarmRepository;
@@ -51,6 +52,11 @@ public class AlarmService {
 
     public Page<Alarm> findAllByUserAndStatus(final User user, final Boolean resolved, final Pageable pageable) {
         return repository.findAlarmsByDefinition_Project_Members_ContainingAndResolvedOrderByResolvedAtDesc(user, resolved, pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Alarm> findAllByDefinition(final AlarmDefinition definition) {
+        return repository.findAlarmsByDefinition(definition);
     }
 
 }
