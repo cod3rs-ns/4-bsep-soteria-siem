@@ -29,7 +29,7 @@
             'description': '',
             'version': '1.0.0',
             'os': null,
-            'defaultLevel': null,
+            'defaultLevel': "DEBUG",
             'paths': [],
             'regexes': []
         };
@@ -131,7 +131,24 @@
                     if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {
                         projectVm.agents.data.push(response.data);
                     }
-                    // TODO Download with provided configuration
+
+                    var config = {
+                        'type': 'agent-configs',
+                        'attributes': {
+                            'os': projectVm.config.os,
+                            'defaultLevel': projectVm.config.defaultLevel,
+                            'paths': _.map(projectVm.config.paths, 'value'),
+                            'regexes': _.map(projectVm.config.regexes, 'value')
+                        }
+                    };
+
+                    projectService.downloadAgent(config)
+                        .then(function(response) {
+                            // TODO Add some message :)
+                        })
+                        .catch(function(error) {
+                            $log.error(error);
+                        });
                 })
                 .catch(function(error) {
                     $log.error(error);

@@ -213,3 +213,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+config.yml
+config.json

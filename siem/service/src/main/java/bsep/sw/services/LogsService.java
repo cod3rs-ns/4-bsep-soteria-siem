@@ -51,5 +51,4 @@ public class LogsService {
 
         return operations.find(query, Log.class, "logs");
     }
-
 }
