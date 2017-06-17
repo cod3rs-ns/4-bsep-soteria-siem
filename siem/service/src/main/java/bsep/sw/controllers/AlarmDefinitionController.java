@@ -65,7 +65,7 @@ public class AlarmDefinitionController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/alarm-definitions")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getProjectAlarmDefinitions(final HttpServletRequest request,
                                                         @Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
@@ -86,7 +86,7 @@ public class AlarmDefinitionController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/alarm-definitions/{definitionId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getAlarmDefinition(@Valid @PathVariable final Long projectId,
                                                 @Valid @PathVariable final Long definitionId) {
         final User user = securityUtil.getLoggedUser();
