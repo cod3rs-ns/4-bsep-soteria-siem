@@ -38,9 +38,9 @@
                 </div>
                 <div class="widget-content">
                     <div class="today-reminder">
-                        <h4 class="reminder-title">{{alarm.attributes.project.attributes.name}}</h4>
-                        <p class="reminder-time"><i class="fa fa-clock-o"></i> {{alarm.attributes.log.attributes.time | date: 'HH:mm:ss'}} </p>
-                        <p class="reminder-place">{{alarm.attributes.log.attributes.level}}</p>
+                        <h4 class="reminder-title">{{alarm.attributes['project-name']}}</h4>
+                        <p class="reminder-time"><i class="fa fa-clock-o"></i> {{alarm.attributes['created-at'] | date: 'HH:mm:ss'}} </p>
+                        <p class="reminder-place">{{alarm.attributes.level}}</p>
                         <em class="reminder-notes">{{alarm.attributes.message}}</em>
                         <i class="fa fa-bell"></i>
                         <hr class="dashed" />

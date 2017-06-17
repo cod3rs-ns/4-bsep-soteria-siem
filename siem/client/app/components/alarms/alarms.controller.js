@@ -5,22 +5,22 @@
         .module('soteria-app')
         .controller('AlarmsController', AlarmsController);
 
-    AlarmsController.$inject = ['alarmsService', 'projectService', 'projectsService', 'CONFIG', '$log', '$localStorage', '_'];
+    AlarmsController.$inject = ['alarmsService', 'CONFIG', '$log', '$localStorage', '_'];
 
-    function AlarmsController(alarmsService, projectService, projectsService, CONFIG, $log, $localStorage, _) {
+    function AlarmsController(alarmsService, CONFIG, $log, $localStorage, _) {
         var alarmsVm = this;
 
         alarmsVm.resolvedAlarms = {
             "data": [],
             "next": null,
             "prev": null
-        }
+        };
 
         alarmsVm.notResolvedAlarms = {
             "data": [],
             "next": null,
             "prev": null
-        }
+        };
 
         alarmsVm.prevResolvedAlarms = getResolvedAlarms;
         alarmsVm.nextResolvedAlarms = getResolvedAlarms;
@@ -47,27 +47,7 @@
         function getUserAlarms(url, alarms) {
             alarmsService.getAlarmsForUser(url)
                 .then(function (response) {
-                    console.log(response);
                     alarms.data = response.data;
-                    _.forEach(alarms.data, function (alarm, index) {
-                        /*
-                        alarmsService.getLogById(CONFIG.SERVICE_URL.substr(0, 21) + alarm.relationships.logs.links.related)
-                            .then(function (response) {
-                                alarms.data[index].attributes.log = response.data;
-                                projectService.getProjectById(response.data.relationships.project.data.id)
-                                    .then(function (response) {
-                                        alarms.data[index].attributes.project = response.data;
-                                    })
-                                    .catch(function (error) {
-                                        $log.error(error);
-                                    });
-                            })
-                            .catch(function (error) {
-                                $log.error(error);
-                            });
-                          */
-                    });
-
                     alarms.next = response.links.next;
                     alarms.prev = response.links.prev;
                 })

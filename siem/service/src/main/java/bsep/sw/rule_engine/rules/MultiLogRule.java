@@ -75,7 +75,8 @@ public class MultiLogRule extends BasicRule {
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
-                .resolved(false);
+                .resolved(false)
+                .level(alarmDefinition.getLevel());
 
         final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
         for (AlarmedLogs al : possibleTriggeredPairs) {
@@ -99,7 +100,7 @@ public class MultiLogRule extends BasicRule {
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, logs.get(0), alarm)); // TODO extend notification
+                    new AlarmNotification(project, logs, alarm)); // TODO extend notification
         }
     }
 }

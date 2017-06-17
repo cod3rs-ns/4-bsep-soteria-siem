@@ -26,6 +26,9 @@ public class Alarm extends EntityMeta {
     @Column(name = "al_resolved_by")
     private String resolvedBy;
 
+    @Column(name = "al_level")
+    private AlarmLevel level;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "al_definition_id")
@@ -83,6 +86,19 @@ public class Alarm extends EntityMeta {
 
     public Alarm resolvedBy(String resolvedBy) {
         this.resolvedBy = resolvedBy;
+        return this;
+    }
+
+    public AlarmLevel getLevel() {
+        return level;
+    }
+
+    public void setLevel(AlarmLevel level) {
+        this.level = level;
+    }
+
+    public Alarm level(AlarmLevel level) {
+        this.level = level;
         return this;
     }
 
