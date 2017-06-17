@@ -128,9 +128,7 @@ public class AgentController extends StandardResponses {
         // Provide agent and config file to zip
         final ArrayList<File> files = new ArrayList<>(2);
         files.add(new File("README.md"));
-
-        // TODO Create .yml config file
-        request.toYmlFile();
+        files.add(new File(request.toYmlFile()));
 
         // Add files to '.zip'
         for (final File file: files) {
