@@ -3,7 +3,6 @@ package bsep.sw.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.joda.time.DateTime;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +14,7 @@ public class Log {
 
     private LogLevel level;
 
-    private DateTime time;
+    private Long time;
 
     private LogInfo info;
 
@@ -53,15 +52,15 @@ public class Log {
         return this;
     }
 
-    public DateTime getTime() {
+    public Long getTime() {
         return time;
     }
 
-    public void setTime(final DateTime time) {
+    public void setTime(final Long time) {
         this.time = time;
     }
 
-    public Log time(final DateTime time) {
+    public Log time(final Long time) {
         this.time = time;
         return this;
     }

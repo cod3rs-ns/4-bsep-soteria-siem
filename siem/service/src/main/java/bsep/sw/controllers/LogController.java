@@ -6,30 +6,32 @@ import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
-import bsep.sw.repositories.LogsRepository;
 import bsep.sw.rule_engine.rules.RulesService;
+import bsep.sw.services.LogsService;
 import bsep.sw.util.CSRUtil;
+import bsep.sw.util.FilterExtractor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.UUID;
+
+import static bsep.sw.util.SupportedFilters.SUPPORTED_LOG_FILTERS;
 
 @RestController
 @RequestMapping("/api")
 public class LogController {
 
-    private final LogsRepository logs;
+    private final LogsService logs;
     private final RulesService rulesService;
     private final CSRUtil csrUtil;
 
     @Autowired
-    public LogController(final LogsRepository logs,
+    public LogController(final LogsService logs,
                          final RulesService rulesService,
                          final CSRUtil csrUtil) {
         this.logs = logs;
@@ -47,10 +49,11 @@ public class LogController {
         final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
         final String next = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit);
 
-        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Map<String, String[]> filters = FilterExtractor.getFilterParams(request.getParameterMap(), SUPPORTED_LOG_FILTERS);
+
         final PaginationLinks links = new PaginationLinks(self, next);
 
-        return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project, pageable), links));
+        return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project, filters, limit, offset), links));
     }
 
     @GetMapping("/logs/{logId}")

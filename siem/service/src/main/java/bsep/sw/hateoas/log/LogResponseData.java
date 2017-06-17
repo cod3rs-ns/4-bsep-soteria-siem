@@ -1,6 +1,7 @@
 package bsep.sw.hateoas.log;
 
 import bsep.sw.domain.Log;
+import org.joda.time.DateTime;
 
 import static bsep.sw.hateoas.ResourceTypes.LOGS_TYPE;
 
@@ -26,7 +27,7 @@ public class LogResponseData {
         return new LogAttributes()
                 .level(log.getLevel().toString())
                 .info(LogInfoHateoas.fromDomain(log.getInfo()))
-                .time(log.getTime())
+                .time(new DateTime(log.getTime()))
                 .message(log.getMessage());
     }
 

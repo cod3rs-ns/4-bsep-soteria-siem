@@ -13,6 +13,7 @@
         projectVm.info = null;
 
         projectVm.logs = {
+            'filters': {},
             'data': [],
             'next': null
         };
@@ -33,9 +34,21 @@
             'regexes': []
         };
 
+        projectVm.levelCheckboxes = {
+            DEBUG: false,
+            INFO: false,
+            NOTICE: false,
+            WARN: false,
+            ERROR: false,
+            CRIT: false,
+            ALERT: false,
+            EMERG: false
+        };
+
         projectVm.loadProject = loadProject;
         projectVm.loadInitialLogs = loadLogs;
         projectVm.loadMore = loadLogs;
+        projectVm.filterLogs = filterLogs;
         projectVm.loadInitialAgents = loadAgents;
         projectVm.nextAgents = loadAgents;
         projectVm.prevAgents = loadAgents;
@@ -73,6 +86,14 @@
                 .catch(function(error) {
                     $log.error(error);
                 });
+        }
+
+        function filterLogs() {
+            var id = $stateParams.id;
+            var filters = createFilters();
+            projectVm.logs.data = [];
+            projectVm.logs.next = null;
+            loadLogs(CONFIG.SERVICE_URL + '/projects/' + id + '/logs?page[limit]=2' + filters);
         }
 
         function loadAgents(url) {
@@ -115,6 +136,37 @@
                 .catch(function(error) {
                     $log.error(error);
                 });
+        }
+
+        function createFilters() {
+            var filters = "";
+
+            var levels = [];
+            _.forEach(projectVm.levelCheckboxes, function (value, key) {
+                if (true === value) {
+                    levels.push(key);
+                }
+            });
+
+            if (!_.isEmpty(levels)) {
+                filters += '&filter[level]=' + _.join(levels);
+            }
+
+            _.forEach(projectVm.logs.filters, function (value, key) {
+                if (key !== 'info' && !_.isEmpty(value))
+                    filters += '&filter[' + key + ']=' + value;
+            });
+
+            var info = projectVm.logs.filters.info;
+            if (!_.isUndefined(info)) {
+                _.forEach(info, function (value, key) {
+                    if (!_.isEmpty(value)) {
+                        filters += '&filter[info.' + key + ']=' + value;
+                    }
+                });
+            }
+
+            return filters;
         }
 
         function chooseAgentPlatform(platform) {

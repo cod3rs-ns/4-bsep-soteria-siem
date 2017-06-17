@@ -10,7 +10,7 @@ public class LogRequest {
     public Log toDomain() {
         return new Log()
                 .level(LogLevel.valueOf(data.attributes.level.toUpperCase()))
-                .time(data.attributes.time)
+                .time(data.attributes.time.getMillis())
                 .info(data.attributes.info.toDomain())
                 .message(data.attributes.message)
                 .project(Long.valueOf(data.relationships.project.data.id));
