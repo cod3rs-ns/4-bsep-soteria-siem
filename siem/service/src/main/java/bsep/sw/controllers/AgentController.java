@@ -100,7 +100,7 @@ public class AgentController extends StandardResponses {
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getProjectAgent(@Valid @PathVariable final Long projectId,
-                                               @Valid @PathVariable final Long agentId) {
+                                             @Valid @PathVariable final Long agentId) {
         final User user = securityUtil.getLoggedUser();
 
         final Project project = projectService.findByMembershipAndId(user, projectId);
@@ -110,6 +110,11 @@ public class AgentController extends StandardResponses {
         }
 
         final Agent agent = agentService.findOneByProjectAndId(project, agentId);
+
+        if (agent == null) {
+            return notFound("agent");
+        }
+
         return ResponseEntity
                 .ok()
                 .body(AgentResponse.fromDomain(agent));

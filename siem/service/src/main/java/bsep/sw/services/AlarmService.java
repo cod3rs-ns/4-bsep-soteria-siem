@@ -29,11 +29,6 @@ public class AlarmService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Alarm> findAll(final Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    @Transactional(readOnly = true)
     public Alarm findOne(final Long id) {
         return repository.findOne(id);
     }
@@ -46,11 +41,13 @@ public class AlarmService {
         return repository.findAlarmsByDefinitionProject(project);
     }
 
+    @Transactional(readOnly = true)
     public Alarm findOneByProjectAndId(final Project project, final Long alarmId) {
         return repository.findAlarmByDefinitionProjectAndId(project, alarmId);
     }
 
-    public Page<Alarm> findAllByUserAndStatus(final User user, final Boolean resolved, final Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<Alarm> findByUserAndStatus(final User user, final Boolean resolved, final Pageable pageable) {
         return repository.findAlarmsByDefinition_Project_Members_ContainingAndResolvedOrderByResolvedAtDesc(user, resolved, pageable);
     }
 

@@ -9,8 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 public class ProjectService {
@@ -27,11 +25,6 @@ public class ProjectService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Project> findAll(final Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    @Transactional(readOnly = true)
     public Project findOne(final Long id) {
         return repository.findOne(id);
     }
@@ -45,22 +38,27 @@ public class ProjectService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Project findByOwnerAndId(final User user, final Long id) {
         return repository.findProjectByOwnerAndId(user, id);
     }
 
+    @Transactional(readOnly = true)
     public Project findByMembershipAndId(final User user, final Long id) {
         return repository.findProjectsByMembersContainingAndId(user, id);
     }
 
+    @Transactional(readOnly = true)
     public Page<Project> findOwned(final User user, final Pageable pageable) {
         return repository.findProjectsByOwner(user, pageable);
     }
 
-    public Page<Project> findAllByMembership(final User user, final Boolean owner, final Pageable pageable) {
+    @Transactional(readOnly = true)
+    public Page<Project> findByMembership(final User user, final Boolean owner, final Pageable pageable) {
         if (owner) {
             return repository.findProjectsByMembersContaining(user, pageable);
         }
         return repository.findProjectsByMembersContainingAndOwnerNot(user, user, pageable);
     }
+
 }

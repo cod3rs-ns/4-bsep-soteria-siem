@@ -3,8 +3,6 @@ package bsep.sw.services;
 import bsep.sw.domain.User;
 import bsep.sw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,19 +19,14 @@ public class UserService {
     }
 
     public User save(final User newUser) {
-            final User user = repository.findOneByUsername(newUser.getUsername());
-            if (newUser.getPassword() != null && (user == null || !newUser.getPassword().equals(user.getPassword()))) {
-                final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                final String hashedPassword = passwordEncoder.encode(newUser.getPassword());
-                newUser.setPassword(hashedPassword);
-            }
+        final User user = repository.findOneByUsername(newUser.getUsername());
+        if (newUser.getPassword() != null && (user == null || !newUser.getPassword().equals(user.getPassword()))) {
+            final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            final String hashedPassword = passwordEncoder.encode(newUser.getPassword());
+            newUser.setPassword(hashedPassword);
+        }
 
-            return repository.save(newUser);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<User> findAll(final Pageable pageable) {
-        return repository.findAll(pageable);
+        return repository.save(newUser);
     }
 
     @Transactional(readOnly = true)
@@ -45,11 +38,14 @@ public class UserService {
         repository.delete(id);
     }
 
-    public User getUserByUsername(final String username) {
+    @Transactional(readOnly = true)
+    public User findUserByUsername(final String username) {
         return repository.findOneByUsername(username);
     }
 
-    public User getUserByEmail(final String email) {
+    @Transactional(readOnly = true)
+    public User findUserByEmail(final String email) {
         return repository.findOneByEmail(email);
     }
+
 }

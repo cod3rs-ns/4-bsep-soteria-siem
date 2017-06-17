@@ -17,7 +17,7 @@ public class RuleMethodSupplier {
                 return StringUtils::endsWithIgnoreCase;
             case STARTS_WITH:
                 return StringUtils::startsWithIgnoreCase;
-            case REGEX: // TODO
+            case REGEX: // TODO implement regex
                 return null;
             default:
                 return null;

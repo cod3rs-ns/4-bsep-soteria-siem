@@ -26,17 +26,14 @@ public class AlarmDefinitionService {
         return repository.save(alarmDefinition);
     }
 
+    @Transactional(readOnly = true)
     public List<AlarmDefinition> findAllByProject(final Project project) {
         return repository.findAlarmDefinitionsByProject(project);
     }
 
+    @Transactional(readOnly = true)
     public AlarmDefinition findByProjectAndId(final Project project, final Long definitionId) {
         return repository.findAlarmDefinitionByIdAndProject(definitionId, project);
-    }
-
-    @Transactional(readOnly = true)
-    public Page<AlarmDefinition> findAll(final Pageable pageable) {
-        return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)

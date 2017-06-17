@@ -59,7 +59,7 @@ public class UserController extends StandardResponses {
     public ResponseEntity<?> registerUser(@Valid @RequestBody final UserRequest userRequest) {
         final User user = userRequest.toDomain();
 
-        if (userService.getUserByUsername(user.getUsername()) != null) {
+        if (userService.findUserByUsername(user.getUsername()) != null) {
             final ErrorResponse errorResponse = new ErrorResponse(
                     HttpStatus.BAD_REQUEST.toString(),
                     "Already exist",
@@ -76,12 +76,12 @@ public class UserController extends StandardResponses {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String currentPrincipalName = authentication.getName();
 
-        return new ResponseEntity<>(UserResponse.fromDomain(userService.getUserByUsername(currentPrincipalName)), HttpStatus.OK);
+        return new ResponseEntity<>(UserResponse.fromDomain(userService.findUserByUsername(currentPrincipalName)), HttpStatus.OK);
     }
 
     @GetMapping("/users/username/available")
     public ResponseEntity<AvailabilityResponse> usernameAvailable(@RequestParam(value = "username") final String username) {
-        if (userService.getUserByUsername(username) != null) {
+        if (userService.findUserByUsername(username) != null) {
             return ResponseEntity.ok(new AvailabilityResponse("username", false));
         }
 
@@ -90,7 +90,7 @@ public class UserController extends StandardResponses {
 
     @GetMapping("/users/email/available")
     public ResponseEntity<AvailabilityResponse> emailAvailable(@RequestParam(value = "email") final String email) {
-        if (userService.getUserByEmail(email) != null) {
+        if (userService.findUserByEmail(email) != null) {
             return ResponseEntity.ok(new AvailabilityResponse("email", false));
         }
 
@@ -101,12 +101,14 @@ public class UserController extends StandardResponses {
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public ResponseEntity<?> getUserByEmail(@Valid @PathVariable final String email) {
-        final User user = userService.getUserByEmail(email);
+        final User user = userService.findUserByEmail(email);
 
         if (user == null) {
             return notFound("user");
         }
 
-        return ResponseEntity.ok().body(UserResponse.fromDomain(user));
+        return ResponseEntity
+                .ok()
+                .body(UserResponse.fromDomain(user));
     }
 }

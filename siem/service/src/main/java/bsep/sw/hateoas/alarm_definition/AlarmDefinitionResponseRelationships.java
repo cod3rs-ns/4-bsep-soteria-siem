@@ -55,14 +55,11 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
 
 
             final RelationshipLinks singleRulesLinks = new RelationshipLinks("non-existing");
-            System.out.println(alarmDefinition.getMultiRule().getSingleRules().size());
             final List<RelationshipData> singleRulesData = new ArrayList<>(alarmDefinition.getMultiRule().getSingleRules()
                     .stream()
                     .map(a -> new SingleRuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
                     .collect(Collectors.toList()));
             relationships.singleRules = new ResponseCollectionRelationship(singleRulesLinks, singleRulesData);
-
-
         } else {
             final RelationshipData multiRuleData = new RelationshipData(MULTI_RULE_TYPE, null);
             final RelationshipLinks multiRuleLinks = new RelationshipLinks("non-existing");
@@ -74,9 +71,7 @@ public class AlarmDefinitionResponseRelationships extends ResourceResponseRelati
                     .map(a -> new SingleRuleRelationshipData(SINGLE_RULE_TYPE, a.getId().toString(), a.getMethod(), a.getField(), a.getValue()))
                     .collect(Collectors.toList()));
             relationships.singleRules = new ResponseCollectionRelationship(singleRulesLinks, singleRulesData);
-
         }
-
         return relationships;
     }
 }

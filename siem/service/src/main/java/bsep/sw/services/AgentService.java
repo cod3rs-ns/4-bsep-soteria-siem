@@ -4,7 +4,6 @@ import bsep.sw.domain.Agent;
 import bsep.sw.domain.Project;
 import bsep.sw.repositories.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,11 +26,6 @@ public class AgentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Agent> findAll(final Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    @Transactional(readOnly = true)
     public Agent findOne(final Long id) {
         return repository.findOne(id);
     }
@@ -40,10 +34,12 @@ public class AgentService {
         repository.delete(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Agent> findAllByProject(final Project project, final Pageable pageable) {
         return repository.findAgentsByProject(project, pageable);
     }
 
+    @Transactional(readOnly = true)
     public Agent findOneByProjectAndId(final Project project, final Long agentId) {
         return repository.findAgentByProjectAndId(project, agentId);
     }

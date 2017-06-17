@@ -131,7 +131,7 @@ public class SocialLoginController {
     }
 
     private User createOrFindFbUser(final FacebookUserResponse userResponse) throws UnsupportedEncodingException {
-        User retUser = userService.getUserByUsername("fb_" + userResponse.getId());
+        User retUser = userService.findUserByUsername("fb_" + userResponse.getId());
         if (retUser == null) {
             retUser = new User();
             retUser.setEmail(userResponse.getEmail());

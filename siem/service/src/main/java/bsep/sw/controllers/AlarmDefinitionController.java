@@ -48,6 +48,7 @@ public class AlarmDefinitionController extends StandardResponses {
         final User user = securityUtil.getLoggedUser();
 
         final AlarmDefinition toSave = alarmDefinitionRequest.toDomain();
+        toSave.setByAttributes(user);
         final Project parent = projectService.findByOwnerAndId(user, projectId);
 
         if (parent == null) {
@@ -76,6 +77,8 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
+
+        // TODO links
         return ResponseEntity
                 .ok()
                 .body(AlarmDefinitionCollectionResponse.fromDomain(definitions, new PaginationLinks(request.getRequestURL().toString(), "next", "prev")));
@@ -88,7 +91,6 @@ public class AlarmDefinitionController extends StandardResponses {
                                                 @Valid @PathVariable final Long definitionId) {
         final User user = securityUtil.getLoggedUser();
 
-
         final Project project = projectService.findByOwnerAndId(user, projectId);
 
         if (project == null) {
@@ -96,6 +98,11 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         final AlarmDefinition definition = alarmDefinitionService.findByProjectAndId(project, definitionId);
+
+        if (definition == null) {
+            return notFound("alarm-definition");
+        }
+
         return ResponseEntity
                 .ok()
                 .body(AlarmDefinitionResponse.fromDomain(definition));
@@ -114,6 +121,7 @@ public class AlarmDefinitionController extends StandardResponses {
         }
 
         alarmDefinitionService.delete(definitionId);
+
         return ResponseEntity
                 .noContent()
                 .build();

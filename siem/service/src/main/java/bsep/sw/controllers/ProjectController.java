@@ -47,6 +47,7 @@ public class ProjectController extends StandardResponses {
                                            @Valid @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
         final User user = securityUtil.getLoggedUser();
         final Project toSave = projectRequest.toDomain();
+        toSave.setByAttributes(user);
         toSave.owner(user);
         toSave.getMembers().add(user);
 
@@ -88,7 +89,7 @@ public class ProjectController extends StandardResponses {
         final User user = securityUtil.getLoggedUser();
 
         final Pageable pageable = new PageRequest(offset / limit, limit);
-        final Page<Project> page = projectService.findAllByMembership(user, owner, pageable);
+        final Page<Project> page = projectService.findByMembership(user, owner, pageable);
 
         final String baseUrl = request.getRequestURL().toString();
         final String self = String.format("%s?page[offset]=%d&page[limit]=%d&filter[owner]=%b", baseUrl, offset, limit, owner);
@@ -113,7 +114,9 @@ public class ProjectController extends StandardResponses {
             return notFound("project");
         }
 
-        return ResponseEntity.ok().body(ProjectResponse.fromDomain(result));
+        return ResponseEntity
+                .ok()
+                .body(ProjectResponse.fromDomain(result));
     }
 
     @DeleteMapping("/projects/{projectId}")
@@ -125,7 +128,9 @@ public class ProjectController extends StandardResponses {
             return notFound("project");
         }
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @GetMapping("/projects/{projectId}/users")
@@ -134,12 +139,15 @@ public class ProjectController extends StandardResponses {
     public ResponseEntity<?> projectCollaborators(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
-        final Project project = projectService.findOne(projectId);
+        final Project project = projectService.findByMembershipAndId(user, projectId);
         if (project == null) {
             return notFound("project");
         }
 
-        return ResponseEntity.ok().body(UserCollectionResponse.fromDomain(project.getMembers(), new PaginationLinks("self", "next")));
+        // TODO links
+        return ResponseEntity
+                .ok()
+                .body(UserCollectionResponse.fromDomain(project.getMembers(), new PaginationLinks("self", "next")));
     }
 
     @PostMapping("/projects/{projectId}/users/{userId}")
@@ -161,7 +169,9 @@ public class ProjectController extends StandardResponses {
         userService.save(collaborator.addProject(project));
         projectService.save(project.addMember(collaborator));
 
-        return ResponseEntity.ok().body(UserResponse.fromDomain(collaborator));
+        return ResponseEntity
+                .ok()
+                .body(UserResponse.fromDomain(collaborator));
     }
 
 }

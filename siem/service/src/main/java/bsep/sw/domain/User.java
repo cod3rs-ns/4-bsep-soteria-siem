@@ -60,6 +60,10 @@ public class User extends EntityMeta {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Project> ownedProjects = new HashSet<>(0);
 
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+
     public String getUsername() {
         return username;
     }

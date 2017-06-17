@@ -10,6 +10,7 @@ import bsep.sw.rule_engine.rules.RulesService;
 import bsep.sw.services.LogsService;
 import bsep.sw.util.CSRUtil;
 import bsep.sw.util.FilterExtractor;
+import bsep.sw.util.StandardResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
@@ -24,7 +25,7 @@ import static bsep.sw.util.SupportedFilters.SUPPORTED_LOG_FILTERS;
 
 @RestController
 @RequestMapping("/api")
-public class LogController {
+public class LogController extends StandardResponses{
 
     private final LogsService logs;
     private final RulesService rulesService;
@@ -53,14 +54,15 @@ public class LogController {
 
         final PaginationLinks links = new PaginationLinks(self, next);
 
-        return ResponseEntity.ok(LogCollectionResponse.fromDomain(logs.findByProject(project, filters, limit, offset), links));
+        return ResponseEntity
+                .ok(LogCollectionResponse.fromDomain(logs.findByProject(project, filters, limit, offset), links));
     }
 
     @GetMapping("/logs/{logId}")
     public ResponseEntity<?> retrieveSingleLog(@PathVariable("logId") final String logId) {
         final Log log = logs.findOne(logId);
         if (log == null) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("not exists", "Log does not exists", String.format("Log with id %s does not exists", logId)));
+            notFound("log");
         }
 
         return ResponseEntity.ok(LogResponse.fromDomain(log));
@@ -73,7 +75,8 @@ public class LogController {
         // TODO: add username in path - (should be IP address of agent)
         final LogRequest request = csrUtil.parseRequest(body, "username");
 
-        final Log log = request.toDomain()
+        final Log log = request
+                .toDomain()
                 .id(UUID.randomUUID().toString());
 
         // TODO maybe not bad idea to check for project existence!!!

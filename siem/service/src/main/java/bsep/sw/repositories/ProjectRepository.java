@@ -21,4 +21,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     Page<Project> findProjectsByMembersContaining(final User user, final Pageable pageable);
 
     Page<Project> findProjectsByMembersContainingAndOwnerNot(final User user, final User owner, final Pageable pageable);
+
 }

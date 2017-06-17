@@ -36,13 +36,13 @@ public class MultiLogRule extends BasicRule {
     private final List<AlarmedLogs> possibleTriggeredPairs = new ArrayList<>();
     private final AlarmedLogsRepository alarmedLogsRepository;
 
-    public MultiLogRule(final List<Log> logs,
-                        final AlarmDefinition alarmDefinition,
-                        final ProjectService projectService,
-                        final AlarmService alarmService,
-                        final AlarmDefinitionService alarmDefinitionService,
-                        final SimpMessagingTemplate template,
-                        final AlarmedLogsRepository alarmedLogsRepository) {
+    MultiLogRule(final List<Log> logs,
+                 final AlarmDefinition alarmDefinition,
+                 final ProjectService projectService,
+                 final AlarmService alarmService,
+                 final AlarmDefinitionService alarmDefinitionService,
+                 final SimpMessagingTemplate template,
+                 final AlarmedLogsRepository alarmedLogsRepository) {
         super(UUID.randomUUID().toString(), UUID.randomUUID().toString());
         this.logs = logs;
         this.alarmDefinition = alarmDefinition;
@@ -78,7 +78,7 @@ public class MultiLogRule extends BasicRule {
                 .resolved(false);
 
         final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
-        for (AlarmedLogs al: possibleTriggeredPairs) {
+        for (AlarmedLogs al : possibleTriggeredPairs) {
             logPairs.add(new LogAlarmPair().alarm(alarm).log(al.getLogId()));
         }
         alarm.logs(logPairs);

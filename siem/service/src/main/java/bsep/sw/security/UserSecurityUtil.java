@@ -32,7 +32,7 @@ public class UserSecurityUtil {
             return null;
         }
 
-        return userService.getUserByUsername(authentication.getName());
+        return userService.findUserByUsername(authentication.getName());
     }
 
     /**

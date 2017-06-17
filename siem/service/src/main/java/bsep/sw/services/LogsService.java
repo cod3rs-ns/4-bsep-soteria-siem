@@ -34,8 +34,8 @@ public class LogsService {
 
     public List<Log> findByProject(final Long project, final Map<String, String[]> filters, final Integer limit, final Integer offset) {
 
-        final Long from = new DateTime(filters.getOrDefault("from", new String[] {DateTime.now().minusYears(1).toString()})[0]).getMillis();
-        final Long to = new DateTime(filters.getOrDefault("to", new String[] {DateTime.now().plusYears(1).toString()})[0]).getMillis();
+        final Long from = new DateTime(filters.getOrDefault("from", new String[]{DateTime.now().minusYears(1).toString()})[0]).getMillis();
+        final Long to = new DateTime(filters.getOrDefault("to", new String[]{DateTime.now().plusYears(1).toString()})[0]).getMillis();
         filters.remove("to");
         filters.remove("from");
 
@@ -43,7 +43,7 @@ public class LogsService {
         query.addCriteria(Criteria.where("project").is(project)).limit(limit).skip(offset);
         query.addCriteria(Criteria.where("time").lt(to).gt(from));
 
-        for (final String name: filters.keySet()) {
+        for (final String name : filters.keySet()) {
             final Criteria criteria = Criteria.where(name);
             criteria.regex(String.join("|", filters.get(name)));
             query.addCriteria(criteria);
