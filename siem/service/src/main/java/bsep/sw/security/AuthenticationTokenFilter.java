@@ -1,8 +1,12 @@
 package bsep.sw.security;
 
+import bsep.sw.util.FacebookUserResponse;
 import bsep.sw.util.HttpHeadersUtil;
+import bsep.sw.util.RestClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +22,10 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+
+import static bsep.sw.util.FacebookConstants.*;
 
 
 public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFilter {
@@ -26,47 +34,45 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
     private final UserDetailsService userDetailsService;
     private final TokenUtils tokenUtils;
+    private final String userInfoUrl;
 
     public AuthenticationTokenFilter(final UserDetailsService userDetailsService,
-                                     final TokenUtils tokenUtils) {
+                                     final TokenUtils tokenUtils,
+                                     final String userInfoUrl) {
         this.userDetailsService = userDetailsService;
         this.tokenUtils = tokenUtils;
+        this.userInfoUrl = userInfoUrl;
     }
 
     @Override
     public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
-
+        String username = null;
         String authToken = httpRequest.getHeader(HttpHeadersUtil.X_AUTH_TOKEN.getName());
 
-        String username;
-        try {
-            username = tokenUtils.getUsernameFromToken(authToken);
-        } catch (final ExpiredJwtException ex) {
-            // refresh token
-            final Claims claims = ex.getClaims();
-
-            final TokenUtils.LoginType loginType = TokenUtils.LoginType.valueOf(claims.get(TokenUtils.getLoginType()).toString());
-            if (loginType == TokenUtils.LoginType.FACEBOOK) {
-                // TODO: Redirect to client login page
-                final String redirectUrl = "http://www.google.ba" ;
-                try {
-                    httpResponse.sendRedirect(redirectUrl);
-                } catch (final IOException e) {
-                    log.debug(String.format("Can't redirect fb user to url %s", redirectUrl), e);
-                }
-                return;
+        if (authToken != null && authToken.startsWith("bearer")) {
+            final String fbToken = authToken.substring(6).trim();
+            try {
+                final FacebookUserResponse user = getFbUserInfo(fbToken);
+                username = "fb_" + user.getId();
+            } catch (final URISyntaxException e) {
+                log.debug("Can't fetch fb user", e);
             }
+        } else {
+            try {
+                username = tokenUtils.getUsernameFromToken(authToken);
+            } catch (final ExpiredJwtException ex) {
+                // refresh token
+                final Claims claims = ex.getClaims();
+                authToken = tokenUtils.refreshToken(claims);
+                username = claims.getSubject();
+                httpResponse.setHeader(HttpHeadersUtil.X_AUTH_REFRESHED.getName(), HttpHeadersUtil.X_AUTH_REFRESHED.getValue());
 
-            authToken = tokenUtils.refreshToken(claims);
-            username = claims.getSubject();
-            httpResponse.setHeader(HttpHeadersUtil.X_AUTH_REFRESHED.getName(), HttpHeadersUtil.X_AUTH_REFRESHED.getValue());
-
-            log.debug(String.format("Token refreshed for user: %s", username), ex);
-        } catch (final Exception ex) {
-            log.debug("Wrong token provided", ex);
-            username = null;
+                log.debug(String.format("Token refreshed for user: %s", username), ex);
+            } catch (final Exception ex) {
+                log.debug("Wrong token provided", ex);
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -78,5 +84,16 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
 
         httpResponse.setHeader(HttpHeadersUtil.X_AUTH_TOKEN.getName(), authToken);
         chain.doFilter(request, httpResponse);
+    }
+
+    private FacebookUserResponse getFbUserInfo(final String accessToken) throws URISyntaxException, IOException {
+        final URIBuilder builder = new URIBuilder(userInfoUrl);
+
+        builder.addParameter(FIELDS, FIELDS_VALUE);
+        builder.addParameter(ACCESS_TOKEN, accessToken);
+
+        final String url = URLDecoder.decode(builder.build().toString(), "utf-8");
+        final String data = RestClient.get(url);
+        return new ObjectMapper().readValue(data, FacebookUserResponse.class);
     }
 }

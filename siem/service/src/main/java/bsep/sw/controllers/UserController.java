@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -56,6 +57,7 @@ public class UserController extends StandardResponses {
     }
 
     @PostMapping("/users")
+    @PermitAll
     public ResponseEntity<?> registerUser(@Valid @RequestBody final UserRequest userRequest) {
         final User user = userRequest.toDomain();
 
@@ -68,6 +70,13 @@ public class UserController extends StandardResponses {
         }
 
         return ResponseEntity.ok(UserResponse.fromDomain(userService.save(user)));
+    }
+
+    @PutMapping("/users/fb")
+    @PermitAll
+    public ResponseEntity<?> registerFbUser(@Valid @RequestBody final UserRequest userRequest) {
+        final User user = userRequest.toDomain();
+        return ResponseEntity.ok(UserResponse.fromDomain(userService.update(user)));
     }
 
     @RequestMapping("/users/me")
@@ -99,7 +108,7 @@ public class UserController extends StandardResponses {
 
     @GetMapping("/users/{email:.+}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getUserByEmail(@Valid @PathVariable final String email) {
         final User user = userService.findUserByEmail(email);
 

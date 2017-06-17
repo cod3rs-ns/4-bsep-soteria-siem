@@ -57,7 +57,7 @@ public class TokenUtils {
      * @param token authentication token
      * @return Claims
      */
-    private Claims getClaimsFromToken(String token) throws Exception {
+    private Claims getClaimsFromToken(final String token) throws Exception {
         return Jwts.parser()
                 .setSigningKey(this.secret)
                 .parseClaimsJws(token)
@@ -68,7 +68,7 @@ public class TokenUtils {
         return new Date(System.currentTimeMillis());
     }
 
-    private Date generateExpirationDate(Long tokenExpiration) {
+    private Date generateExpirationDate(final Long tokenExpiration) {
         if (tokenExpiration != null) {
             return new Date(System.currentTimeMillis() + tokenExpiration);
         }
@@ -81,8 +81,8 @@ public class TokenUtils {
      * @param userDetails UserDetails
      * @return encrypted string - token
      */
-    public String generateToken(UserDetails userDetails, Long tokenExpiration, LoginType loginType) {
-        Map<String, Object> claims = new HashMap<>();
+    public String generateToken(final UserDetails userDetails, final Long tokenExpiration, final LoginType loginType) {
+        final Map<String, Object> claims = new HashMap<>();
 
         claims.put(SUBJECT, userDetails.getUsername());
         // Set Role of User to token. Our user has only one role.
@@ -92,7 +92,7 @@ public class TokenUtils {
         return this.generateToken(claims, tokenExpiration);
     }
 
-    private String generateToken(Map<String, Object> claims, Long tokenExpiration) {
+    private String generateToken(final Map<String, Object> claims, final Long tokenExpiration) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(claims.get(SUBJECT).toString())
@@ -102,7 +102,7 @@ public class TokenUtils {
     }
 
     public String refreshToken(Claims claims) {
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(claims.get(SUBJECT).toString());
+        final UserDetails userDetails = this.userDetailsService.loadUserByUsername(claims.get(SUBJECT).toString());
         if (userDetails != null) {
             claims.put(CREATED, this.generateCurrentDate());
             return generateToken(claims, null);
@@ -114,11 +114,4 @@ public class TokenUtils {
         return expiration;
     }
 
-    public void setExpiration(Long expiration) {
-        this.expiration = expiration;
-    }
-
-    public static String getLoginType() {
-        return LOGIN_TYPE;
-    }
 }

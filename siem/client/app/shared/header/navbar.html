@@ -60,8 +60,8 @@
 					<div class="logged-user" ng-if="!(headerVm.$storage.role === 'guest')">
 						<div class="btn-group">
 							<a href="javascript:void(0);" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                                <img ng-src="{{headerVm.loggedInUser.attributes.imagePath}}" alt="User Avatar" style="height:25px; width:25px;"/>
-                                <span class="name">&nbsp;{{headerVm.$storage.user}}</span> <span class="caret"></span>
+                                <img ng-src="{{headerVm.$storage.image}}" alt="User Avatar" style="height:25px; width:25px;"/>
+                                <span class="name">&nbsp;{{headerVm.$storage.userInfo}}</span> <span class="caret"></span>
                             </a>
 							<ul class="dropdown-menu" role="menu">
 								<li>

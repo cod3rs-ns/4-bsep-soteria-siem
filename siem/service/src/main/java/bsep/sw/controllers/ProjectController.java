@@ -60,7 +60,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/owned")
     @ResponseBody
-    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request,
                                               @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
                                               @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit) {
@@ -81,7 +81,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/member-of")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request,
                                                    @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
                                                    @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit,
@@ -104,7 +104,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> getProject(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
@@ -135,7 +135,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/users")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> projectCollaborators(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
@@ -152,7 +152,7 @@ public class ProjectController extends StandardResponses {
 
     @PostMapping("/projects/{projectId}/users/{userId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
     public ResponseEntity<?> addCollaborator(@Valid @PathVariable final Long projectId, @Valid @PathVariable final Long userId) {
         final User user = securityUtil.getLoggedUser();
 

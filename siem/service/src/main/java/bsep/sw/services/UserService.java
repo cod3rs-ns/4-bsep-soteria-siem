@@ -3,6 +3,8 @@ package bsep.sw.services;
 import bsep.sw.domain.User;
 import bsep.sw.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,24 @@ public class UserService {
         }
 
         return repository.save(newUser);
+    }
+
+    public User update(final User user) {
+        final User savedUser = repository.findOneByUsername(user.getUsername());
+        if (savedUser != null) {
+            savedUser.setFirstName(user.getFirstName());
+            savedUser.setLastName(user.getLastName());
+            savedUser.setImagePath(user.getImagePath());
+            savedUser.setPhoneNumber(user.getPhoneNumber());
+            return repository.save(savedUser);
+        }
+
+        return repository.save(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<User> findAll(final Pageable pageable) {
+        return repository.findAll(pageable);
     }
 
     @Transactional(readOnly = true)
