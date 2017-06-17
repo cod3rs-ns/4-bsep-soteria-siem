@@ -34,16 +34,18 @@ public class LogsService {
 
     public List<Log> findByProject(final Long project, final Map<String, String[]> filters, final Integer limit, final Integer offset) {
 
-        final DateTime from = new DateTime(filters.getOrDefault("from", new String[] {DateTime.now().minusYears(1).toString()})[0]);
-        final DateTime to = new DateTime(filters.getOrDefault("to", new String[] {DateTime.now().plusYears(1).toString()})[0]);
+        final Long from = new DateTime(filters.getOrDefault("from", new String[] {DateTime.now().minusYears(1).toString()})[0]).getMillis();
+        final Long to = new DateTime(filters.getOrDefault("to", new String[] {DateTime.now().plusYears(1).toString()})[0]).getMillis();
+        filters.remove("to");
+        filters.remove("from");
 
         final Query query = new Query();
         query.addCriteria(Criteria.where("project").is(project)).limit(limit).skip(offset);
+        query.addCriteria(Criteria.where("time").lt(to).gt(from));
 
-        // FIXME Add support for 'from' and 'to'
-//        query.addCriteria(Criteria.where("time").lt(to).and("time").gt(from));
-
+        // Remove 'from' and 'to'
         for (final String name: filters.keySet()) {
+            System.out.println(name);
             // FIXME to set or when delimited with ','
             query.addCriteria(Criteria.where(name).regex(String.join(",", filters.get(name)), "i"));
         }
