@@ -16,6 +16,7 @@
         defPreviewVm.multiRule = {};
         defPreviewVm.alarms = [];
         defPreviewVm.resolvedPercentage = 73;
+        defPreviewVm.resolvedAlarms = 0;
         defPreviewVm.chartOptions = {
             animate: {
                 duration: 5,
@@ -54,10 +55,22 @@
             alarmsService.getAllByDefinition(project_id, defintion_id)
                 .then(function (response) {
                     defPreviewVm.alarms = response.data;
+                    countResolved();
                 })
                 .catch(function (error) {
                     $log.error(error);
                 });
+        }
+
+        function countResolved() {
+            defPreviewVm.resolvedAlarms = 0;
+            defPreviewVm.resolvedPercentage = 0;
+            _.forEach(defPreviewVm.alarms, function (value) {
+                if (value.attributes.resolved) {
+                    defPreviewVm.resolvedAlarms += 1;
+                }
+            });
+            defPreviewVm.resolvedPercentage = Math.round(defPreviewVm.resolvedAlarms / defPreviewVm.alarms.length * 100.0);
         }
 
     }

@@ -1,8 +1,8 @@
 <div class="container">
 	<div class="main-header">
 		<h2>Alarm definition</h2>
-		<em>This definition triggered total of <span class="label label-warning">4 alarms</span> projects, by its <span
-				class="label label-default">2 rules</span></em>
+		<em>This definition triggered total of <span class="label label-warning">{{defPreviewVm.alarms.length + ' alarm(s)'}}</span>, by its <span
+				class="label label-info">{{defPreviewVm.rules.length + ' rule(s)'}}</span></em>
 	</div>
 	<div class="main-content">
 		<div class="row" style="margin-right: 10px;">
@@ -115,6 +115,27 @@
 				</div>
 			</div>
 			<div class="col-md-5">
+				<div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-warning red-font"></i>
+							<p class="pull-right"><span> TOTAL ALARMS</span>{{defPreviewVm.alarms.length}}</p>
+						</div>
+					</div>
+					
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-check-circle"></i>
+							<p class="pull-right"><span> RESOLVED ALARMS</span>{{defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-close"></i>
+							<p class="pull-right"><span> NOT RESOLVED</span>{{defPreviewVm.alarms.length - defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+				</div>
 				<div class="row" ng-show="defPreviewVm.multiRule.id != null">
 					<div class="widget">
 						<div class="widget-header">
@@ -124,11 +145,11 @@
 							<div class="basic-info">
 								<p class="data-row">
 									<span class="data-name">Interval</span>
-									<span class="data-value">10 seconds</span>
+									<span class="data-value">{{defPreviewVm.multiRule.interval + ' seconds'}}</span>
 								</p>
 								<p class="data-row">
 									<span class="data-name">Repetition</span>
-									<span class="data-value">13 logs</span>
+									<span class="data-value">{{defPreviewVm.multiRule['repetition-trigger'] + ' logs'}}</span>
 								</p>
 							</div>
 						</div>
