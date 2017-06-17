@@ -20,7 +20,8 @@ angular
         'SERVICE_URL': 'http://localhost:9091/api',
         'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
         'AUTH_TOKEN': 'X-Auth-Token',
-        'AGENTS_LIMIT': 6
+        'AGENTS_LIMIT': 6,
+        'FB_FIELDS': 'id,first_name,last_name,email'
     })
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
