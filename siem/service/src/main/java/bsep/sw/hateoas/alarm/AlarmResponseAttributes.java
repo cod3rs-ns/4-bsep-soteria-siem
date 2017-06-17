@@ -24,6 +24,15 @@ public class AlarmResponseAttributes extends ResourceResponseAttributes {
     @JsonProperty("level")
     public AlarmLevel level;
 
+    @JsonProperty("created-at")
+    public DateTime createdAt;
+
+    @JsonProperty("project-id")
+    public Long projectId;
+
+    @JsonProperty("project-name")
+    public String projectName;
+
     public static AlarmResponseAttributes fromDomain(final Alarm alarm) {
         final AlarmResponseAttributes attributes = new AlarmResponseAttributes();
         attributes.message = alarm.getMessage();
@@ -31,6 +40,9 @@ public class AlarmResponseAttributes extends ResourceResponseAttributes {
         attributes.resolvedAt = alarm.getResolvedAt();
         attributes.resolvedBy = alarm.getResolvedBy();
         attributes.level = alarm.getLevel();
+        attributes.createdAt = alarm.getCreatedAt();
+        attributes.projectId = alarm.getDefinition().getProject().getId();
+        attributes.projectName = alarm.getDefinition().getProject().getName();
         return attributes;
     }
 

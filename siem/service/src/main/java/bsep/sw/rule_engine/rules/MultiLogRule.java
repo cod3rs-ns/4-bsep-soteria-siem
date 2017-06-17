@@ -75,8 +75,8 @@ public class MultiLogRule extends BasicRule {
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
-                .resolved(false);
-                //.level(alarmDefinition.getLevel());
+                .resolved(false)
+                .level(alarmDefinition.getLevel());
 
         final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
         for (AlarmedLogs al : possibleTriggeredPairs) {

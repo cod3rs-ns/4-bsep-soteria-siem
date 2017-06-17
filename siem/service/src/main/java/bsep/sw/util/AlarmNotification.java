@@ -4,46 +4,26 @@ package bsep.sw.util;
 import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
 import bsep.sw.domain.Project;
+import bsep.sw.hateoas.PaginationLinks;
+import bsep.sw.hateoas.alarm.AlarmResponse;
+import bsep.sw.hateoas.log.LogCollectionResponse;
+import bsep.sw.hateoas.project.ProjectResponse;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class AlarmNotification {
+public class AlarmNotification implements Serializable {
 
-    private Project project;
-    private List<Log> logs;
-    private Alarm alarm;
+    public ProjectResponse project;
+    public LogCollectionResponse logs;
+    public AlarmResponse alarm;
 
     public AlarmNotification() {
     }
 
     public AlarmNotification(final Project project, final List<Log> logs, final Alarm alarm) {
-        this.project = project;
-        this.logs = logs;
-        this.alarm = alarm;
-    }
-
-    public Project getProject() {
-
-        return project;
-    }
-
-    public void setProject(final Project project) {
-        this.project = project;
-    }
-
-    public List<Log> getLogs() {
-        return logs;
-    }
-
-    public void setLog(final List<Log> logs) {
-        this.logs = logs;
-    }
-
-    public Alarm getAlarm() {
-        return alarm;
-    }
-
-    public void setAlarm(final Alarm alarm) {
-        this.alarm = alarm;
+        this.project = ProjectResponse.fromDomain(project);
+        this.logs = LogCollectionResponse.fromDomain(logs, new PaginationLinks("non-existing"));
+        this.alarm = AlarmResponse.fromDomain(alarm);
     }
 }
