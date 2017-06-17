@@ -107,7 +107,6 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users**").permitAll();
         // Custom JWT based authentication
         httpSecurity
