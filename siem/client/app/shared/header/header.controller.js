@@ -5,9 +5,9 @@
         .module('soteria-app')
         .controller('HeaderController', HeaderController);
 
-    HeaderController.$inject = ['CONFIG', 'loginService', '$scope', '$localStorage', '$rootScope', '$log', '$state'];
+    HeaderController.$inject = ['CONFIG', 'loginService', '$scope', '$localStorage', '$rootScope', '$log', '$state', '_'];
 
-    function HeaderController(CONFIG, loginService, $scope, $localStorage, $rootScope, $log, $state) {
+    function HeaderController(CONFIG, loginService, $scope, $localStorage, $rootScope, $log, $state, _) {
         var headerVm = this;
 
         headerVm.notificationCount = 0;
@@ -71,6 +71,11 @@
             loginService.loggedInUser()
                 .then(function (response) {
                     headerVm.loggedInUser = response.data;
+                    $localStorage.image = headerVm.loggedInUser.attributes.imagePath
+                    $localStorage.userInfo = headerVm.loggedInUser.attributes.firstName + " " + headerVm.loggedInUser.attributes.lastName
+                    if (_.isEqual($localStorage.role, 'FACEBOOK')) {
+                        $localStorage.image = 'http://graph.facebook.com/' + $localStorage.user.substring(3) + '/picture?type=square'
+                    }
                 })
                 .catch(function (error) {
                     $log.error(error);
