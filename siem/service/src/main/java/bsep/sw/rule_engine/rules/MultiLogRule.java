@@ -99,7 +99,7 @@ public class MultiLogRule extends BasicRule {
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, logs.get(0), alarm)); // TODO extend notification
+                    new AlarmNotification(project, logs, alarm)); // TODO extend notification
         }
     }
 }

@@ -12,6 +12,8 @@ import org.easyrules.core.BasicRule;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 public class SingleLogRule extends BasicRule {
@@ -81,7 +83,7 @@ public class SingleLogRule extends BasicRule {
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, log, alarm));
+                    new AlarmNotification(project, Collections.singletonList(log), alarm));
         }
     }
 
