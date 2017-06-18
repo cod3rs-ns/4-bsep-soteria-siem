@@ -1,6 +1,11 @@
 package bsep.sw.services;
 
 import bsep.sw.domain.Log;
+import bsep.sw.domain.LogLevel;
+import bsep.sw.domain.Project;
+import bsep.sw.hateoas.reports.DailyReport;
+import bsep.sw.hateoas.reports.GlobalReport;
+import bsep.sw.hateoas.reports.ReportRequest;
 import bsep.sw.repositories.LogsRepository;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +14,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class LogsService {
@@ -54,5 +58,46 @@ public class LogsService {
         }
 
         return operations.find(query, Log.class, "logs");
+    }
+
+    public GlobalReport getReport(final Project project, final ReportRequest request) {
+        final List<Log> logs = repository.findAllByProjectAndLevelEqualsAndTimeBetween(
+                project.getId(),
+                LogLevel.ERROR,
+                DateTime.now().minusYears(1).getMillis(),
+                DateTime.now().plusYears(1).getMillis());
+        final Map<String,Integer> logsByDate = new TreeMap<>();
+        for (final Log log:logs) {
+            final String day = extractDayOnly(log.getTime());
+            if (logsByDate.containsKey(day)) {
+                Integer dailyLogs = logsByDate.get(day);
+                dailyLogs += 1;
+                logsByDate.put(day, dailyLogs);
+
+            } else {
+                Integer dailyLogs = 1;
+                logsByDate.put(day, dailyLogs);
+            }
+        }
+        final List<DailyReport> dailyReports = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : logsByDate.entrySet())
+        {
+            final DailyReport dr = new DailyReport(entry.getKey(), entry.getValue());
+            dailyReports.add(dr);
+        }
+
+        final GlobalReport report = new GlobalReport(logs.size(), dailyReports);
+        return report;
+    }
+
+    private String extractDayOnly(final Long time) {
+        final DateTime full = new DateTime(time);
+        final StringBuilder sb = new StringBuilder();
+        sb.append(full.getYear());
+        sb.append("-");
+        sb.append(full.getMonthOfYear());
+        sb.append("-");
+        sb.append(full.getDayOfMonth());
+        return sb.toString();
     }
 }
