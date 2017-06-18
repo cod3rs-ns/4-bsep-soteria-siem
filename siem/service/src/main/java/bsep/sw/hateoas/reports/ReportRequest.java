@@ -1,6 +1,7 @@
 package bsep.sw.hateoas.reports;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.joda.time.DateTime;
 
 public class ReportRequest {
 
@@ -11,9 +12,18 @@ public class ReportRequest {
     public ReportType type;
 
     @JsonProperty("from")
-    public Long fromDate;
+    public DateTime fromDate;
 
     @JsonProperty("to")
-    public Long toDate;
+    public DateTime toDate;
 
+    @Override
+    public String toString() {
+        return "ReportRequest{" +
+                "value='" + value + '\'' +
+                ", type=" + type +
+                ", fromDate=" + fromDate +
+                ", toDate=" + toDate +
+                '}';
+    }
 }

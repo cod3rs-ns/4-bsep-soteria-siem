@@ -14,7 +14,10 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 public class LogsService {
@@ -61,33 +64,54 @@ public class LogsService {
     }
 
     public GlobalReport getReport(final Project project, final ReportRequest request) {
-        final List<Log> logs = repository.findAllByProjectAndLevelEqualsAndTimeBetween(
-                project.getId(),
-                LogLevel.ERROR,
-                DateTime.now().minusYears(1).getMillis(),
-                DateTime.now().plusYears(1).getMillis());
-        final Map<String,Integer> logsByDate = new TreeMap<>();
-        for (final Log log:logs) {
+        final List<Log> logs = new ArrayList<>();
+        switch (request.type) {
+            case LEVEL:
+                logs.addAll(repository.findAllByProjectAndLevelEqualsAndTimeBetween(
+                        project.getId(),
+                        LogLevel.valueOf(request.value),
+                        request.fromDate.getMillis(),
+                        request.toDate.getMillis()));
+                break;
+            case PLATFORM:
+                // TODO implement after rebase
+                break;
+            case HOST:
+                logs.addAll(repository.findAllByProjectAndInfo_HostEqualsAndTimeBetween(
+                        project.getId(),
+                        request.value,
+                        request.fromDate.getMillis(),
+                        request.toDate.getMillis()));
+                break;
+            case SOURCE:
+                logs.addAll(repository.findAllByProjectAndInfo_SourceEqualsAndTimeBetween(
+                        project.getId(),
+                        request.value,
+                        request.fromDate.getMillis(),
+                        request.toDate.getMillis()));
+                break;
+            default:
+                return null;
+        }
+
+        final Map<String, Integer> logsByDate = new TreeMap<>();
+        for (final Log log : logs) {
             final String day = extractDayOnly(log.getTime());
             if (logsByDate.containsKey(day)) {
                 Integer dailyLogs = logsByDate.get(day);
                 dailyLogs += 1;
                 logsByDate.put(day, dailyLogs);
-
             } else {
                 Integer dailyLogs = 1;
                 logsByDate.put(day, dailyLogs);
             }
         }
         final List<DailyReport> dailyReports = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : logsByDate.entrySet())
-        {
-            final DailyReport dr = new DailyReport(entry.getKey(), entry.getValue());
-            dailyReports.add(dr);
+        for (final Map.Entry<String, Integer> entry : logsByDate.entrySet()) {
+            dailyReports.add(new DailyReport(entry.getKey(), entry.getValue()));
         }
 
-        final GlobalReport report = new GlobalReport(logs.size(), dailyReports);
-        return report;
+        return new GlobalReport(logs.size(), dailyReports);
     }
 
     private String extractDayOnly(final Long time) {
