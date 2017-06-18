@@ -6,11 +6,118 @@
 </head>
 <body>
 <div class="container">
-	<canvas id="line" class="chart chart-line" chart-data="reportVm.data"
-	        chart-labels="reportVm.labels" chart-series="reportVm.series" chart-options="reportVm.options"
-	        chart-dataset-override="reportVm.datasetOverride" chart-click="onClick">
-	</canvas>
+
 </div>
+
+<div class="container">
+	<div class="main-header">
+		<h2>Report s</h2>
+		<em>Deeper insights in your logs</em>
+	</div>
+	<div class="main-content">
+		<div class="row" style="margin-right: 10px;">
+			<div class="col-md-8">
+				<div class="widget">
+					<div class="widget-header">
+						<h3><i class="fa fa-edit"></i>Custom report criteria</h3></div>
+					<div class="widget-content clearfix">
+						<form class="form-horizontal label-left">
+							<div class="form-group">
+								<label class="col-md-3 control-label">Method:</label>
+								<div class="col-md-9">
+									<select id="report-field"
+									        class="form-control"
+									        ng-model="reportVm.reportRequest.type">
+										<option value="LEVEL">Level</option>
+										<option value="PLATFORM">Platform</option>
+										<option value="HOST">Host</option>
+										<option value="SOURCE">Source</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="report-value"
+								       class="col-sm-3 control-label">Value:</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control"
+									       name="definition-description"
+									       id="report-value"
+									       placeholder="Criteria value..."
+									       ng-model="reportVm.reportRequest.value">
+								</div>
+							</div>
+							<p>Report range -
+								<small>select interval for report</small>
+							</p>
+							<input date-range-picker class="form-control date-picker" type="text" ng-model="reportVm.rangePicker.date"
+							       options="reportVm.rangePicker.options"/>
+						</form>
+						<button class="btn btn-primary btn-add-field pull-right" type="button"
+						        ng-click="reportVm.loadReport()"> SHOW REPORT!
+						</button>
+					</div>
+				</div>
+				<div class="widget">
+					<div class="widget-header">
+						<h3><i class="fa fa-bar-chart"></i>Main report</h3>
+					</div>
+					<div class="widget-content" style="padding: 10px;">
+						<div class="row" style="margin: 10px;">
+							<canvas id="mainChart" class="chart chart-line" chart-data="reportVm.mainChart.data"
+							        chart-labels="reportVm.mainChart.labels" chart-series="reportVm.mainChart.series"
+							        chart-options="reportVm.mainChart.options"
+							        chart-dataset-override="reportVm.mainChart.datasetOverride">
+							</canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<!--<div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-warning red-font"></i>
+							<p class="pull-right"><span> TOTAL ALARMS</span>{{defPreviewVm.alarms.length}}</p>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-check-circle"></i>
+							<p class="pull-right"><span> RESOLVED ALARMS</span>{{defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+					<div class="row" style="margin-bottom: 10px;">
+						<div class="contextual-summary-info">
+							<i class="fa fa-close"></i>
+							<p class="pull-right"><span> NOT RESOLVED</span>{{defPreviewVm.alarms.length - defPreviewVm.resolvedAlarms}}</p>
+						</div>
+					</div>
+				</div> -->
+				<div class="row">
+					<div class="widget">
+						<div class="widget-header">
+							<h3>All time occurrences of logs by level</h3>
+						</div>
+						<div class="widget-content">
+						
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="widget">
+						<div class="widget-header">
+							<h3>All time log occurrences by platform </h3>
+						</div>
+						<div class="widget-content">
+						
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 </body>
 </html>

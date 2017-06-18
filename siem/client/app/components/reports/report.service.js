@@ -13,7 +13,7 @@
         };
 
         function getReport(project_id, reportRequest) {
-            return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/report', {'data': reportRequest})
+            return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/report', reportRequest)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {

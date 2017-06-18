@@ -8,7 +8,8 @@ angular
         'angularMoment',
         'ngSanitize',
         'easypiechart',
-        'chart.js'
+        'chart.js',
+        'daterangepicker'
     ])
     .factory('_', ['$window',
         function ($window) {

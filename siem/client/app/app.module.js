@@ -8,5 +8,6 @@ angular
         'angularMoment',
         'ngSanitize',
         'easypiechart',
-        'chart.js'
+        'chart.js',
+        'daterangepicker'
     ]);
