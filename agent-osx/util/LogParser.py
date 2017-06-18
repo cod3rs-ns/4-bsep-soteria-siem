@@ -1,8 +1,8 @@
 import re
 import os
+import subprocess
 
 from domain.Log import Log
-from external.LogRequest import LogRequest
 
 
 class LogParser(object):
@@ -19,9 +19,7 @@ class LogParser(object):
             self.parse_log(log)
 
     def parse_log(self, log):
-        formatted_log = self.export_log(log)
-        if formatted_log is not None:
-            print LogRequest(formatted_log).json()
+        return self.export_log(log)
 
     def export_log(self, log):
         for regex_id, pattern in enumerate(self._regexes):
@@ -43,6 +41,10 @@ class LogParser(object):
     def read(path):
         with open(path) as log_file:
             return log_file.readlines()
+
+    @staticmethod
+    def read_last(path):
+        return subprocess.check_output(['tail', '-1', path])
 
     def list_log_files(self, directory_base_path):
         logs = []
