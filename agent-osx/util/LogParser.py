@@ -6,12 +6,13 @@ from external.LogRequest import LogRequest
 
 
 class LogParser(object):
-    def __init__(self, default_log_level, patterns):
+    def __init__(self, default_log_level, patterns, project_id):
         self.DEFAULT_LOG_LEVEL = default_log_level
         self.SUPPORTED_TYPES = ['.txt', '.log']
 
         self._regexes = patterns['regexes']
         self._log_patterns = patterns['log_patterns']
+        self._project_id = project_id
 
     def parse_logs(self, logs):
         for log in logs:
@@ -20,7 +21,7 @@ class LogParser(object):
     def parse_log(self, log):
         formatted_log = self.export_log(log)
         if formatted_log is not None:
-             print LogRequest(formatted_log).json()
+            print LogRequest(formatted_log).json()
 
     def export_log(self, log):
         for regex_id, pattern in enumerate(self._regexes):
@@ -31,7 +32,7 @@ class LogParser(object):
 
             formatted_log = [x.strip() for x in re.split(regex, log) if ('' != x)]
 
-            log = Log(level=self.DEFAULT_LOG_LEVEL)
+            log = Log(level=self.DEFAULT_LOG_LEVEL, project=self._project_id)
             for idx, key in enumerate(self._log_patterns[regex_id].split("|")):
                 if key != '-':
                     setattr(log, key, formatted_log[idx])

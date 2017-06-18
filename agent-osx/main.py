@@ -10,7 +10,7 @@ if __name__ == "__main__":
         'log_patterns': conf['patterns']
     }
 
-    parser = LogParser(conf['defaultLevel'], patterns)
+    parser = LogParser(conf['defaultLevel'], patterns, project_id=conf['projectId'])
 
     for log_paths in conf['paths']:
         for log_file in parser.list_log_files(log_paths):
