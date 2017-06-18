@@ -1,3 +1,8 @@
+import platform
+import uuid
+import os
+
+
 class Log(object):
     def __init__(self, level, time, info, message, project):
         self.level = level
@@ -8,12 +13,12 @@ class Log(object):
 
 
 class LogInfo(object):
-    def __init__(self, host, source, pid, gid, uid, errors=[]):
-        self.host = host
-        self.source = source
+    def __init__(self, pid, errors=[]):
+        self.host = uuid.getnode()
+        self.source = platform.node()
         self.pid = pid
-        self.gid = gid
-        self.uid = uid
+        self.gid = os.getgid()
+        self.uid = os.getuid()
         self.errors = errors
 
 
