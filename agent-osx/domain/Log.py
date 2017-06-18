@@ -4,12 +4,23 @@ import os
 
 
 class Log(object):
-    def __init__(self, level, time, info, message, project):
+    # TODO Set default Log Level
+    def __init__(self, pid=None, level=None, time=None, message=None, project=1):
         self.level = level
         self.time = time
-        self.info = info
+        self.info = LogInfo(pid)
         self.message = message
         self.project = project
+
+    def __setattr__(self, key, value):
+        if key == 'pid':
+            # Extract only numbers from 'pid' field
+            try:
+                self.info = LogInfo(int(filter(str.isdigit, value)))
+            except ValueError:
+                pass
+
+        super(Log, self).__setattr__(key, value)
 
 
 class LogInfo(object):

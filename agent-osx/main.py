@@ -1,10 +1,17 @@
 import util.yaml_reader as config
-import util.log_reader as logs
+from util.LogParser import LogParser
+
 
 if __name__ == "__main__":
     conf = config.read()
 
-    regexes = ['([\d\-: ,])+([\[ \d\]])+(INFO|ERROR)([ \-])+']
+    patterns = {
+        'regexes':      conf['regexes'],
+        'log_patterns': conf['patterns']
+    }
 
-    all_logs = logs.read(conf['paths'][0] + '/PyCharm2017.1/idea.log')
-    logs.parse_logs(all_logs, regexes)
+    parser = LogParser(conf['defaultLevel'], patterns)
+
+    for log_paths in conf['paths']:
+        for log_file in parser.list_log_files(log_paths):
+            parser.parse_logs(parser.read(log_file))
