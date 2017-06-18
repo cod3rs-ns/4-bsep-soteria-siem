@@ -2,6 +2,7 @@ package bsep.sw.controllers;
 
 
 import bsep.sw.domain.Agent;
+import bsep.sw.domain.AgentConfig;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.PaginationLinks;
@@ -12,6 +13,8 @@ import bsep.sw.hateoas.agent_config.AgentConfigRequest;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AgentService;
 import bsep.sw.services.ProjectService;
+import bsep.sw.util.AgentKeys;
+import bsep.sw.util.KeyStoreUtil;
 import bsep.sw.util.StandardResponses;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +42,17 @@ public class AgentController extends StandardResponses {
     private final AgentService agentService;
     private final ProjectService projectService;
     private final UserSecurityUtil securityUtil;
+    private final KeyStoreUtil keyStoreUtil;
 
     @Autowired
     public AgentController(final AgentService agentService,
                            final ProjectService projectService,
-                           final UserSecurityUtil securityUtil) {
+                           final UserSecurityUtil securityUtil,
+                           final KeyStoreUtil keyStoreUtil) {
         this.agentService = agentService;
         this.projectService = projectService;
         this.securityUtil = securityUtil;
+        this.keyStoreUtil = keyStoreUtil;
     }
 
     @GetMapping("/projects/{projectId}/agents")
@@ -91,6 +97,8 @@ public class AgentController extends StandardResponses {
         }
 
         final Agent agent = agentService.save(request.toDomain().project(project));
+        keyStoreUtil.generateAndSaveCertificate(agent.getId().toString());
+
         return ResponseEntity
                 .ok()
                 .body(AgentResponse.fromDomain(agent));
@@ -122,9 +130,10 @@ public class AgentController extends StandardResponses {
 
     @PostMapping(value = "/agents", produces = "application/zip", consumes = "application/json")
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
-    public void downloadAgentWithConfiguration(final HttpServletResponse response,  @RequestBody final AgentConfigRequest request) throws IOException {
+    public void downloadAgentWithConfiguration(final HttpServletResponse response, @RequestBody final AgentConfigRequest request) throws IOException {
+        final Agent agent = agentService.findOne(request.getData().getAttributes().getAgentId());
 
-        final boolean windows = "WINDOWS_AGENT".equalsIgnoreCase(request.getData().getAttributes().getOs());
+        final boolean windows = "WINDOWS".equalsIgnoreCase(request.getData().getAttributes().getOs());
 
         final ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
 
@@ -132,15 +141,17 @@ public class AgentController extends StandardResponses {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"agent.zip\"");
 
-        request.toJsonFile();
+        final AgentKeys keys = keyStoreUtil.findKeys(agent.getId().toString());
+        final AgentConfig agentConfig = new AgentConfig(request.getData().getAttributes(), agent, keys);
 
         // Provide agent and config file to zip
         final ArrayList<File> files = new ArrayList<>(2);
+        files.add(new File("agents/win.zip"));
         files.add(new File("README.md"));
-        files.add(new File((windows) ? request.toJsonFile() : request.toYmlFile()));
+        files.add(new File(windows ? agentConfig.toJsonFile() : agentConfig.toYmlFile()));
 
         // Add files to '.zip'
-        for (final File file: files) {
+        for (final File file : files) {
             zip.putNextEntry(new ZipEntry(file.getName()));
             final FileInputStream fileInputStream = new FileInputStream(file);
 

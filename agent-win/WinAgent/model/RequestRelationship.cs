@@ -11,9 +11,11 @@ namespace WinAgent.model
     {
         public RelationshipData Data { get; set; }
 
-        public RequestRelationship()
+        public RequestRelationship() { }
+
+        public RequestRelationship(RelationshipData data)
         {
-            this.Data = new RelationshipData("projects", EnvUtil.Configuration.Property("PROJECT_ID"));
+            this.Data = data;
         }
 
     }

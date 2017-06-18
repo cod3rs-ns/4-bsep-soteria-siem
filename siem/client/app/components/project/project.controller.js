@@ -31,7 +31,13 @@
             'os': null,
             'defaultLevel': "DEBUG",
             'paths': [],
-            'regexes': []
+            'regexes': [],
+            'patterns': [],
+            'types': {
+                System: false,
+                Firewall: false,
+                Application: false
+            }
         };
 
         projectVm.levelCheckboxes = {
@@ -124,13 +130,20 @@
                 }
             };
 
-            console.log(data);
-
             projectService.addAgent(projectId, data)
                 .then(function(response) {
                     if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {
                         projectVm.agents.data.push(response.data);
                     }
+
+                    var types = [];
+                    _.forEach(projectVm.config.types, function (value, key) {
+                        if (true === value) {
+                            types.push(key);
+                        }
+                    });
+
+                    $log.info(types);
 
                     var config = {
                         'type': 'agent-configs',
@@ -138,7 +151,10 @@
                             'os': projectVm.config.os,
                             'defaultLevel': projectVm.config.defaultLevel,
                             'paths': _.map(projectVm.config.paths, 'value'),
-                            'regexes': _.map(projectVm.config.regexes, 'value')
+                            'regexes': _.map(projectVm.config.regexes, 'value'),
+                            'patterns':  _.map(projectVm.config.patterns, 'value'),
+                            'types': types,
+                            'agentId': response.data.id
                         }
                     };
 
@@ -193,6 +209,9 @@
         function addField(group) {
             var index = _.size(projectVm.config[group]) + 1;
             projectVm.config[group].push({'id': index, value: ''});
+            if ('regexes' === group) {
+                addField('patterns');
+            }
         }
     }
 })();
