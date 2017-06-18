@@ -76,16 +76,16 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4 fa-logo"
-                         ng-class="{ 'background-dark': projectVm.config.os == 'WINDOWS_AGENT' }"
-                         ng-click="projectVm.choosePlatform('WINDOWS_AGENT')">
+                         ng-class="{ 'background-dark': projectVm.config.os == 'WINDOWS' }"
+                         ng-click="projectVm.choosePlatform('WINDOWS')">
                         <i class="fa fa-windows"></i>
                     </div>
-                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'LINUX_AGENT' }"
-                         ng-click="projectVm.choosePlatform('LINUX_AGENT')">
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'LINUX' }"
+                         ng-click="projectVm.choosePlatform('LINUX')">
                         <i class="fa fa-linux"></i>
                     </div>
-                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'OSX_AGENT' }"
-                         ng-click="projectVm.choosePlatform('OSX_AGENT')">
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'OSX' }"
+                         ng-click="projectVm.choosePlatform('OSX')">
                         <i class="fa fa-apple"></i>
                     </div>
                 </div>
@@ -144,17 +144,10 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
-                                                    <input type="checkbox">
-                                                    <span>System logs</span>
-                                                </label>
-                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
-                                                    <input type="checkbox">
-                                                    <span>Application logs</span>
-                                                </label>
-                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12">
-                                                    <input type="checkbox">
-                                                    <span>Firewall logs</span>
+                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12"
+                                                       ng-repeat="(type, checked) in projectVm.config.types">
+                                                    <input type="checkbox" ng-model="projectVm.config.types[type]">
+                                                    <span>{{type}} logs</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -200,6 +193,15 @@
                                                     <button class="btn btn-primary btn-add-field" type="button"
                                                             ng-click="projectVm.addField('regexes')">Add another field
                                                     </button>
+                                                </div>
+                                            </div>
+                                            For each regex you need to provide pattern.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.patterns"
+                                                           type="text" autocomplete="off"
+                                                           class="input form-control agent-field"
+                                                           id="{{'patterns' + field.id}}" ng-model="field.value"/>
                                                 </div>
                                             </div>
                                         </div>

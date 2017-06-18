@@ -33,7 +33,11 @@
             'paths': [],
             'regexes': [],
             'patterns': [],
-            'types': ['Application', 'System', 'Firewall']
+            'types': {
+                System: false,
+                Firewall: false,
+                Application: false
+            }
         };
 
         projectVm.levelCheckboxes = {
@@ -132,6 +136,15 @@
                         projectVm.agents.data.push(response.data);
                     }
 
+                    var types = [];
+                    _.forEach(projectVm.config.types, function (value, key) {
+                        if (true === value) {
+                            types.push(key);
+                        }
+                    });
+
+                    $log.info(types);
+
                     var config = {
                         'type': 'agent-configs',
                         'attributes': {
@@ -139,8 +152,8 @@
                             'defaultLevel': projectVm.config.defaultLevel,
                             'paths': _.map(projectVm.config.paths, 'value'),
                             'regexes': _.map(projectVm.config.regexes, 'value'),
-                            'patterns': projectVm.config.patterns,
-                            'types': projectVm.config.types,
+                            'patterns':  _.map(projectVm.config.patterns, 'value'),
+                            'types': types,
                             'agentId': response.data.id
                         }
                     };
@@ -196,6 +209,9 @@
         function addField(group) {
             var index = _.size(projectVm.config[group]) + 1;
             projectVm.config[group].push({'id': index, value: ''});
+            if ('regexes' === group) {
+                addField('patterns');
+            }
         }
     }
 })();

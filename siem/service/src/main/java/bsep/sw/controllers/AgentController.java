@@ -133,7 +133,7 @@ public class AgentController extends StandardResponses {
     public void downloadAgentWithConfiguration(final HttpServletResponse response, @RequestBody final AgentConfigRequest request) throws IOException {
         final Agent agent = agentService.findOne(request.getData().getAttributes().getAgentId());
 
-        final boolean windows = "WINDOWS_AGENT".equalsIgnoreCase(request.getData().getAttributes().getOs());
+        final boolean windows = "WINDOWS".equalsIgnoreCase(request.getData().getAttributes().getOs());
 
         final ZipOutputStream zip = new ZipOutputStream(response.getOutputStream());
 
