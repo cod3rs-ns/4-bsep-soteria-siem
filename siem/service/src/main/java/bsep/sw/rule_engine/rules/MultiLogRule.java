@@ -3,6 +3,7 @@ package bsep.sw.rule_engine.rules;
 import bsep.sw.domain.*;
 import bsep.sw.repositories.AlarmedLogsRepository;
 import bsep.sw.rule_engine.FieldSupplier;
+import bsep.sw.rule_engine.FieldType;
 import bsep.sw.rule_engine.RuleMethodSupplier;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
@@ -13,6 +14,7 @@ import org.easyrules.core.BasicRule;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +38,8 @@ public class MultiLogRule extends BasicRule {
     private final List<AlarmedLogs> possibleTriggeredPairs = new ArrayList<>();
     private final AlarmedLogsRepository alarmedLogsRepository;
 
+    private final List<FieldType> errorFields = Arrays.asList(FieldType.ERROR, FieldType.ERROR_NO, FieldType.ERROR_TYPE, FieldType.STACK);
+
     MultiLogRule(final List<Log> logs,
                  final AlarmDefinition alarmDefinition,
                  final ProjectService projectService,
@@ -57,14 +61,34 @@ public class MultiLogRule extends BasicRule {
     @Override
     public boolean evaluate() {
         for (final Log log : logs) {
+            Boolean logMatchingCriteria = true;
             for (final SingleRule rule : alarmDefinition.getMultiRule().getSingleRules()) {
-                if (!methodSupplier
-                        .getMethod(rule.getMethod())
-                        .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
-                    break;
+                // specific check for list of errors, need at least one to match rule
+                if (errorFields.contains(rule.getField())) {
+                    Boolean atLeastOneMatchingRule = false;
+                    for (LogError error : log.getInfo().getErrors()) {
+                        if (methodSupplier
+                                .getMethod(rule.getMethod())
+                                .apply(fieldSupplier.getErrorField(log, rule.getField(), error).get(), rule.getValue())) {
+                            atLeastOneMatchingRule = true;
+                        }
+                    }
+                    if (!atLeastOneMatchingRule) {
+                        logMatchingCriteria = false;
+                        break;
+                    }
+                } else {
+                    if (!methodSupplier
+                            .getMethod(rule.getMethod())
+                            .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
+                        logMatchingCriteria = false;
+                        break;
+                    }
                 }
             }
-            possibleTriggeredPairs.add(new AlarmedLogs().definition(alarmDefinition.getId()).log(log.getId()));
+            if (logMatchingCriteria) {
+                possibleTriggeredPairs.add(new AlarmedLogs().definition(alarmDefinition.getId()).log(log.getId()));
+            }
         }
         final Integer totalMatchingLogs = possibleTriggeredPairs.size();
         return totalMatchingLogs >= alarmDefinition.getMultiRule().getRepetitionTrigger();
@@ -95,7 +119,7 @@ public class MultiLogRule extends BasicRule {
             alarmedLogsRepository.save(possibleTriggeredPairs);
         }
 
-        // Send notifications through socket
+        // send notifications through socket
         final Project project = projectService.findOne(alarmDefinition.getProject().getId());
         for (final User user : project.getMembers()) {
             template.convertAndSend(
