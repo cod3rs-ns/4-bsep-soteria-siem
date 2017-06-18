@@ -61,6 +61,7 @@ public class MultiLogRule extends BasicRule {
     @Override
     public boolean evaluate() {
         for (final Log log : logs) {
+            Boolean logMatchingCriteria = true;
             for (final SingleRule rule : alarmDefinition.getMultiRule().getSingleRules()) {
                 // specific check for list of errors, need at least one to match rule
                 if (errorFields.contains(rule.getField())) {
@@ -73,17 +74,21 @@ public class MultiLogRule extends BasicRule {
                         }
                     }
                     if (!atLeastOneMatchingRule) {
+                        logMatchingCriteria = false;
                         break;
                     }
                 } else {
                     if (!methodSupplier
                             .getMethod(rule.getMethod())
                             .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
+                        logMatchingCriteria = false;
                         break;
                     }
                 }
             }
-            possibleTriggeredPairs.add(new AlarmedLogs().definition(alarmDefinition.getId()).log(log.getId()));
+            if (logMatchingCriteria) {
+                possibleTriggeredPairs.add(new AlarmedLogs().definition(alarmDefinition.getId()).log(log.getId()));
+            }
         }
         final Integer totalMatchingLogs = possibleTriggeredPairs.size();
         return totalMatchingLogs >= alarmDefinition.getMultiRule().getRepetitionTrigger();
@@ -114,7 +119,7 @@ public class MultiLogRule extends BasicRule {
             alarmedLogsRepository.save(possibleTriggeredPairs);
         }
 
-        // Send notifications through socket
+        // send notifications through socket
         final Project project = projectService.findOne(alarmDefinition.getProject().getId());
         for (final User user : project.getMembers()) {
             template.convertAndSend(
