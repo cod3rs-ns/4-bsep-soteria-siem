@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     parser = LogParser(conf['defaultLevel'], patterns, project_id=conf['projectId'])
 
-    event_handler = LogsFileChangeHandler(parser, log_proxy=LogsProxy())
+    event_handler = LogsFileChangeHandler(parser, log_proxy=LogsProxy(config=conf))
     observer = Observer()
     for log_path in conf['paths']:
         observer.schedule(event_handler, path=log_path, recursive=True)
