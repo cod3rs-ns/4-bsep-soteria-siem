@@ -14,6 +14,8 @@ public class LogInfo {
 
     private String source;
 
+    private PlatformType platform;
+
     private String pid;
 
     private String gid;
@@ -49,6 +51,19 @@ public class LogInfo {
 
     public LogInfo source(final String source) {
         this.source = source;
+        return this;
+    }
+
+    public PlatformType getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(PlatformType platform) {
+        this.platform = platform;
+    }
+
+    public LogInfo platform(final PlatformType platform) {
+        this.platform = platform;
         return this;
     }
 

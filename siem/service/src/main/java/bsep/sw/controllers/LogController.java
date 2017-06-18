@@ -1,7 +1,6 @@
 package bsep.sw.controllers;
 
 import bsep.sw.domain.Log;
-import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
