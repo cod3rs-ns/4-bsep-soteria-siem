@@ -111,5 +111,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         // Custom JWT based authentication
         httpSecurity
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity.requiresChannel().anyRequest().requiresSecure();
     }
+
 }
