@@ -10,7 +10,7 @@ namespace WinAgent.util
 {
     class LogMonitoring
     {
-        public static string watchLog = EnvUtil.Configuration.Property("LOGS_TO_WATCH");
+        public static string watchLog = EnvUtil.Configuration.Properties.Types;
 
         public static void StartWatch()
         {
@@ -40,9 +40,11 @@ namespace WinAgent.util
             var logMessage = log.Entries[e].Message;
             var logHost = log.Entries[e].MachineName;
             var logSource = log.Entries[e].Source;
+            var pid = log.Entries[e].InstanceId;
+
             log.Close();	// close log
 
-            return new Log(logLevel, logTime, logMessage, logHost, logSource);
+            return new Log(logLevel, logTime, logMessage, logHost, logSource, pid.ToString());
         }
     }
 }

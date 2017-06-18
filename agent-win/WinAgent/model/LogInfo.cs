@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WinAgent.util;
 
 namespace WinAgent.model
 {
@@ -13,6 +14,7 @@ namespace WinAgent.model
         public string Pid { get; set; }
         public string Gid { get; set; }
         public string Uid { get; set; }
+        public string Platform { get; set; }
         public List<LogError> Errors { get; set; }
 
         public LogInfo()
@@ -22,9 +24,11 @@ namespace WinAgent.model
 
         public LogInfo(Log log)
         {
-            this.Host = log.Host;
-            this.Source = log.Source;
+            this.Host = EnvUtil.Configuration.MacAddress;
+            this.Source = log.Host;
             this.Errors = new List<LogError>();
+            this.Platform = EnvUtil.Configuration.Properties.Os;
+            this.Pid = log.Pid;
         }
     }
 
