@@ -31,7 +31,9 @@
             'os': null,
             'defaultLevel': "DEBUG",
             'paths': [],
-            'regexes': []
+            'regexes': [],
+            'patterns': [],
+            'types': ['Application', 'System', 'Firewall']
         };
 
         projectVm.levelCheckboxes = {
@@ -124,8 +126,6 @@
                 }
             };
 
-            console.log(data);
-
             projectService.addAgent(projectId, data)
                 .then(function(response) {
                     if (_.size(projectVm.agents.data) < CONFIG.AGENTS_LIMIT) {
@@ -138,7 +138,10 @@
                             'os': projectVm.config.os,
                             'defaultLevel': projectVm.config.defaultLevel,
                             'paths': _.map(projectVm.config.paths, 'value'),
-                            'regexes': _.map(projectVm.config.regexes, 'value')
+                            'regexes': _.map(projectVm.config.regexes, 'value'),
+                            'patterns': projectVm.config.patterns,
+                            'types': projectVm.config.types,
+                            'agentId': response.data.id
                         }
                     };
 

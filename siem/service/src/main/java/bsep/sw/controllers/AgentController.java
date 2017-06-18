@@ -131,8 +131,7 @@ public class AgentController extends StandardResponses {
     @PostMapping(value = "/agents", produces = "application/zip", consumes = "application/json")
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public void downloadAgentWithConfiguration(final HttpServletResponse response, @RequestBody final AgentConfigRequest request) throws IOException {
-        // TODO: add agent id in request
-        final Agent agent = agentService.findOne(3L);
+        final Agent agent = agentService.findOne(request.getData().getAttributes().getAgentId());
 
         final boolean windows = "WINDOWS_AGENT".equalsIgnoreCase(request.getData().getAttributes().getOs());
 

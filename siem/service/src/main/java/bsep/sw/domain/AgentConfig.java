@@ -27,19 +27,20 @@ public class AgentConfig {
     private String secretKey;
     private Long projectId;
     private Long agentId;
-    private String types;
+    private List<String> types;
 
     public AgentConfig(final AgentConfigAttributes attributes, final Agent agent, final AgentKeys agentKeys) {
-        // TODO : set patterns from request and set types
         this.os = attributes.getOs();
         this.defaultLevel = attributes.getDefaultLevel();
         this.paths = attributes.getPaths();
         this.regexes = attributes.getRegexes();
+        this.patterns = attributes.getPatterns();
         this.privateKey = agentKeys.getPrivateKey();
         this.publicKey = agentKeys.getPublicKey();
         this.secretKey = agentKeys.getSecretKey();
         this.projectId = agent.getProject().getId();
         this.agentId = agent.getId();
+        this.types = attributes.getTypes();
     }
 
     public String toYmlFile() throws FileNotFoundException {
@@ -142,11 +143,11 @@ public class AgentConfig {
         this.patterns = patterns;
     }
 
-    public String getTypes() {
+    public List<String> getTypes() {
         return types;
     }
 
-    public void setTypes(final String types) {
+    public void setTypes(final List<String> types) {
         this.types = types;
     }
 }
