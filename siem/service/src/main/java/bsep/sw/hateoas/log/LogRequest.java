@@ -13,7 +13,8 @@ public class LogRequest {
                 .time(data.attributes.time.getMillis())
                 .info(data.attributes.info.toDomain())
                 .message(data.attributes.message)
-                .project(Long.valueOf(data.relationships.project.data.id));
+                .project(Long.valueOf(data.relationships.project.data.id))
+                .agent(Long.valueOf(data.relationships.agent.data.id));
     }
 
     public LogRequestData getData() {

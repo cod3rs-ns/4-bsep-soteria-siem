@@ -22,6 +22,8 @@ public class Log {
 
     private Long project;
 
+    private Long agent;
+
     public Log() {
         super();
     }
@@ -101,6 +103,19 @@ public class Log {
 
     public Log project(final Long project) {
         this.project = project;
+        return this;
+    }
+
+    public Long getAgent() {
+        return agent;
+    }
+
+    public void setAgent(final Long agent) {
+        this.agent = agent;
+    }
+
+    public Log agent(final Long agent) {
+        this.agent = agent;
         return this;
     }
 

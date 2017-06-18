@@ -24,7 +24,7 @@ import static bsep.sw.util.SupportedFilters.SUPPORTED_LOG_FILTERS;
 
 @RestController
 @RequestMapping("/api")
-public class LogController extends StandardResponses{
+public class LogController extends StandardResponses {
 
     private final LogsService logs;
     private final RulesService rulesService;
@@ -67,12 +67,12 @@ public class LogController extends StandardResponses{
         return ResponseEntity.ok(LogResponse.fromDomain(log));
     }
 
-    @PostMapping(value = "/logs", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/logs/agent/{agentId}", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public ResponseEntity<?> storeLog(final HttpEntity<String> httpEntity) throws Exception {
+    public ResponseEntity<?> storeLog(@PathVariable("agentId") final Long agent,
+                                      final HttpEntity<String> httpEntity) throws Exception {
         final String body = httpEntity.getBody();
-        // TODO: add username in path - (should be IP address of agent)
-        final LogRequest request = csrUtil.parseRequest(body, "username");
+        final LogRequest request = csrUtil.parseRequest(body, agent.toString());
 
         final Log log = request
                 .toDomain()

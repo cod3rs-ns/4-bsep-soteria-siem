@@ -55,10 +55,10 @@ public class CSRUtil {
         return false;
     }
 
-    private byte[] decryptSymmetricKey(final byte[] key, final String username) {
+    private byte[] decryptSymmetricKey(final byte[] key, final String agentId) {
         try {
             final Cipher cipher = Cipher.getInstance("RSA");
-            cipher.init(Cipher.DECRYPT_MODE, keyStoreUtil.readPrivateKey(username));
+            cipher.init(Cipher.DECRYPT_MODE, keyStoreUtil.readPrivateKey(agentId));
             return cipher.doFinal(key);
         } catch (final Exception e) {
             logger.error("Problem occurred while verifying request", e);
@@ -66,15 +66,15 @@ public class CSRUtil {
         return new byte[]{};
     }
 
-    public LogRequest parseRequest(final String request, final String username) throws Exception {
+    public LogRequest parseRequest(final String request, final String agentId) throws Exception {
         final Pattern pattern = Pattern.compile(START_CSR + "(.*)" + END_CSR + "(.*)" + START_SECRET + "(.*)" + END_SECRET + "(.*)", Pattern.DOTALL);
         final Matcher matcher = pattern.matcher(request);
         if (matcher.matches()) {
             final byte[] cipherData = Base64.decodeBase64(matcher.group(1).trim());
-            final byte[] secretKey = decryptSymmetricKey(Base64.decodeBase64(matcher.group(3).trim()), username);
+            final byte[] secretKey = decryptSymmetricKey(Base64.decodeBase64(matcher.group(3).trim()), agentId);
             final byte[] signature = Base64.decodeBase64(matcher.group(4).trim());
 
-            if (verify(cipherData, signature, keyStoreUtil.readPublicKey(username))) {
+            if (verify(cipherData, signature, keyStoreUtil.readPublicKey(agentId))) {
                 try {
                     final String decrypted = new String(decrypt(cipherData, secretKey));
                     final ObjectMapper mapper = new ObjectMapper();
