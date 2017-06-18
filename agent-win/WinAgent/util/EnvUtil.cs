@@ -28,7 +28,8 @@ namespace WinAgent.util
                     new JsonSerializerSettings
                     {
                         ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });    
+                    });
+    
             }
 
             MacAddress =
