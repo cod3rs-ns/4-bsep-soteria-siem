@@ -7,7 +7,8 @@ angular
         'ngStomp',
         'angularMoment',
         'ngSanitize',
-        'easypiechart'
+        'easypiechart',
+        'chart.js'
     ])
     .factory('_', ['$window',
         function ($window) {
@@ -153,6 +154,20 @@ angular
                         templateUrl: 'app/components/alarm-definitions/alarm-definition-preview.html',
                         controller: 'AlarmDefinitionPreviewController',
                         controllerAs: 'defPreviewVm'
+                    }
+                }
+            })
+            .state('project.report', {
+                parent: 'project',
+                url: '/report',
+                data: {
+                    pageTitle: 'Soteria | Alarm definition'
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/reports/reports.html',
+                        controller: 'ReportController',
+                        controllerAs: 'reportVm'
                     }
                 }
             });
