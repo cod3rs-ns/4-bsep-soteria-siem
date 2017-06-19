@@ -38,10 +38,10 @@ public class ReportController extends StandardResponses {
         this.securityUtil = securityUtil;
     }
 
-    @PostMapping("/projects/{projectId}/logs/report")
+    @PostMapping("/projects/{projectId}/report")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
-    public ResponseEntity<?> createCustomLogReport(@PathVariable final Long projectId,
+    public ResponseEntity<?> createCustomReport(@PathVariable final Long projectId,
                                                 @Valid @RequestBody final ReportRequest reportRequest) {
         final User user = securityUtil.getLoggedUser();
         final Project project = projectService.findByMembershipAndId(user, projectId);
@@ -49,25 +49,18 @@ public class ReportController extends StandardResponses {
         if (project == null) {
             return notFound("project");
         }
-
-        final GlobalReport report = logsService.getReport(project, reportRequest);
-
-        return ResponseEntity.ok(report);
-    }
-
-    @PostMapping("/projects/{projectId}/alarms/report")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
-    public ResponseEntity<?> createCustomAlarmReport(@PathVariable final Long projectId,
-                                                @Valid @RequestBody final ReportRequest reportRequest) {
-        final User user = securityUtil.getLoggedUser();
-        final Project project = projectService.findByMembershipAndId(user, projectId);
-
-        if (project == null) {
-            return notFound("project");
+        final GlobalReport report;
+        switch (reportRequest.entityType) {
+            case LOGS:
+                report = logsService.getReport(project, reportRequest);
+                break;
+            case ALARMS:
+                report = alarmService.getReport(project, reportRequest);
+                break;
+            default:
+                return notFound("report-entity-type");
         }
 
-        final GlobalReport report = alarmService.getReport(project, reportRequest);
 
         return ResponseEntity.ok(report);
     }

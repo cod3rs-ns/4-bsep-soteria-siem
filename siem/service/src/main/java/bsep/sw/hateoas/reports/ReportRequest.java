@@ -17,6 +17,9 @@ public class ReportRequest {
     @JsonProperty("to")
     public DateTime toDate;
 
+    @JsonProperty("entity-type")
+    public ReportEntityType entityType;
+
     @Override
     public String toString() {
         return "ReportRequest{" +
@@ -24,6 +27,7 @@ public class ReportRequest {
                 ", type=" + type +
                 ", fromDate=" + fromDate +
                 ", toDate=" + toDate +
+                ", entityType=" + entityType +
                 '}';
     }
 }
