@@ -2,6 +2,7 @@ package bsep.sw.repositories;
 
 import bsep.sw.domain.Log;
 import bsep.sw.domain.LogLevel;
+import bsep.sw.domain.PlatformType;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +20,7 @@ public interface LogsRepository extends MongoRepository<Log, String> {
     List<Log> findAllByProjectAndInfo_SourceEqualsAndTimeBetween(final Long project, final String source, final Long timeStart, final Long timeEnd);
 
     Integer countAllByProjectAndLevel(final Long project, final LogLevel level);
+
+    Integer countAllByProjectAndInfo_Platform(final Long project, final PlatformType type);
 
 }

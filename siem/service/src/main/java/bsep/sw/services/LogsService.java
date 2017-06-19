@@ -2,6 +2,7 @@ package bsep.sw.services;
 
 import bsep.sw.domain.Log;
 import bsep.sw.domain.LogLevel;
+import bsep.sw.domain.PlatformType;
 import bsep.sw.domain.Project;
 import bsep.sw.hateoas.reports.*;
 import bsep.sw.repositories.LogsRepository;
@@ -123,7 +124,7 @@ public class LogsService {
         return sb.toString();
     }
 
-    public PieCollectionReport getReportLevels(Project project) {
+    public PieCollectionReport getReportLevels(final Project project) {
         final ArrayList<PieReport> pieReports = new ArrayList<>();
         for (LogLevel level : LogLevel.values()) {
             final Integer val = repository.countAllByProjectAndLevel(project.getId(), level);
@@ -131,4 +132,14 @@ public class LogsService {
         }
         return new PieCollectionReport(pieReports);
     }
+
+    public PieCollectionReport getReportPlatforms(final Project project) {
+        final ArrayList<PieReport> pieReports = new ArrayList<>();
+        for (PlatformType type : PlatformType.values()) {
+            final Integer val = repository.countAllByProjectAndInfo_Platform(project.getId(), type);
+            pieReports.add(new PieReport(type.name(), val));
+        }
+        return new PieCollectionReport(pieReports);
+    }
+
 }

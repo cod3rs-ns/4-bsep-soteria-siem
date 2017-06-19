@@ -36,8 +36,8 @@ public class ReportController extends StandardResponses {
     @PostMapping("/projects/{projectId}/report")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
-    public ResponseEntity<?> retrieveLogsForProject(@PathVariable final Long projectId,
-                                                    @Valid @RequestBody final ReportRequest reportRequest) {
+    public ResponseEntity<?> createCustomReport(@PathVariable final Long projectId,
+                                                @Valid @RequestBody final ReportRequest reportRequest) {
         final User user = securityUtil.getLoggedUser();
         final Project project = projectService.findByMembershipAndId(user, projectId);
 
@@ -53,7 +53,7 @@ public class ReportController extends StandardResponses {
     @GetMapping("/projects/{projectId}/report/levels")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
-    public ResponseEntity<?> retrieveLogsForProject(@PathVariable final Long projectId) {
+    public ResponseEntity<?> retrieveLevelsReport(@PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
         final Project project = projectService.findByMembershipAndId(user, projectId);
 
@@ -62,6 +62,22 @@ public class ReportController extends StandardResponses {
         }
 
         final PieCollectionReport report = logsService.getReportLevels(project);
+
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/projects/{projectId}/report/platforms")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    public ResponseEntity<?> retrievePlatformsReport(@PathVariable final Long projectId) {
+        final User user = securityUtil.getLoggedUser();
+        final Project project = projectService.findByMembershipAndId(user, projectId);
+
+        if (project == null) {
+            return notFound("project");
+        }
+
+        final PieCollectionReport report = logsService.getReportPlatforms(project);
 
         return ResponseEntity.ok(report);
     }
