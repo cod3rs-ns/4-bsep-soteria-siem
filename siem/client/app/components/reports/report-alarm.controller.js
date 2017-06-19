@@ -106,7 +106,7 @@
             reportVm.reportRequest.from = reportVm.rangePicker.date.startDate;
             reportVm.reportRequest.to = reportVm.rangePicker.date.endDate;
 
-            reportService.get(reportVm.projectId, reportVm.reportRequest)
+            reportService.getAlarmCriteriaReport(reportVm.projectId, reportVm.reportRequest)
                 .then(function (response) {
                     reportVm.report = response;
                     var lst = [];

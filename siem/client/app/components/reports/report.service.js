@@ -10,11 +10,22 @@
     function reportService(CONFIG, $http, $log) {
         return {
             getLogCriteriaReport: getLogCriteriaReport,
+            getAlarmCriteriaReport: getAlarmCriteriaReport,
             getStandardReport: getStandardReport
         };
 
         function getLogCriteriaReport(project_id, report_request) {
             return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/logs/report', report_request)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function getAlarmCriteriaReport(project_id, report_request) {
+            return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/alarms/report', report_request)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
