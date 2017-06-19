@@ -19,6 +19,7 @@ namespace WinAgent.util
                 if (type.Equals("Firewall")) {
                     logName = "Security";
                 }
+
                 EventLog myLog = new EventLog(logName);
                 // set event handler
                 myLog.EntryWritten += new EntryWrittenEventHandler(OnEntryWritten);

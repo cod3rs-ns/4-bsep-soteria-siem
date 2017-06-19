@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -22,14 +23,34 @@ namespace WinAgent.util
 
             if (File.Exists(path))
             {
-                string json = File.ReadAllText(path);
-                
-                Properties = JsonConvert.DeserializeObject<Configuration>(json,
-                    new JsonSerializerSettings
-                    {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
-    
+                if (File.Exists("licenseDecryptor.jar") && File.Exists("license"))
+                {
+                    string data = File.ReadAllText(path);
+                    string key = File.ReadAllText("license");
+
+                    Process process = new Process();
+
+                    var escapedData = data.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"");
+                    var escapedKey = key.Trim().Replace("\\", "\\\\").Replace("\"", "\\\"");
+
+                    process.StartInfo = new ProcessStartInfo("java", "-jar licenseDecryptor.jar \"" + escapedData + "\" " + "\"" + escapedKey + "\"");
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.UseShellExecute = false;
+                    process.Start();
+
+                    String decryptedJson = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    try {
+                        Properties = JsonConvert.DeserializeObject<Configuration>(decryptedJson,
+                            new JsonSerializerSettings
+                            {
+                                ContractResolver = new CamelCasePropertyNamesContractResolver()
+                            });
+                    } catch (Exception e) {
+                        Console.WriteLine("Wrong configuration specified");
+                    }
+                }
             }
 
             MacAddress =
