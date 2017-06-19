@@ -1,5 +1,6 @@
 package bsep.sw.controllers;
 
+import bsep.sw.domain.Role;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.user.AuthResponse;
@@ -7,6 +8,7 @@ import bsep.sw.hateoas.user.AvailabilityResponse;
 import bsep.sw.hateoas.user.UserRequest;
 import bsep.sw.hateoas.user.UserResponse;
 import bsep.sw.repositories.RoleRepository;
+import bsep.sw.security.Roles;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
 import bsep.sw.util.StandardResponses;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 @RestController
@@ -73,6 +77,20 @@ public class UserController extends StandardResponses {
                     String.format("User with username: %s  already exists.", user.getUsername()));
             return ResponseEntity.badRequest().body(errorResponse);
         }
+        final Collection<Role> roles = new ArrayList<>();
+        switch (user.getRole()) {
+            case ADMIN:
+                roles.add(roleRepository.findRoleByName(Roles.ADMIN));
+                roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
+                roles.add(roleRepository.findRoleByName(Roles.FACEBOOK));
+                break;
+            case OPERATOR:
+                roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
+                break;
+            case FACEBOOK:
+                roles.add(roleRepository.findRoleByName(Roles.FACEBOOK));
+                break;
+        }
         user.roles(Collections.singletonList(roleRepository.findRoleByName("ROLE_ADMIN")));
         return ResponseEntity.ok(UserResponse.fromDomain(userService.save(user)));
     }
@@ -81,6 +99,7 @@ public class UserController extends StandardResponses {
     @PermitAll
     public ResponseEntity<?> registerFbUser(@Valid @RequestBody final UserRequest userRequest) {
         final User user = userRequest.toDomain();
+        user.roles(Collections.singletonList(roleRepository.findRoleByName(Roles.FACEBOOK)));
         return ResponseEntity.ok(UserResponse.fromDomain(userService.update(user)));
     }
 

@@ -28,4 +28,9 @@ public class Privileges {
 
     // ------------------------- USER PRIVILEGES ------------------------- //
     public static final String READ_SELF_INFO = "PRIVILEGE_READ_SELF_INFO";
+
+    private Privileges() {
+
+    }
+
 }
