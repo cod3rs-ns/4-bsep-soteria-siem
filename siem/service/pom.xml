@@ -75,7 +75,7 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- utils -->
+		<!-- Utils -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
@@ -122,6 +122,12 @@
 			<groupId>net.minidev</groupId>
 			<artifactId>json-smart</artifactId>
 			<version>RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
 		</dependency>
 
 		<!--Web Sockets-->

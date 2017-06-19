@@ -15,6 +15,7 @@ import bsep.sw.services.AgentService;
 import bsep.sw.services.ProjectService;
 import bsep.sw.util.AgentKeys;
 import bsep.sw.util.KeyStoreUtil;
+import bsep.sw.util.MailSender;
 import bsep.sw.util.StandardResponses;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -43,16 +42,19 @@ public class AgentController extends StandardResponses {
     private final ProjectService projectService;
     private final UserSecurityUtil securityUtil;
     private final KeyStoreUtil keyStoreUtil;
+    private final MailSender mailSender;
 
     @Autowired
     public AgentController(final AgentService agentService,
                            final ProjectService projectService,
                            final UserSecurityUtil securityUtil,
-                           final KeyStoreUtil keyStoreUtil) {
+                           final KeyStoreUtil keyStoreUtil,
+                           final MailSender mailSender) {
         this.agentService = agentService;
         this.projectService = projectService;
         this.securityUtil = securityUtil;
         this.keyStoreUtil = keyStoreUtil;
+        this.mailSender = mailSender;
     }
 
     @GetMapping("/projects/{projectId}/agents")
@@ -132,6 +134,7 @@ public class AgentController extends StandardResponses {
     @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
     public void downloadAgentWithConfiguration(final HttpServletResponse response, @RequestBody final AgentConfigRequest request) throws IOException {
         final Agent agent = agentService.findOne(request.getData().getAttributes().getAgentId());
+        final User user = securityUtil.getLoggedUser();
 
         final boolean windows = "WINDOWS".equalsIgnoreCase(request.getData().getAttributes().getOs());
 
@@ -160,6 +163,9 @@ public class AgentController extends StandardResponses {
             fileInputStream.close();
             zip.closeEntry();
         }
+
+        // FIXME - Encrypt config file with generated key and put that key in 'license'.
+        mailSender.sendLicense(user.getFirstName(), "7gvqg78wgviovublbobai[jebyv[savdiifv[0bs", user.getEmail());
 
         zip.close();
     }
