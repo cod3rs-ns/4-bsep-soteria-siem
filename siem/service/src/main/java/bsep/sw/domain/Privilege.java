@@ -1,11 +1,10 @@
 package bsep.sw.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Entity
-@Table(name = "user_privileges")
+@Table(name = "privileges")
 public class Privilege {
 
     @Id
