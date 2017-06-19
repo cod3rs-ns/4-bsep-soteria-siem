@@ -3,6 +3,8 @@ package bsep.sw.services;
 import bsep.sw.domain.*;
 import bsep.sw.hateoas.reports.*;
 import bsep.sw.repositories.AlarmRepository;
+import bsep.sw.repositories.LogsRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,17 +12,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @Transactional
 public class AlarmService {
 
     private final AlarmRepository repository;
+    private final LogsRepository logsRepository;
 
     @Autowired
-    public AlarmService(final AlarmRepository repository) {
+    public AlarmService(final AlarmRepository repository, final LogsRepository logsRepository) {
         this.repository = repository;
+        this.logsRepository = logsRepository;
     }
 
     public Alarm save(final Alarm alarm) {
@@ -78,20 +85,28 @@ public class AlarmService {
         final List<Alarm> alarms = new ArrayList<>();
         switch (request.type) {
             case ALARM_LEVEL:
-                alarms.addAll(repository.findAlarmsByDefinitionProjectAndDefinition_DefinitionType_AndLevelAndCreatedAtBetween(
+                alarms.addAll(repository.findAlarmsByDefinitionProjectAndLevelAndCreatedAtBetween(
                         project,
-                        AlarmDefinitionType.SINGLE,
                         AlarmLevel.valueOf(request.value),
                         request.fromDate,
                         request.toDate));
                 break;
             case ALARM_RESOLVED:
-                alarms.addAll(repository.findAlarmsByDefinitionProjectAndDefinition_DefinitionType_AndResolvedAndCreatedAtBetween(
+                alarms.addAll(repository.findAlarmsByDefinitionProjectAndResolvedAndCreatedAtBetween(
                         project,
-                        AlarmDefinitionType.SINGLE,
                         Boolean.valueOf(request.value),
                         request.fromDate,
                         request.toDate));
+                break;
+            case ALARM_LOG_PLATFORM:
+            case ALARM_LOG_HOST:
+            case ALARM_LOG_SOURCE:
+                List<Alarm> allQueryAlarms = repository.findAlarmsByDefinitionProjectAndDefinition_DefinitionTypeAndCreatedAtBetween(
+                        project,
+                        AlarmDefinitionType.SINGLE,
+                        request.fromDate,
+                        request.toDate);
+                alarms.addAll(matchLogQuery(allQueryAlarms, request));
                 break;
             default:
                 return null;
@@ -125,6 +140,44 @@ public class AlarmService {
         sb.append("-");
         sb.append(time.getDayOfMonth());
         return sb.toString();
+    }
+
+    private ArrayList<Alarm> matchLogQuery(final List<Alarm> all, final ReportRequest request) {
+        final ArrayList<Alarm> matching = new ArrayList<>();
+        for (Alarm a : all) {
+            final String logId;
+            try {
+                logId = a.getLogs().get(0).getLog();
+            } catch (final Exception e) {
+                continue;
+            }
+            final Log log = logsRepository.findOne(logId);
+
+            if (log == null) {
+                continue;
+            }
+
+            switch (request.type) {
+                case ALARM_LOG_PLATFORM:
+                    if (StringUtils.equalsIgnoreCase(log.getInfo().getPlatform().toString(), request.value)) {
+                        matching.add(a);
+                    }
+                    break;
+                case ALARM_LOG_SOURCE:
+                    if (StringUtils.equalsIgnoreCase(log.getInfo().getSource(), request.value)) {
+                        matching.add(a);
+                    }
+                    break;
+                case ALARM_LOG_HOST:
+                    if (StringUtils.equalsIgnoreCase(log.getInfo().getHost(), request.value)) {
+                        matching.add(a);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return matching;
     }
 
 }

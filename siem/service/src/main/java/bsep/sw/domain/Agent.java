@@ -19,6 +19,7 @@ public class Agent extends EntityMeta {
 
     @NotNull
     @Column(name = "a_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AgentType type;
 
     @NotNull
@@ -29,7 +30,6 @@ public class Agent extends EntityMeta {
     @NotNull
     @Column(name = "a_agent_version", nullable = false, length = 10)
     @Size(min = 1, max = 10)
-    @Enumerated(EnumType.STRING)
     private String agentVersion;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
