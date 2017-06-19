@@ -20,6 +20,14 @@
         headerVm.resetNotifications = resetNotifications;
         headerVm.logout = logout;
 
+        activate();
+
+        function activate() {
+            if(!_.isUndefined($localStorage.user)) {
+                connect($localStorage.user);
+            }
+        }
+
         $rootScope.$on('userLoggedIn', function (event, message) {
             connect(message);
             me();
