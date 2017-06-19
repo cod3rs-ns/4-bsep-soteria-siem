@@ -4,10 +4,14 @@ package bsep.sw.domain;
 import bsep.sw.hateoas.agent_config.AgentConfigAttributes;
 import bsep.sw.util.AgentKeys;
 import net.minidev.json.JSONValue;
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -43,24 +47,35 @@ public class AgentConfig {
         this.types = attributes.getTypes();
     }
 
-    public String toYmlFile() throws FileNotFoundException {
+    public String toYmlFile(final SecretKey key) throws FileNotFoundException {
         final Representer representer = new Representer();
         representer.addClassTag(AgentConfig.class, Tag.MAP);
         final Yaml yaml = new Yaml(representer);
 
         final PrintWriter out = new PrintWriter(CONFIG_FILE_NAME_YML);
-        out.print(yaml.dump(this));
+        out.print(encryptConfig(key, yaml.dump(this)));
         out.close();
 
         return CONFIG_FILE_NAME_YML;
     }
 
-    public String toJsonFile() throws FileNotFoundException {
+    public String toJsonFile(final SecretKey key) throws FileNotFoundException {
         final PrintWriter out = new PrintWriter(CONFIG_FILE_NAME_JSON);
-        out.print(JSONValue.toJSONString(this));
+        out.print(encryptConfig(key, JSONValue.toJSONString(this)));
         out.close();
 
         return CONFIG_FILE_NAME_JSON;
+    }
+
+    private static String encryptConfig(final SecretKey key, final String data) {
+        try {
+            final Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            final byte[] encrypted = cipher.doFinal(data.getBytes());
+            return Base64.encodeBase64String(encrypted);
+        } catch (final Exception e) {
+            return null;
+        }
     }
 
     public String getOs() {

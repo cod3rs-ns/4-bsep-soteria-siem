@@ -11,8 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.util.regex.Matcher;
@@ -86,6 +89,18 @@ public class CSRUtil {
                 }
             }
         }
+        return null;
+    }
+
+    public SecretKey generateAESKey() {
+        try {
+            final KeyGenerator generator = KeyGenerator.getInstance("AES");
+            generator.init(128);
+            return generator.generateKey();
+        } catch (final NoSuchAlgorithmException e) {
+            logger.debug("Can't generate AES key", e);
+        }
+
         return null;
     }
 }
