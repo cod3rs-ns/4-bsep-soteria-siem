@@ -6,6 +6,7 @@ import bsep.sw.domain.PlatformType;
 import bsep.sw.domain.Project;
 import bsep.sw.hateoas.reports.*;
 import bsep.sw.repositories.LogsRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -66,14 +67,30 @@ public class LogsService {
         final List<Log> logs = new ArrayList<>();
         switch (request.type) {
             case LOG_LEVEL:
+                final LogLevel level;
+                try {
+                    level = LogLevel.valueOf(StringUtils.upperCase(request.value));
+                } catch (final Exception ex) {
+                    return null;
+                }
                 logs.addAll(repository.findAllByProjectAndLevelEqualsAndTimeBetween(
                         project.getId(),
-                        LogLevel.valueOf(request.value),
+                        level,
                         request.fromDate.getMillis(),
                         request.toDate.getMillis()));
                 break;
             case LOG_PLATFORM:
-                // TODO implement after rebase
+                final PlatformType type;
+                try {
+                    type = PlatformType.valueOf(StringUtils.upperCase(request.value));
+                } catch (final Exception ex) {
+                    return null;
+                }
+                logs.addAll(repository.findAllByProjectAndInfo_PlatformEqualsAndTimeBetween(
+                        project.getId(),
+                        type,
+                        request.fromDate.getMillis(),
+                        request.toDate.getMillis()));
                 break;
             case LOG_HOST:
                 logs.addAll(repository.findAllByProjectAndInfo_HostEqualsAndTimeBetween(

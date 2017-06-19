@@ -85,9 +85,15 @@ public class AlarmService {
         final List<Alarm> alarms = new ArrayList<>();
         switch (request.type) {
             case ALARM_LEVEL:
+                final AlarmLevel level;
+                try {
+                    level = AlarmLevel.valueOf(StringUtils.upperCase(request.value));
+                } catch (final Exception ex) {
+                    return null;
+                }
                 alarms.addAll(repository.findAlarmsByDefinitionProjectAndLevelAndCreatedAtBetween(
                         project,
-                        AlarmLevel.valueOf(request.value),
+                        level,
                         request.fromDate,
                         request.toDate));
                 break;

@@ -19,6 +19,8 @@ public interface LogsRepository extends MongoRepository<Log, String> {
 
     List<Log> findAllByProjectAndInfo_SourceEqualsAndTimeBetween(final Long project, final String source, final Long timeStart, final Long timeEnd);
 
+    List<Log> findAllByProjectAndInfo_PlatformEqualsAndTimeBetween(final Long project, final PlatformType type, final Long timeStart, final Long timeEnd);
+
     Integer countAllByProjectAndLevel(final Long project, final LogLevel level);
 
     Integer countAllByProjectAndInfo_Platform(final Long project, final PlatformType type);
