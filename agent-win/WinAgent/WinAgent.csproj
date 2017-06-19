@@ -69,6 +69,7 @@
     <Compile Include="util\CryptoUtil.cs" />
     <Compile Include="util\EnvUtil.cs" />
     <Compile Include="util\HttpClient.cs" />
+    <Compile Include="util\LogGenerator.cs" />
     <Compile Include="util\LogMonitoring.cs" />
   </ItemGroup>
   <ItemGroup>
