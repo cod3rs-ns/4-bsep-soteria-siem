@@ -22,6 +22,15 @@
             "prev": null
         };
 
+        alarmsVm.levelClasses = {
+            "INFO": "label-info",
+            "LOW": "label-primary",
+            "MEDIUM": "label-default",
+            "HIGH": "label-warning",
+            "SEVERE": "label-danger"
+        }
+
+
         alarmsVm.prevResolvedAlarms = getResolvedAlarms;
         alarmsVm.nextResolvedAlarms = getResolvedAlarms;
         alarmsVm.prevNotResolvedAlarms = getNotResolvedAlarms;

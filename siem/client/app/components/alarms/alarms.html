@@ -8,7 +8,6 @@
                             <th>Message</th>
                             <th>Project name</th>
                             <th>Created at</th>
-                            <th>Host</th>
                             <th>Level</th>
                             <th>Resolved by</th>
                         </tr>
@@ -16,10 +15,9 @@
                     <tbody>
                         <tr ng-repeat="alarm in alarmsVm.resolvedAlarms.data">
                             <td>{{alarm.attributes.message}}</td>
-                            <td>{{alarm.attributes.project.attributes.name}}</td>
-                            <td>{{alarm.attributes.log.attributes.time | date:'dd/MM/yyyy HH:mm:ss'}}</td>
-                            <td>{{alarm.attributes.log.attributes.info.host}}</td>
-                            <td>{{alarm.attributes.log.attributes.level}}</td>
+                            <td>{{alarm.attributes['project-name']}}</td>
+                            <td>{{alarm.attributes['created-at'] | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+                            <td><span ng-class="['label', alarmsVm.levelClasses[alarm.attributes.level]]" >{{alarm.attributes.level}}</span></td>
                             <td>{{alarm.attributes['resolved-by']}}</td>
                         </tr>
                     </tbody>
