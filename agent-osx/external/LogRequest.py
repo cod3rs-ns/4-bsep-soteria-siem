@@ -1,5 +1,7 @@
 import json
 
+from util import timeutil
+
 
 class LogRequest(object):
     def __init__(self, log):
@@ -19,7 +21,7 @@ class LogRequestData(object):
 class LogRequestAttributes(object):
     def __init__(self, log):
         self.level = log.level.upper()
-        self.time = log.time
+        self.time = timeutil.time_iso_8601(log.time)
         self.info = LogInfo(log.info)
         self.message = log.message
 
