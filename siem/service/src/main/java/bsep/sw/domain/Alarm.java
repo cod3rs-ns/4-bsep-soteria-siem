@@ -27,6 +27,7 @@ public class Alarm extends EntityMeta {
     private String resolvedBy;
 
     @Column(name = "al_level")
+    @Enumerated(EnumType.STRING)
     private AlarmLevel level;
 
     @NotNull

@@ -7,5 +7,7 @@ angular
         'ngStomp',
         'angularMoment',
         'ngSanitize',
-        'easypiechart'
+        'easypiechart',
+        'chart.js',
+        'daterangepicker'
     ]);
