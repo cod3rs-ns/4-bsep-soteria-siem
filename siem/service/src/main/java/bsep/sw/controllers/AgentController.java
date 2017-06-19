@@ -13,10 +13,8 @@ import bsep.sw.hateoas.agent_config.AgentConfigRequest;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.AgentService;
 import bsep.sw.services.ProjectService;
-import bsep.sw.util.AgentKeys;
-import bsep.sw.util.KeyStoreUtil;
-import bsep.sw.util.MailSender;
-import bsep.sw.util.StandardResponses;
+import bsep.sw.util.*;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +23,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -43,18 +44,21 @@ public class AgentController extends StandardResponses {
     private final UserSecurityUtil securityUtil;
     private final KeyStoreUtil keyStoreUtil;
     private final MailSender mailSender;
+    private final CSRUtil csrUtil;
 
     @Autowired
     public AgentController(final AgentService agentService,
                            final ProjectService projectService,
                            final UserSecurityUtil securityUtil,
                            final KeyStoreUtil keyStoreUtil,
-                           final MailSender mailSender) {
+                           final MailSender mailSender,
+                           final CSRUtil csrUtil) {
         this.agentService = agentService;
         this.projectService = projectService;
         this.securityUtil = securityUtil;
         this.keyStoreUtil = keyStoreUtil;
         this.mailSender = mailSender;
+        this.csrUtil = csrUtil;
     }
 
     @GetMapping("/projects/{projectId}/agents")
@@ -148,10 +152,10 @@ public class AgentController extends StandardResponses {
         final AgentConfig agentConfig = new AgentConfig(request.getData().getAttributes(), agent, keys);
 
         // Provide agent and config file to zip
+        final SecretKey key = csrUtil.generateAESKey();
         final ArrayList<File> files = new ArrayList<>(2);
-        files.add(new File("agents/win.zip"));
-        files.add(new File("README.md"));
-        files.add(new File(windows ? agentConfig.toJsonFile() : agentConfig.toYmlFile()));
+        files.add(new File(windows ? "agents/win-agent.zip" : "agents/osx-agent.zip"));
+        files.add(new File(windows ? agentConfig.toJsonFile(key) : agentConfig.toYmlFile(key)));
 
         // Add files to '.zip'
         for (final File file : files) {
@@ -164,8 +168,7 @@ public class AgentController extends StandardResponses {
             zip.closeEntry();
         }
 
-        // FIXME - Encrypt config file with generated key and put that key in 'license'.
-        mailSender.sendLicense(user.getFirstName(), "7gvqg78wgviovublbobai[jebyv[savdiifv[0bs", user.getEmail());
+        mailSender.sendLicense(user.getFirstName(), Base64.encodeBase64String(key.getEncoded()), user.getEmail());
 
         zip.close();
     }

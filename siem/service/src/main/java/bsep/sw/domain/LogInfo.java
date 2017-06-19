@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 @Document
@@ -14,6 +16,7 @@ public class LogInfo {
 
     private String source;
 
+    @Enumerated(EnumType.STRING)
     private PlatformType platform;
 
     private String pid;
