@@ -47,8 +47,8 @@
 										<li ng-repeat="notification in headerVm.notifications">
 											<a href="#">
 												<i class="fa fa-comment green-font"></i>
-												<span class="text">{{notification.alarm.message}}</span>
-												<span class="timestamp" am-time-ago="notification.log.time"></span>
+												<span class="text">{{notification.alarm.data.attributes.message}}</span>
+												<span class="timestamp" am-time-ago="notification.time"></span>
 											</a>
 										</li>
 									</ul>

@@ -20,6 +20,14 @@
         headerVm.resetNotifications = resetNotifications;
         headerVm.logout = logout;
 
+        activate();
+
+        function activate() {
+            if(!_.isUndefined($localStorage.user)) {
+                connect($localStorage.user);
+            }
+        }
+
         $rootScope.$on('userLoggedIn', function (event, message) {
             connect(message);
             me();
@@ -49,7 +57,7 @@
         function showAlarm(data) {
             if (data) {
                 headerVm.notificationCount += 1;
-                data.log.time = new Date();
+                data.time = new Date();
                 headerVm.notifications.unshift(data);
                 if (headerVm.notifications.length > 10) {
                     headerVm.notifications.pop();
