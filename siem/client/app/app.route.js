@@ -158,16 +158,16 @@ angular
                     }
                 }
             })
-            .state('project.report', {
+            .state('project.logs-report', {
                 parent: 'project',
-                url: '/report',
+                url: '/logs-report',
                 data: {
                     pageTitle: 'Soteria | Logs Report'
                 },
                 views: {
                     'content@': {
-                        templateUrl: 'app/components/reports/reports.html',
-                        controller: 'ReportController',
+                        templateUrl: 'app/components/reports/reports-logs.html',
+                        controller: 'LogReportController',
                         controllerAs: 'reportVm'
                     }
                 }

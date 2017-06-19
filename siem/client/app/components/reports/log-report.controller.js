@@ -3,11 +3,11 @@
 
     angular
         .module('soteria-app')
-        .controller('ReportController', ReportController);
+        .controller('LogReportController', LogReportController);
 
-    ReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
+    LogReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
 
-    function ReportController($stateParams, $log, reportService, _) {
+    function LogReportController($stateParams, $log, reportService, _) {
         var reportVm = this;
 
         reportVm.reportRequest = {
