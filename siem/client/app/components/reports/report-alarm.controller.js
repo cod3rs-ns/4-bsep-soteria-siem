@@ -3,11 +3,11 @@
 
     angular
         .module('soteria-app')
-        .controller('ReportController', ReportController);
+        .controller('AlarmReportController', AlarmReportController);
 
-    ReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
+    AlarmReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
 
-    function ReportController($stateParams, $log, reportService, _) {
+    function AlarmReportController($stateParams, $log, reportService, _) {
         var reportVm = this;
 
         reportVm.reportRequest = {
@@ -74,7 +74,7 @@
             }
         };
 
-        reportVm.platformChart = {
+        reportVm.resolvedChart = {
             labels: [],
             series: ['times occurred'],
             data: [],
@@ -94,7 +94,7 @@
         function activate() {
             reportVm.projectId = $stateParams.id;
             loadLevelReport();
-            loadPlatformReport();
+            loadResolvedReport();
         }
 
         function loadReport() {
@@ -106,7 +106,7 @@
             reportVm.reportRequest.from = reportVm.rangePicker.date.startDate;
             reportVm.reportRequest.to = reportVm.rangePicker.date.endDate;
 
-            reportService.getLogCriteriaReport(reportVm.projectId, reportVm.reportRequest)
+            reportService.get(reportVm.projectId, reportVm.reportRequest)
                 .then(function (response) {
                     reportVm.report = response;
                     var lst = [];
@@ -122,7 +122,7 @@
         }
 
         function loadLevelReport() {
-            reportService.getStandardReport(reportVm.projectId, 'LOG_LEVELS')
+            reportService.getStandardReport(reportVm.projectId, 'ALARM_LEVELS')
                 .then(function (response) {
                     reportVm.levelReport = response;
                     _.forEach(reportVm.levelReport.reports, function (value) {
@@ -135,13 +135,13 @@
                 });
         }
 
-        function loadPlatformReport() {
-            reportService.getStandardReport(reportVm.projectId, 'LOG_PLATFORMS')
+        function loadResolvedReport() {
+            reportService.getStandardReport(reportVm.projectId, 'ALARM_RESOLVED')
                 .then(function (response) {
-                    reportVm.platformReport = response;
-                    _.forEach(reportVm.platformReport.reports, function (value) {
-                        reportVm.platformChart.labels.push(value['name']);
-                        reportVm.platformChart.data.push(value['value']);
+                    reportVm.resolvedReport = response;
+                    _.forEach(reportVm.resolvedReport.reports, function (value) {
+                        reportVm.resolvedChart.labels.push(value['name']);
+                        reportVm.resolvedChart.data.push(value['value']);
                     });
                 })
                 .catch(function (error) {

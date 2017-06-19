@@ -18,13 +18,13 @@ angular
         }
     ])
     .constant(
-    'CONFIG', {
-        'SERVICE_URL': 'http://localhost:9091/api',
-        'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
-        'AUTH_TOKEN': 'X-Auth-Token',
-        'AGENTS_LIMIT': 6,
-        'FB_FIELDS': 'id,first_name,last_name,email'
-    })
+        'CONFIG', {
+            'SERVICE_URL': 'http://localhost:9091/api',
+            'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
+            'AUTH_TOKEN': 'X-Auth-Token',
+            'AGENTS_LIMIT': 6,
+            'FB_FIELDS': 'id,first_name,last_name,email'
+        })
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
         // For any unmatched url, redirect to /login
@@ -162,12 +162,26 @@ angular
                 parent: 'project',
                 url: '/report',
                 data: {
-                    pageTitle: 'Soteria | Alarm definition'
+                    pageTitle: 'Soteria | Logs Report'
                 },
                 views: {
                     'content@': {
                         templateUrl: 'app/components/reports/reports.html',
                         controller: 'ReportController',
+                        controllerAs: 'reportVm'
+                    }
+                }
+            })
+            .state('project.alarms-report', {
+                parent: 'project',
+                url: '/alarms-report',
+                data: {
+                    pageTitle: 'Soteria | Alarms Report'
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/reports/reports-alarms.html',
+                        controller: 'AlarmReportController',
                         controllerAs: 'reportVm'
                     }
                 }

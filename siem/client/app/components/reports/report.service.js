@@ -9,13 +9,12 @@
 
     function reportService(CONFIG, $http, $log) {
         return {
-            get: getReport,
-            getLevelReport: getLevelReport,
-            getPlatformReport: getPlatformReport
+            getLogCriteriaReport: getLogCriteriaReport,
+            getStandardReport: getStandardReport
         };
 
-        function getReport(project_id, reportRequest) {
-            return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/report', reportRequest)
+        function getLogCriteriaReport(project_id, report_request) {
+            return $http.post(CONFIG.SERVICE_URL + '/projects/' + project_id + '/logs/report', report_request)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
@@ -24,18 +23,8 @@
                 });
         }
 
-        function getLevelReport(project_id) {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/' + project_id + '/report/levels')
-                .then(function successCallback(response) {
-                    return response.data;
-                }, function errorCallback(response) {
-                    $log.warn(response.data.detail);
-                    throw response.data.detail;
-                });
-        }
-
-        function getPlatformReport(project_id) {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/' + project_id + '/report/platforms')
+        function getStandardReport(project_id, report_type) {
+            return $http.get(CONFIG.SERVICE_URL + '/projects/' + project_id + '/std-reports/' + report_type)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
