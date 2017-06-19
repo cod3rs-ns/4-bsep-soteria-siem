@@ -11,10 +11,11 @@
         var reportVm = this;
 
         reportVm.reportRequest = {
-            type: 'HOST',
+            type: 'ALARM_RESOLVED',
+            'entity-type': 'LOGS',
             value: '',
-            from: "2017-06-10T22:40:22.993+02:00",
-            to: "2017-06-30T10:40:22.993+02:00"
+            from: null,
+            to: null
         };
 
         reportVm.rangePicker = {
@@ -106,7 +107,7 @@
             reportVm.reportRequest.from = reportVm.rangePicker.date.startDate;
             reportVm.reportRequest.to = reportVm.rangePicker.date.endDate;
 
-            reportService.getAlarmCriteriaReport(reportVm.projectId, reportVm.reportRequest)
+            reportService.getCriteriaReport(reportVm.projectId, reportVm.reportRequest)
                 .then(function (response) {
                     reportVm.report = response;
                     var lst = [];

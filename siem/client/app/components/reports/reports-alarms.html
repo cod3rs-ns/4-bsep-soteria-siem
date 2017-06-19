@@ -30,6 +30,9 @@
 									        ng-model="reportVm.reportRequest.type">
 										<option value="ALARM_LEVEL">Level</option>
 										<option value="ALARM_RESOLVED">Resolved</option>
+										<option value="ALARM_LOG_HOST">Host</option>
+										<option value="ALARM_LOG_SOURCE">Source</option>
+										<option value="ALARM_LOG_PLATFORM">Platform</option>
 									</select>
 								</div>
 							</div>
@@ -78,7 +81,8 @@
 						</div>
 						<div class="widget-content">
 							<canvas id="level-pie" class="chart chart-pie"
-							        chart-data="reportVm.levelChart.data" chart-labels="reportVm.levelChart.labels" chart-options="reportVm.levelChart.options">
+							        chart-data="reportVm.levelChart.data" chart-labels="reportVm.levelChart.labels"
+							        chart-options="reportVm.levelChart.options">
 							</canvas>
 						</div>
 					</div>
@@ -90,7 +94,8 @@
 						</div>
 						<div class="widget-content">
 							<canvas id="platform-pie" class="chart chart-pie char-sm"
-							        chart-data="reportVm.resolvedChart.data" chart-labels="reportVm.resolvedChart.labels" chart-options="reportVm.resolvedChart.options">
+							        chart-data="reportVm.resolvedChart.data" chart-labels="reportVm.resolvedChart.labels"
+							        chart-options="reportVm.resolvedChart.options">
 							</canvas>
 						</div>
 					</div>
