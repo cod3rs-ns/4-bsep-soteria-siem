@@ -154,8 +154,7 @@ public class AgentController extends StandardResponses {
         // Provide agent and config file to zip
         final SecretKey key = csrUtil.generateAESKey();
         final ArrayList<File> files = new ArrayList<>(2);
-        files.add(new File("agents/win.zip"));
-        files.add(new File("README.md"));
+        files.add(new File(windows ? "agents/win-agent.zip" : "agents/osx-agent.zip"));
         files.add(new File(windows ? agentConfig.toJsonFile(key) : agentConfig.toYmlFile(key)));
 
         // Add files to '.zip'
