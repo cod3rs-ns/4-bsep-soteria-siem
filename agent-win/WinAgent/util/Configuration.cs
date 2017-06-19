@@ -18,6 +18,6 @@ namespace WinAgent.util
         public string SecretKey { get; set; }
         public long ProjectId { get; set; }
         public long AgentId { get; set; }
-        public string Types { get; set; }
+        public List<string> Types { get; set; }
     }
 }
