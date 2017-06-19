@@ -1,9 +1,6 @@
 package bsep.sw.repositories;
 
-import bsep.sw.domain.Alarm;
-import bsep.sw.domain.AlarmDefinition;
-import bsep.sw.domain.Project;
-import bsep.sw.domain.User;
+import bsep.sw.domain.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +18,9 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Page<Alarm> findAlarmsByDefinition_Project_Members_ContainingAndResolvedOrderByResolvedAtDesc(final User user, final Boolean resolved, final Pageable pageable);
 
     List<Alarm> findAlarmsByDefinition(final AlarmDefinition definition);
+
+    Integer countAlarmsByDefinitionProjectAndLevel(final Project project, final AlarmLevel level);
+
+    Integer countAlarmsByDefinitionProjectAndResolved(final Project project, final Boolean resolved);
 
 }
