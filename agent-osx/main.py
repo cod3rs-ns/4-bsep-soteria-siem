@@ -15,12 +15,15 @@ if __name__ == "__main__":
         'log_patterns': conf['patterns']
     }
 
-    parser = LogParser(conf['defaultLevel'], patterns, project_id=conf['projectId'])
+    parser = LogParser(conf['defaultLevel'], patterns, project_id=conf['projectId'], agent_id=conf['agentId'])
 
     event_handler = LogsFileChangeHandler(parser, log_proxy=LogsProxy(config=conf))
     observer = Observer()
     for log_path in conf['paths']:
-        observer.schedule(event_handler, path=log_path, recursive=True)
+        try:
+            observer.schedule(event_handler, path=log_path, recursive=True)
+        except OSError:
+            print "No such file or directory: {}".format(log_path)
     observer.start()
 
     print "Started observing for incoming logs on the following paths: "

@@ -28,6 +28,7 @@ class LogInfo(object):
     def __init__(self, info):
         self.host = info.host
         self.source = info.source
+        self.platform = 'OSX'
         self.pid = info.pid
         self.gid = info.gid
         self.uid = info.uid
@@ -45,14 +46,20 @@ class LogInfoError(object):
 class LogRequestRelationships(object):
     def __init__(self, log):
         self.project = ProjectRequestRelationship(log.project)
+        self.agent = AgentRequestRelationship(log.agent)
 
 
 class ProjectRequestRelationship(object):
     def __init__(self, project_id):
-        self.data = RelationshipData(project_id)
+        self.data = RelationshipData(relationship_type="project", relationship_id=project_id)
+
+
+class AgentRequestRelationship(object):
+    def __init__(self, agent_id):
+        self.data = RelationshipData(relationship_type="agents", relationship_id=agent_id)
 
 
 class RelationshipData(object):
-    def __init__(self, project_id):
-        self.type = "projects"
-        self.id = project_id
+    def __init__(self, relationship_type, relationship_id):
+        self.type = relationship_type
+        self.id = relationship_id

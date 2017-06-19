@@ -13,7 +13,7 @@ class LogsGenerator(object):
     Logs generator serves to create random directories with random files in it.
     Then, we occasionally generates Log in advanced known format:
 
-                LEVEL   TIME    PID     MESSAGE
+                TIME   LEVEL    PID     MESSAGE
 
     After log is added to file, it needs to be distributed through secured request
     to SIEM center. 
@@ -35,7 +35,7 @@ class LogsGenerator(object):
         return Log(pid, level, time, message)
 
     def save_log(self, log):
-        log_format = "\n {} {} {} {}".format(log.level, log.time, log.info.pid, log.message)
+        log_format = "\n {} {} {} {}".format(log.time, log.level, log.info.pid, log.message)
         log_file_path = self._log_files[random.randint(0, len(self._log_files) - 1)]
 
         with open(log_file_path, "a") as log_file:
@@ -76,6 +76,7 @@ class LogsGenerator(object):
 
 
 if __name__ == "__main__":
+    # TODO - Provide your custom path
     generator = LogsGenerator('/Users/dmarjanovic/Desktop/test/')
 
     generator.init()
