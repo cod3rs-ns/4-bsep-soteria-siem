@@ -1,5 +1,5 @@
 import time
-import util.yaml_reader as config
+import util.config_reader as config
 
 from watchdog.observers import Observer
 from util.LogParser import LogParser

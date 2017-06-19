@@ -1,4 +1,6 @@
 .idea/
 *.pyc
 config.yml
-crypter.jar
+license_decrypter.jar
+request_encryptor.jar
+license
