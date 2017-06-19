@@ -3,6 +3,7 @@ package bsep.sw.controllers;
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.reports.GlobalReport;
+import bsep.sw.hateoas.reports.PieCollectionReport;
 import bsep.sw.hateoas.reports.ReportRequest;
 import bsep.sw.security.UserSecurityUtil;
 import bsep.sw.services.LogsService;
@@ -45,6 +46,22 @@ public class ReportController extends StandardResponses {
         }
 
         final GlobalReport report = logsService.getReport(project, reportRequest);
+
+        return ResponseEntity.ok(report);
+    }
+
+    @GetMapping("/projects/{projectId}/report/levels")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    public ResponseEntity<?> retrieveLogsForProject(@PathVariable final Long projectId) {
+        final User user = securityUtil.getLoggedUser();
+        final Project project = projectService.findByMembershipAndId(user, projectId);
+
+        if (project == null) {
+            return notFound("project");
+        }
+
+        final PieCollectionReport report = logsService.getReportLevels(project);
 
         return ResponseEntity.ok(report);
     }

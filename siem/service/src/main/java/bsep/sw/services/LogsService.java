@@ -3,9 +3,7 @@ package bsep.sw.services;
 import bsep.sw.domain.Log;
 import bsep.sw.domain.LogLevel;
 import bsep.sw.domain.Project;
-import bsep.sw.hateoas.reports.DailyReport;
-import bsep.sw.hateoas.reports.GlobalReport;
-import bsep.sw.hateoas.reports.ReportRequest;
+import bsep.sw.hateoas.reports.*;
 import bsep.sw.repositories.LogsRepository;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,5 +121,14 @@ public class LogsService {
         sb.append("-");
         sb.append(full.getDayOfMonth());
         return sb.toString();
+    }
+
+    public PieCollectionReport getReportLevels(Project project) {
+        final ArrayList<PieReport> pieReports = new ArrayList<>();
+        for (LogLevel level : LogLevel.values()) {
+            final Integer val = repository.countAllByProjectAndLevel(project.getId(), level);
+            pieReports.add(new PieReport(level.name(), val));
+        }
+        return new PieCollectionReport(pieReports);
     }
 }

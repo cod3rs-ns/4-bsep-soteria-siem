@@ -12,7 +12,7 @@
 <div class="container">
 	<div class="main-header">
 		<h2>Report s</h2>
-		<em>Deeper insights in your logs</em>
+		<em>Deeper insights into your logs</em>
 	</div>
 	<div class="main-content">
 		<div class="row" style="margin-right: 10px;">
@@ -99,7 +99,9 @@
 							<h3>All time occurrences of logs by level</h3>
 						</div>
 						<div class="widget-content">
-						
+							<canvas id="pie" class="chart chart-pie"
+							        chart-data="reportVm.levelChart.data" chart-labels="reportVm.levelChart.labels" chart-options="reportVm.levelChart.options">
+							</canvas>
 						</div>
 					</div>
 				</div>
@@ -117,7 +119,5 @@
 		</div>
 	</div>
 </div>
-
-
 </body>
 </html>

@@ -61,12 +61,26 @@
             }
         };
 
+        reportVm.levelChart = {
+            labels: [],
+            series: ['times occurred'],
+            data: [],
+            options: {
+                colors : [ '#803690', '#00ADF9', '#DCDCDC', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                }
+            }
+        };
+
         reportVm.loadReport = loadReport;
 
         activate();
 
         function activate() {
             reportVm.projectId = $stateParams.id;
+            loadLevelReport();
         }
 
         function loadReport() {
@@ -87,6 +101,22 @@
                         lst.push(value['day-count']);
                     });
                     reportVm.mainChart.data.push(lst);
+                })
+                .catch(function (error) {
+                    $log.error(error);
+                });
+        }
+
+        function loadLevelReport() {
+            reportService.getLevelReport(reportVm.projectId)
+                .then(function (response) {
+                    reportVm.levelReport = response;
+                    var lst = [];
+                    _.forEach(reportVm.levelReport.reports, function (value) {
+                        reportVm.levelChart.labels.push(value['name']);
+                        reportVm.levelChart.data.push(value['value']);
+                    });
+                    //reportVm.levelChart.data.push(lst);
                 })
                 .catch(function (error) {
                     $log.error(error);
