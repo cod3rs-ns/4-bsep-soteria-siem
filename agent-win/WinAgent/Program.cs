@@ -17,7 +17,9 @@ namespace WinAgent
         {
             Console.WriteLine("---------- Start SIEM agent -----------");
             LogMonitoring.StartWatch();
-            
+
+            LogGenerator.GenerateLogs();
+
             Console.ReadLine();
         }       
     }
