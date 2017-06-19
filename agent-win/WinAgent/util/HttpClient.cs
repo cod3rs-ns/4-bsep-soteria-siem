@@ -22,7 +22,7 @@ namespace WinAgent.util
                 {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
-
+            
             var encryptedRequest = CryptoUtil.CreateRequest(postData.Replace("\"", "\\\""));
             var data = System.Text.Encoding.UTF8.GetBytes(encryptedRequest);
 
