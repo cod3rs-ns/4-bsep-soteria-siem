@@ -2,6 +2,7 @@ package bsep.sw.handlers;
 
 
 import bsep.sw.hateoas.ErrorResponse;
+import com.mongodb.DuplicateKeyException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
@@ -86,6 +87,14 @@ public class GlobalExceptionHandler {
         log.error("BCE", e);
         final ErrorResponse response = new ErrorResponse("400", e.getMessage(), e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(value = {DuplicateKeyException.class, org.springframework.dao.DuplicateKeyException.class})
+    public ResponseEntity<ErrorResponse> handleReplyAttack(final Exception e) {
+        log.info("Indicate reply attack");
+        final ErrorResponse response = new ErrorResponse("403", "Indicate reply attack", e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
 }
