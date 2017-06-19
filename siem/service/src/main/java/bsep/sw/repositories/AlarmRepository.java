@@ -1,6 +1,7 @@
 package bsep.sw.repositories;
 
 import bsep.sw.domain.*;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     Integer countAlarmsByDefinitionProjectAndResolved(final Project project, final Boolean resolved);
 
+    List<Alarm> findAlarmsByDefinitionProjectAndDefinition_DefinitionType_AndResolvedAndCreatedAtBetween(final Project project, final AlarmDefinitionType type, final Boolean resolved, final DateTime startTime, final DateTime endTime);
+
+    List<Alarm> findAlarmsByDefinitionProjectAndDefinition_DefinitionType_AndLevelAndCreatedAtBetween(final Project project, final AlarmDefinitionType type, final AlarmLevel level, final DateTime startTime, final DateTime endTime);
 }

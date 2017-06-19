@@ -1,8 +1,10 @@
 package bsep.sw.hateoas.reports;
 
 public enum ReportType {
-    LEVEL,
-    PLATFORM,
-    HOST,
-    SOURCE
+    LOG_LEVEL,
+    LOG_PLATFORM,
+    LOG_HOST,
+    LOG_SOURCE,
+    ALARM_RESOLVED,
+    ALARM_LEVEL
 }

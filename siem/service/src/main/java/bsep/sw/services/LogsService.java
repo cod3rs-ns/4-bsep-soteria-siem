@@ -65,24 +65,24 @@ public class LogsService {
     public GlobalReport getReport(final Project project, final ReportRequest request) {
         final List<Log> logs = new ArrayList<>();
         switch (request.type) {
-            case LEVEL:
+            case LOG_LEVEL:
                 logs.addAll(repository.findAllByProjectAndLevelEqualsAndTimeBetween(
                         project.getId(),
                         LogLevel.valueOf(request.value),
                         request.fromDate.getMillis(),
                         request.toDate.getMillis()));
                 break;
-            case PLATFORM:
+            case LOG_PLATFORM:
                 // TODO implement after rebase
                 break;
-            case HOST:
+            case LOG_HOST:
                 logs.addAll(repository.findAllByProjectAndInfo_HostEqualsAndTimeBetween(
                         project.getId(),
                         request.value,
                         request.fromDate.getMillis(),
                         request.toDate.getMillis()));
                 break;
-            case SOURCE:
+            case LOG_SOURCE:
                 logs.addAll(repository.findAllByProjectAndInfo_SourceEqualsAndTimeBetween(
                         project.getId(),
                         request.value,
