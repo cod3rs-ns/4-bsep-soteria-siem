@@ -1,9 +1,5 @@
 <div class="wrapper full-page-wrapper page-auth page-register text-center">
 	<div class="inner-page">
-		<div class="logo">
-			<a ui-sref="home"><img src="../../../assets/images/logo.png" alt="Soteria Application" /></a>
-		</div>
-
 		<div class="register-box center-block">
 			<form role="form" id="registration-form" ng-submit="registerVm.register();" class="registration-form" name="registrationForm"
 				novalidate>
@@ -12,12 +8,14 @@
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.username.$invalid && registrationForm.username.$dirty }">
 					<div class="input-group">
 						<input type="text" ng-model="registerVm.registrationUser.username" placeholder="Username" class="form-control" id="sign-up-username"
-							name="username" field-unique required>
+							name="username" field-unique required ng-minlength="3" ng-maxlength="30">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					</div>
 					<span ng-show="registrationForm.username.$error.required && registrationForm.username.$dirty && !registrationForm.username.$error.unique"
 						class="help-block" style="font-size: 10pt; margin:0px;">Username is required.</span>
 					<span ng-show="registrationForm.username.$error.unique" class="help-block" style="font-size: 10pt; margin:0px;">User with the same username already exists.</span>
+					<span ng-show="registrationForm.username.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Username must contains at least 3 characters.</span>
+					<span ng-show="registrationForm.username.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Username must contains less than 30 characters.</span>
 				</div>
 
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.password.$invalid && registrationForm.password.$dirty }">
@@ -44,28 +42,32 @@
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.firstName.$invalid && registrationForm.firstName.$dirty }">
 					<div class="input-group">
 						<input type="text" ng-model="registerVm.registrationUser.firstName" name="firstName" placeholder="First name" class="form-control"
-							id="sign-up-first-name" required>
+							id="sign-up-first-name" required ng-minlength="2" ng-maxlength="30">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					</div>
-					<span ng-show="registrationForm.firstName.$invalid && registrationForm.firstName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">First name is required.</span>
+					<span ng-show="registrationForm.firstName.$error.required && registrationForm.firstName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">First name is required.</span>
+					<span ng-show="registrationForm.firstName.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">First name must contains at least 2 characters.</span>
+					<span ng-show="registrationForm.firstName.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">First name must contains less than 30 characters.</span>
 				</div>
 
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.lastName.$invalid && registrationForm.lastName.$dirty }">
 					<div class="input-group">
 						<input type="text" ng-model="registerVm.registrationUser.lastName" name="lastName" placeholder="Last name" class="form-control"
-							id="sign-up-last-name" required>
+							id="sign-up-last-name" required ng-minlength="2" ng-maxlength="30">
 						<span class="input-group-addon"><i class="fa fa-user"></i></span>
 					</div>
-					<span ng-show="registrationForm.lastName.$invalid && registrationForm.lastName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Last name is required.</span>
+					<span ng-show="registrationForm.lastName.$error.required && registrationForm.lastName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Last name is required.</span>
+					<span ng-show="registrationForm.lastName.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Last name must contains at least 2 characters.</span>
+					<span ng-show="registrationForm.lastName.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Last name contains less than 30 characters.</span>
 				</div>
 
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.phoneNumber.$invalid && registrationForm.phoneNumber.$dirty }">
 					<div class="input-group">
 						<input type="text" ng-model="registerVm.registrationUser.phoneNumber" name="phoneNumber" placeholder="Phone number" class="form-control"
-							id="sign-up-last-name" required>
+							id="sign-up-last-name" ng-maxlength="16">
 						<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
 					</div>
-					<span ng-show="registrationForm.phoneNumber.$invalid && registrationForm.phoneNumber.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Phone number is required.</span>
+					<span ng-show="registrationForm.phoneNumber.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Phone number contains less than 30 characters.</span>
 				</div>
 
 				<div class="form-group" ng-class="{ 'has-error': registrationForm.email.$invalid && registrationForm.email.$dirty}">
@@ -84,7 +86,10 @@
 					<span>I accept the <a href="#">Terms &amp; Agreements</a></span>
 				</label>
 
-				<button class="btn btn-custom-primary btn-lg btn-block btn-auth" ng-click="registerVm.register();"><i class="fa fa-check-circle"></i> Create Account</button>
+				<button class="btn btn-custom-primary btn-lg btn-block btn-auth" ng-click="registerVm.register();"
+					ng-disabled="registrationForm.$invalid || registerVm.passwordRetyped != registerVm.registrationUser.password">
+					<i class="fa fa-check-circle"></i> Create Account
+				</button>
 			</form>
 		</div>
 	</div>

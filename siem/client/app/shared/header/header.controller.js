@@ -79,11 +79,10 @@
             loginService.loggedInUser()
                 .then(function (response) {
                     headerVm.loggedInUser = response.data;
-                    $localStorage.image = headerVm.loggedInUser.attributes.imagePath;
-                    // TODO image
+                    $localStorage.image = 'https://i.imgur.com/HQ3YU7n.gif';
                     $localStorage.userInfo = headerVm.loggedInUser.attributes.firstName + " " + headerVm.loggedInUser.attributes.lastName;
                     if (_.isEqual($localStorage.role, 'OPERATOR')) {
-                        $localStorage.image = 'http://graph.facebook.com/' + $localStorage.user.substring(3) + '/picture?type=square'
+                        $localStorage.image = 'https://graph.facebook.com/' + $localStorage.user.substring(3) + '/picture?type=square'
                     }
                 })
                 .catch(function (error) {

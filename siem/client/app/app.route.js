@@ -229,8 +229,8 @@ angular
                         } else {
                             $location.path('/internal-server-error');
                         }
-                        return $q.reject(response);
                     }
+                    return $q.reject(response);
                 }
             };
         }]);
