@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WinAgent.model;
 using WinAgent.util;
 using System.IO;
+using System.Net;
 
 namespace WinAgent
 {
@@ -16,6 +17,8 @@ namespace WinAgent
         private static void Main(string[] args)
         {
             Console.WriteLine("---------- Start SIEM agent -----------");
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+
             LogMonitoring.StartWatch();
 
             LogGenerator.GenerateLogs();

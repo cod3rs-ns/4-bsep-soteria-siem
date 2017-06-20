@@ -15,7 +15,7 @@ namespace WinAgent.util
     {
         public static void SendLogToSIEMServer(Log log)
         {
-            var request = (HttpWebRequest)WebRequest.Create("http://localhost:9091/api/logs/agent/" + EnvUtil.Configuration.Properties.AgentId.ToString());
+            var request = (HttpWebRequest)WebRequest.Create("https://localhost:8443/api/logs/agent/" + EnvUtil.Configuration.Properties.AgentId.ToString());
 
             var postData = Newtonsoft.Json.JsonConvert.SerializeObject(new LogRequest(log),
                 new JsonSerializerSettings
