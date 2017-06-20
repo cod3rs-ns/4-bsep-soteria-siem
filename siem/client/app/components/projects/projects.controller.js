@@ -28,7 +28,10 @@
         };
 
         projectsVm.createProjectDialog = {
-            "project": {}
+            "project": {
+                "name": "",
+                "description": ""
+            }
         };
 
         projectsVm.prevOwnedProjects = getOwnedProjects;
