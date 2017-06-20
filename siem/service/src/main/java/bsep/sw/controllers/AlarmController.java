@@ -71,7 +71,9 @@ public class AlarmController extends StandardResponses {
     @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_ALARM)")
     public ResponseEntity<?> getDefinitionAlarms(final HttpServletRequest request,
                                                  @Valid @PathVariable final Long projectId,
-                                                 @Valid @PathVariable final Long definitionId) {
+                                                 @Valid @PathVariable final Long definitionId,
+                                                 @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
+                                                 @RequestParam(value = "page[limit]", required = false, defaultValue = "10") final Integer limit) {
         final User user = securityUtil.getLoggedUser();
 
         final Project project = projectService.findByMembershipAndId(user, projectId);
@@ -86,13 +88,17 @@ public class AlarmController extends StandardResponses {
             return notFound("definition");
         }
 
-        final List<Alarm> alarms = alarmService.findAllByDefinition(definition);
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Page<Alarm> alarms = alarmService.findAllByDefinition(definition, pageable);
 
-        // TODO maybe pagination
+        final String baseUrl = request.getRequestURL().toString();
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
+        final String next = alarms.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
 
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(alarms, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmCollectionResponse.fromDomain(alarms.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @GetMapping("/projects/{projectId}/alarms/{alarmId}")

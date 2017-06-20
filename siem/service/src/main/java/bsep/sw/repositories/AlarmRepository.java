@@ -18,7 +18,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     Page<Alarm> findAlarmsByDefinition_Project_Members_ContainingAndResolvedOrderByResolvedAtDesc(final User user, final Boolean resolved, final Pageable pageable);
 
-    List<Alarm> findAlarmsByDefinition(final AlarmDefinition definition);
+    Page<Alarm> findAlarmsByDefinition(final AlarmDefinition definition, final Pageable pageable);
 
     Integer countAlarmsByDefinitionProjectAndLevel(final Project project, final AlarmLevel level);
 

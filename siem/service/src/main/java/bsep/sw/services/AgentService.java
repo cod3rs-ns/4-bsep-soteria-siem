@@ -4,11 +4,10 @@ import bsep.sw.domain.Agent;
 import bsep.sw.domain.Project;
 import bsep.sw.repositories.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional
@@ -35,7 +34,7 @@ public class AgentService {
     }
 
     @Transactional(readOnly = true)
-    public List<Agent> findAllByProject(final Project project, final Pageable pageable) {
+    public Page<Agent> findAllByProject(final Project project, final Pageable pageable) {
         return repository.findAgentsByProject(project, pageable);
     }
 
