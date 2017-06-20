@@ -18,6 +18,15 @@
             'next': null
         };
 
+        projectVm.timeRange = {
+            'fromTime': null,
+            'date': {
+                'startDate': null,
+                'endDate': null
+            },
+            'toTime': null
+        };
+
         projectVm.agents = {
             'data': [],
             'next': null,
@@ -96,6 +105,15 @@
         }
 
         function filterLogs() {
+            $log.info(projectVm.timeRange.fromTime);
+            $log.info(projectVm.timeRange.toTime);
+            $log.info(projectVm.timeRange.date);
+
+            $log.info(new Date(projectVm.timeRange.date.startDate.format('LL')).setTime(projectVm.timeRange.fromTime.getTime()));
+
+            $log.info(projectVm.timeRange.fromTime.toISOString());
+            $log.info(projectVm.timeRange.toTime.toISOString());
+
             var id = $stateParams.id;
             var filters = createFilters();
             projectVm.logs.data = [];
@@ -229,5 +247,16 @@
                     return 'label-default';
             }
         }
+
+        projectVm.options = projectVm.options = {
+            locale: {
+                applyLabel: "Apply",
+                fromLabel: "From",
+                format: "YYYY-MM-DD",
+                toLabel: "To",
+                cancelLabel: 'Cancel',
+                customRangeLabel: 'Custom range'
+            }
+        };
     }
 })();

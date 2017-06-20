@@ -257,56 +257,71 @@
                 </div>
                 <div class="widget-content">
                     <!-- Search fields -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title agent-config-header">
-                                Filter your logs
-                            </h4>
-                        </div>
-                        <div class="panel-collapse collapse in">
-                            <div class="panel-body">
-                                <div class="col-lg-4">
-                                    <label class="col-lg-6 control-inline fancy-checkbox custom-bgcolor-green"
-                                           ng-repeat="(level, checked) in projectVm.levelCheckboxes">
-                                        <input type="checkbox" ng-model="projectVm.levelCheckboxes[level]">
-                                        <span>{{level}}</span>
-                                    </label>
-                                </div>
-                                <div class="col-lg-8">
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by message..." class="form-control"
-                                               ng-model="projectVm.logs.filters.message">
+                    <uib-accordion>
+                        <div uib-accordion-group class="panel panel-default" is-open="status.open">
+                            <uib-accordion-heading class="panel-heading">
+                                <h4 class="panel-title agent-config-header">
+                                    Filter your logs
+                                    <i class="pull-right glyphicon" class="search-collapse" ng-class="{'glyphicon-menu-up': status.open, 'glyphicon-menu-down': !status.open}"></i>
+                                </h4>
+                            </uib-accordion-heading>
+                            <div class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="col-lg-4">
+                                        <label class="col-lg-6 control-inline fancy-checkbox custom-bgcolor-green"
+                                               ng-repeat="(level, checked) in projectVm.levelCheckboxes">
+                                            <input type="checkbox" ng-model="projectVm.levelCheckboxes[level]">
+                                            <span>{{level}}</span>
+                                        </label>
                                     </div>
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by host..." class="form-control"
-                                               ng-model="projectVm.logs.filters.info.host">
-                                    </div>
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by source..." class="form-control"
-                                               ng-model="projectVm.logs.filters.info.source">
-                                    </div>
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by pid..." class="form-control"
-                                               ng-model="projectVm.logs.filters.info.pid">
-                                    </div>
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by gid..." class="form-control"
-                                               ng-model="projectVm.logs.filters.info.gid">
-                                    </div>
-                                    <div class="input-group input-group-sm col-lg-12">
-                                        <input type="search" placeholder="Search by uid..." class="form-control"
-                                               ng-model="projectVm.logs.filters.info.uid">
-                                    </div>
-                                    <span class="input-group-btn">
+                                    <div class="col-lg-8">
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by message..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.message">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by host..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.host">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by source..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.source">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by pid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.pid">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by gid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.gid">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by uid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.uid">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <input date-range-picker class="form-control date-picker" type="text" ng-model="projectVm.timeRange.date"
+                                                       options="projectVm.options"/>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div uib-timepicker ng-model="projectVm.timeRange.fromTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div uib-timepicker ng-model="projectVm.timeRange.toTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                            </div>
+                                        </div>
+                                        <span class="input-group-btn">
                                         <button class="col-lg-12 btn btn-primary" type="button"
                                                 ng-click="projectVm.filterLogs();">
                                             <i class="fa fa-search"></i> Search
                                         </button>
                                     </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </uib-accordion>
 
                     <table id="ticket-table" class="table table-sorting">
                         <thead>
