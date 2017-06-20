@@ -47,9 +47,6 @@
                                         <dt>Type:</dt>
                                         <dd>{{agent.attributes["agent-type"]}}</dd>
 
-                                        <dt>Created at:</dt>
-                                        <dd>{{agent.meta["created-at"]}}</dd>
-
                                         <dt>Description:</dt>
                                         <dd>{{agent.attributes["description"]}}</dd>
 
@@ -89,7 +86,7 @@
                         <i class="fa fa-apple"></i>
                     </div>
                 </div>
-                <div class="widget-content">
+                <div class="widget-content" ng-hide="projectVm.config.os == null">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="panel-group">
@@ -132,18 +129,18 @@
                                                 <div class="col-sm-6">
                                                     <select name="default-log-level" id="default-log-level"
                                                             class="select2" ng-model="projectVm.config.defaultLevel">
-                                                        <option value="debug">DEBUG</option>
-                                                        <option value="info">INFO</option>
-                                                        <option value="notice">NOTICE</option>
-                                                        <option value="warn">WARN</option>
-                                                        <option value="error">ERROR</option>
-                                                        <option value="crit">CRIT</option>
-                                                        <option value="alert">ALERT</option>
-                                                        <option value="emerg">EMERG</option>
+                                                        <option value="DEBUG">DEBUG</option>
+                                                        <option value="INFO">INFO</option>
+                                                        <option value="NOTICE">NOTICE</option>
+                                                        <option value="WARN">WARN</option>
+                                                        <option value="ERROR">ERROR</option>
+                                                        <option value="CRIT">CRIT</option>
+                                                        <option value="ALERT">ALERT</option>
+                                                        <option value="EMERG">EMERG</option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row" ng-show="projectVm.config.os == 'WINDOWS'">
                                                 <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12"
                                                        ng-repeat="(type, checked) in projectVm.config.types">
                                                     <input type="checkbox" ng-model="projectVm.config.types[type]">
@@ -153,7 +150,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="panel panel-default">
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
                                     <div class="panel-heading">
                                         <h4 class="panel-title agent-config-header">
                                             Agent custom paths
@@ -174,8 +171,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="panel panel-default">
+                                </div ng-hide>
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
                                     <div class="panel-heading agent-config-header">
                                         <h4 class="panel-title agent-config-header">
                                             Regex for parsing your logs
@@ -195,6 +192,17 @@
                                                     </button>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
+                                    <div class="panel-heading agent-config-header">
+                                        <h4 class="panel-title agent-config-header">
+                                            Patterns for parsing your logs
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
                                             For each regex you need to provide pattern.
                                             <div class="row">
                                                 <div class="col-md-12">
@@ -311,14 +319,16 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="log in projectVm.logs.data">
-                            <td><span class="label label-critical">{{log.attributes.level}}</span></td>
-                            <td>{{log.attributes.time}}</td>
+                            <td><span class="label" ng-class="projectVm.getLabelColor(log.attributes.level)">{{log.attributes.level}}</span>
+                            </td>
+                            <td>{{log.attributes.time | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
                             <td>{{log.attributes.info.host}}</td>
                             <td>{{log.attributes.message}}</td>
                         </tr>
                         </tbody>
                     </table>
                     <button class="btn btn-custom-primary btn-lg btn-block btn-auth"
+                            ng-class="{ 'disabled': projectVm.logs.next == null }"
                             ng-click="projectVm.loadMore(projectVm.logs.next);">Load more...
                     </button>
                 </div>

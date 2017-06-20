@@ -63,6 +63,7 @@
         projectVm.saveAgent = saveAgent;
 
         projectVm.addField = addField;
+        projectVm.getLabelColor = getLabelColor;
 
         activate();
 
@@ -143,8 +144,6 @@
                         }
                     });
 
-                    $log.info(types);
-
                     var config = {
                         'type': 'agent-configs',
                         'attributes': {
@@ -211,6 +210,23 @@
             projectVm.config[group].push({'id': index, value: ''});
             if ('regexes' === group) {
                 addField('patterns');
+            }
+        }
+
+        function getLabelColor(logLevel) {
+            switch(_.toUpper(logLevel)) {
+                case 'ERROR': case 'EMERG': case 'ALERT': case 'CRIT':
+                    return 'label-danger';
+                case 'WARN':
+                    return 'label-warning';
+                case 'INFO':
+                    return 'label-info';
+                case 'NOTICE':
+                    return 'label-primary';
+                case 'DEBUG':
+                    return 'label-success';
+                default:
+                    return 'label-default';
             }
         }
     }
