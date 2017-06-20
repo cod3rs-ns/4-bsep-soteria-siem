@@ -12,7 +12,8 @@
             getOwnedProjects: getOwnedProjects,
             getMembershipProjects: getMembershipProjects,
             getCollaborators: getCollaborators,
-            addCollaborator: addCollaborator
+            addCollaborator: addCollaborator,
+            createProject: createProject
         };
 
         return service;
@@ -49,6 +50,16 @@
 
         function addCollaborator(projectId, collaboratorId) {
             return $http.post(CONFIG.SERVICE_URL + '/projects/' + projectId + '/users/' + collaboratorId)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function createProject(project) {
+            return $http.post(CONFIG.SERVICE_URL + '/projects', { 'data': project })
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {
