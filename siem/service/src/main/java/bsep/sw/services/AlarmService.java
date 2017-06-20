@@ -58,8 +58,8 @@ public class AlarmService {
     }
 
     @Transactional(readOnly = true)
-    public List<Alarm> findAllByDefinition(final AlarmDefinition definition) {
-        return repository.findAlarmsByDefinition(definition);
+    public Page<Alarm> findAllByDefinition(final AlarmDefinition definition, final Pageable pageable) {
+        return repository.findAlarmsByDefinition(definition, pageable);
     }
 
     public PieCollectionReport getReportLevels(final Project project) {

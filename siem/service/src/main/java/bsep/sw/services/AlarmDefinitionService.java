@@ -27,6 +27,11 @@ public class AlarmDefinitionService {
     }
 
     @Transactional(readOnly = true)
+    public Page<AlarmDefinition> findAllByProject(final Project project, final Pageable pageable) {
+        return repository.findAlarmDefinitionsByProject(project, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public List<AlarmDefinition> findAllByProject(final Project project) {
         return repository.findAlarmDefinitionsByProject(project);
     }

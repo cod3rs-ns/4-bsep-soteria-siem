@@ -17,6 +17,7 @@ import bsep.sw.util.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -76,18 +76,17 @@ public class AgentController extends StandardResponses {
             return notFound("project");
         }
 
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Page<Agent> agents = agentService.findAllByProject(project, pageable);
+
         final String baseUrl = request.getRequestURL().toString();
         final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
-        // FIXME 'next' should be 'null' if there's no data presented
-        final String next = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit);
+        final String next = agents.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
         final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
 
-        final Pageable pageable = new PageRequest(offset / limit, limit);
-
-        final List<Agent> agents = agentService.findAllByProject(project, pageable);
         return ResponseEntity
                 .ok()
-                .body(AgentCollectionResponse.fromDomain(agents, new PaginationLinks(self, next, prev)));
+                .body(AgentCollectionResponse.fromDomain(agents.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @PostMapping("/projects/{projectId}/agents")
