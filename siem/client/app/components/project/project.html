@@ -9,10 +9,18 @@
             <div class="top-content">
                 <ul class="list-inline quick-access">
                     <li>
-                        <a href="#">
+                        <a ui-sref="project.logs-report({'id': projectVm.projectId})">
                             <div class="quick-access-item bg-color-green">
                                 <i class="fa fa-bar-chart-o"></i>
-                                <h5>REPORTS</h5><em>monitor your project properly</em>
+                                <h5>LOGS REPORT</h5><em>monitor your project properly</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a ui-sref="project.alarms-report({'id': projectVm.projectId})">
+                            <div class="quick-access-item bg-color-orange">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h5>ALARMS REPORT</h5><em>monitor your project properly</em>
                             </div>
                         </a>
                     </li>
