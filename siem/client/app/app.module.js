@@ -9,5 +9,6 @@ angular
         'ngSanitize',
         'easypiechart',
         'chart.js',
-        'daterangepicker'
+        'daterangepicker',
+        'ui.bootstrap'
     ]);
