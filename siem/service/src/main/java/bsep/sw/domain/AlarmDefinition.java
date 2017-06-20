@@ -16,8 +16,8 @@ import java.util.Set;
 public class AlarmDefinition extends EntityMeta {
 
     @NotNull
-    @Column(name = "ad_name", nullable = false, length = 20)
-    @Size(min = 1, max = 20)
+    @Column(name = "ad_name", nullable = false, length = 40)
+    @Size(min = 3, max = 40)
     private String name;
 
     @NotNull
@@ -36,7 +36,7 @@ public class AlarmDefinition extends EntityMeta {
 
     @NotNull
     @Column(name = "ad_message", nullable = false)
-    @Size(min = 1, max = 255)
+    @Size(min = 3, max = 255)
     private String message;
 
     @Column(name = "ad_first_occurrence")

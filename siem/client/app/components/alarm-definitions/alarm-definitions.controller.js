@@ -37,6 +37,9 @@
         activate();
 
         function activate () {
+            //$scope.definitionForm.$setPristine();
+            //$scope.definitionForm.$setDirty();
+
             var project_id = $stateParams.id;
             defVm.loadAlarmDefinitions(project_id);
         }
