@@ -5,7 +5,6 @@ import bsep.sw.hateoas.ErrorResponse;
 import com.mongodb.DuplicateKeyException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.log4j.Logger;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +23,9 @@ import javax.validation.ConstraintViolationException;
 @RestController
 public class GlobalExceptionHandler {
 
-    private final Logger log = Logger.getLogger(GlobalExceptionHandler.class);
-
-
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = {AccessDeniedException.class})
     public ResponseEntity<ErrorResponse> handleBaseException(final AccessDeniedException e) {
-        log.error("AD", e);
         final ErrorResponse response = new ErrorResponse("401", "Unauthorized", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
@@ -38,7 +33,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleJSONBodyException(final ConstraintViolationException e) {
-        log.error("CVE", e);
         final StringBuilder sb = new StringBuilder("error [");
         if (!e.getConstraintViolations().isEmpty()) {
             final ConstraintViolation violation = e.getConstraintViolations().iterator().next();
@@ -56,15 +50,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = NullPointerException.class)
     public ResponseEntity<ErrorResponse> handleJSONBodyExceptionMissingField(final NullPointerException e) {
-        log.error("NPE", e);
-        final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Missing necessary field");
+        final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "NPE");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleJSONBodyUniqueException(final DataIntegrityViolationException e) {
-        log.error("DIVE", e);
         // do not expose intern to user - remove unique constraint name
         final String errorMessage = ExceptionUtils.getRootCause(e).getMessage();
         final String simplifiedMessage = StringUtils.substringBefore(errorMessage, " for key");
@@ -76,7 +68,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJSONBodyUniqueException(final HttpMessageNotReadableException e) {
-        log.error("HMNRE", e);
         final ErrorResponse response = new ErrorResponse("400", "Invalid object format", "Non-existing enumeration type");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -84,7 +75,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = {BadCredentialsException.class})
     public ResponseEntity<ErrorResponse> handleBaseException(final BadCredentialsException e) {
-        log.error("BCE", e);
         final ErrorResponse response = new ErrorResponse("400", e.getMessage(), e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -92,7 +82,6 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(value = {DuplicateKeyException.class, org.springframework.dao.DuplicateKeyException.class})
     public ResponseEntity<ErrorResponse> handleReplyAttack(final Exception e) {
-        log.info("Indicate reply attack");
         final ErrorResponse response = new ErrorResponse("403", "Indicate reply attack", e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
