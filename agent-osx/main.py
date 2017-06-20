@@ -1,4 +1,5 @@
 import time
+import sys
 import util.config_reader as config
 
 from watchdog.observers import Observer
@@ -8,6 +9,14 @@ from observer.LogsFileChangeHandler import LogsFileChangeHandler
 
 
 if __name__ == "__main__":
+    # Try to get provided Logs service URL or use default localhost.
+    try:
+        service_url = sys.argv[1]
+    except IndexError:
+        service_url = 'http://localhost:9091/api/logs'
+
+    print service_url
+
     conf = config.read()
 
     patterns = {
@@ -17,7 +26,7 @@ if __name__ == "__main__":
 
     parser = LogParser(conf['defaultLevel'], patterns, project_id=conf['projectId'], agent_id=conf['agentId'])
 
-    event_handler = LogsFileChangeHandler(parser, log_proxy=LogsProxy(config=conf))
+    event_handler = LogsFileChangeHandler(parser, log_proxy=LogsProxy(config=conf, url=service_url))
     observer = Observer()
     for log_path in conf['paths']:
         try:
