@@ -4,9 +4,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "logs")
+@CompoundIndexes({
+        @CompoundIndex(name = "time_agent_idx", def = "{'time' : 1, 'agent': 1}", unique = true)
+})
 public class Log {
 
     @Id
@@ -21,6 +26,8 @@ public class Log {
     private String message;
 
     private Long project;
+
+    private Long agent;
 
     public Log() {
         super();
@@ -101,6 +108,19 @@ public class Log {
 
     public Log project(final Long project) {
         this.project = project;
+        return this;
+    }
+
+    public Long getAgent() {
+        return agent;
+    }
+
+    public void setAgent(final Long agent) {
+        this.agent = agent;
+    }
+
+    public Log agent(final Long agent) {
+        this.agent = agent;
         return this;
     }
 

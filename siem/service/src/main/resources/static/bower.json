@@ -1,0 +1,38 @@
+{
+  "name": "awt-cts-project",
+  "homepage": "https://github.com/dmarjanovic94/bsep-siep",
+  "authors": [
+    "Stefan Ristanović <st.keky@gmail.com>",
+    "Bojan Blagojević <datiglavaradi@gmail.com>",
+    "Dragutin Marjanović <dmarjanovic94@gmail.com>"
+  ],
+  "description": "Soteria SIEP Web Application Client",
+  "main": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.6.4",
+    "angular-ui-router": "^0.3.2",
+    "lodash": "^4.17.4",
+    "angular-jwt": "^0.1.8",
+    "ngstorage": "^0.3.11",
+    "ngToast": "ngtoast#^2.0.0",
+    "sockjs": "^0.3.4",
+    "ng-stomp": "^0.3.0",
+    "stomp-websocket": "^2.3.4",
+    "jquery": "2.1.0",
+    "bootstrap": "^3.3.7",
+    "angular-moment": "^1.0.1",
+    "jquery.easy-pie-chart": "angular.easy-pie-chart#^2.1.4",
+    "angular-chart.js": "^1.1.1",
+    "daterangepicker": "1.2",
+    "angular-daterangepicker": "^0.2.2",
+    "angular-bootstrap": "^2.5.0"
+  }
+}

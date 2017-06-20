@@ -1,0 +1,96 @@
+<div class="wrapper full-page-wrapper page-auth page-register text-center">
+	<div class="inner-page">
+		<div class="register-box center-block">
+			<form role="form" id="registration-form" ng-submit="registerVm.register();" class="registration-form" name="registrationForm"
+				novalidate>
+				<p class="title">Create Your Account</p>
+
+				<div class="form-group" ng-class="{ 'has-error' : registrationForm.username.$invalid && registrationForm.username.$dirty }">
+					<div class="input-group">
+						<input type="text" ng-model="registerVm.registrationUser.username" placeholder="Username" class="form-control" id="sign-up-username"
+							name="username" field-unique required ng-minlength="3" ng-maxlength="30">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+					</div>
+					<span ng-show="registrationForm.username.$error.required && registrationForm.username.$dirty && !registrationForm.username.$error.unique"
+						class="help-block" style="font-size: 10pt; margin:0px;">Username is required.</span>
+					<span ng-show="registrationForm.username.$error.unique" class="help-block" style="font-size: 10pt; margin:0px;">User with the same username already exists.</span>
+					<span ng-show="registrationForm.username.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Username must contains at least 3 characters.</span>
+					<span ng-show="registrationForm.username.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Username must contains less than 30 characters.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : registrationForm.password.$invalid && registrationForm.password.$dirty }">
+					<div class="input-group">
+						<input type="password" ng-model="registerVm.registrationUser.password" name="password" placeholder="Password" class="form-control"
+							id="sign-up-password" required ng-minlength="6">
+						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+					</div>
+					<span ng-show="registrationForm.password.$error.required && registrationForm.password.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Password is required.</span>
+					<span ng-show="registrationForm.password.$error.minlength && registrationForm.password.$dirty && !registrationForm.password.$error.required"
+						class="help-block" style="font-size: 10pt; margin:0px;">Password must be longer than 6 characters.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : (registrationForm.passwordRetyped.$invalid || registerVm.passwordRetyped != registerVm.registrationUser.password) && registrationForm.passwordRetyped.$dirty }">
+					<div class="input-group">
+						<input type="password" ng-model="registerVm.passwordRetyped" name="passwordRetyped" placeholder="Confirm password" class="form-control"
+							id="sign-up-re-password" required>
+						<span class="input-group-addon"><i class="fa fa-lock"></i></span>
+					</div>
+					<span ng-show="(registrationForm.passwordRetyped.$invalid || registerVm.passwordRetyped != registerVm.registrationUser.password) && registrationForm.passwordRetyped.$dirty"
+						class="help-block" style="font-size: 10pt; margin:0px;">Passwords must match.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : registrationForm.firstName.$invalid && registrationForm.firstName.$dirty }">
+					<div class="input-group">
+						<input type="text" ng-model="registerVm.registrationUser.firstName" name="firstName" placeholder="First name" class="form-control"
+							id="sign-up-first-name" required ng-minlength="2" ng-maxlength="30">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+					</div>
+					<span ng-show="registrationForm.firstName.$error.required && registrationForm.firstName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">First name is required.</span>
+					<span ng-show="registrationForm.firstName.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">First name must contains at least 2 characters.</span>
+					<span ng-show="registrationForm.firstName.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">First name must contains less than 30 characters.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : registrationForm.lastName.$invalid && registrationForm.lastName.$dirty }">
+					<div class="input-group">
+						<input type="text" ng-model="registerVm.registrationUser.lastName" name="lastName" placeholder="Last name" class="form-control"
+							id="sign-up-last-name" required ng-minlength="2" ng-maxlength="30">
+						<span class="input-group-addon"><i class="fa fa-user"></i></span>
+					</div>
+					<span ng-show="registrationForm.lastName.$error.required && registrationForm.lastName.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Last name is required.</span>
+					<span ng-show="registrationForm.lastName.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Last name must contains at least 2 characters.</span>
+					<span ng-show="registrationForm.lastName.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Last name contains less than 30 characters.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error' : registrationForm.phoneNumber.$invalid && registrationForm.phoneNumber.$dirty }">
+					<div class="input-group">
+						<input type="text" ng-model="registerVm.registrationUser.phoneNumber" name="phoneNumber" placeholder="Phone number" class="form-control"
+							id="sign-up-phone" ng-maxlength="16">
+						<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
+					</div>
+					<span ng-show="registrationForm.phoneNumber.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Phone number contains less than 30 characters.</span>
+				</div>
+
+				<div class="form-group" ng-class="{ 'has-error': registrationForm.email.$invalid && registrationForm.email.$dirty}">
+					<div class="input-group">
+						<input type="text" ng-model="registerVm.registrationUser.email" name="email" placeholder="Email" class="form-control" id="sign-up-email"
+							field-unique required>
+						<span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+					</div>
+					<span ng-show="registrationForm.email.$invalid && registrationForm.email.$dirty && !registrationForm.email.$error.unique"
+						class="help-block" style="font-size: 10pt; margin:0px;">Wrong format of email address.</span>
+					<span id="email-already-exists" ng-show="registrationForm.email.$error.unique" class="help-block" style="font-size: 10pt; margin:0px;">User with same email already exist.</span>
+				</div>
+
+				<label class="fancy-checkbox">
+					<input type="checkbox">
+					<span>I accept the <a href="#">Terms &amp; Agreements</a></span>
+				</label>
+
+				<button class="btn btn-custom-primary btn-lg btn-block btn-auth" ng-click="registerVm.register();"
+					ng-disabled="registrationForm.$invalid || registerVm.passwordRetyped != registerVm.registrationUser.password">
+					<i class="fa fa-check-circle"></i> Create Account
+				</button>
+			</form>
+		</div>
+	</div>
+</div>

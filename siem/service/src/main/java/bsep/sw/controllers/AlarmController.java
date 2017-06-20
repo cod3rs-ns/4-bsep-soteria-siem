@@ -48,7 +48,7 @@ public class AlarmController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/alarms")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_ALARM)")
     public ResponseEntity<?> getProjectsAlarms(final HttpServletRequest request,
                                                @Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
@@ -68,10 +68,12 @@ public class AlarmController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/alarm-definitions/{definitionId}/alarms")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_ALARM)")
     public ResponseEntity<?> getDefinitionAlarms(final HttpServletRequest request,
                                                  @Valid @PathVariable final Long projectId,
-                                                 @Valid @PathVariable final Long definitionId) {
+                                                 @Valid @PathVariable final Long definitionId,
+                                                 @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
+                                                 @RequestParam(value = "page[limit]", required = false, defaultValue = "10") final Integer limit) {
         final User user = securityUtil.getLoggedUser();
 
         final Project project = projectService.findByMembershipAndId(user, projectId);
@@ -86,18 +88,22 @@ public class AlarmController extends StandardResponses {
             return notFound("definition");
         }
 
-        final List<Alarm> alarms = alarmService.findAllByDefinition(definition);
+        final Pageable pageable = new PageRequest(offset / limit, limit);
+        final Page<Alarm> alarms = alarmService.findAllByDefinition(definition, pageable);
 
-        // TODO maybe pagination
+        final String baseUrl = request.getRequestURL().toString();
+        final String self = String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset, limit);
+        final String next = alarms.hasNext() ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, limit + offset, limit) : null;
+        final String prev = (offset - limit >= 0) ? String.format("%s?page[offset]=%d&page[limit]=%d", baseUrl, offset - limit, limit) : null;
 
         return ResponseEntity
                 .ok()
-                .body(AlarmCollectionResponse.fromDomain(alarms, new PaginationLinks(request.getRequestURL().toString())));
+                .body(AlarmCollectionResponse.fromDomain(alarms.getContent(), new PaginationLinks(self, next, prev)));
     }
 
     @GetMapping("/projects/{projectId}/alarms/{alarmId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_ALARM)")
     public ResponseEntity<?> getProjectsAlarm(@Valid @PathVariable final Long projectId,
                                               @Valid @PathVariable final Long alarmId) {
         final User user = securityUtil.getLoggedUser();
@@ -121,7 +127,7 @@ public class AlarmController extends StandardResponses {
 
     @GetMapping("/alarms")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_ALARM)")
     public ResponseEntity<?> getAlarmsResponsibleFor(final HttpServletRequest request,
                                                      @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
                                                      @RequestParam(value = "page[limit]", required = false, defaultValue = "10") final Integer limit,
@@ -143,7 +149,7 @@ public class AlarmController extends StandardResponses {
 
     @PutMapping("/alarms/{alarmId}/resolve")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).WRITE_ALARM)")
     public ResponseEntity<?> resolveAlarm(@Valid @PathVariable final Long alarmId) {
         final User user = securityUtil.getLoggedUser();
 

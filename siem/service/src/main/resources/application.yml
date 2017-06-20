@@ -4,7 +4,7 @@ spring:
 
     datasource:
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/soteria?verifyServerCertificate=false&useSSL=false&requireSSL=false
+        url: jdbc:mysql://localhost:3306/soteria?useSSL=false
         username: soteria
         password: soteria
 
@@ -28,15 +28,10 @@ spring:
 
     social:
       facebook:
-        app-id: 380680235662631
-        app-secret: dc431f53170612aaae626a7915edd723
-        dialog-url: https://www.facebook.com/dialog/oauth/
-        redirect-uri: http://localhost:9091/api/social/facebook/access-token
-        access-token-url: https://graph.facebook.com/v2.9/oauth/access_token
         user-info-url: https://graph.facebook.com/me
-        scope: email,user_about_me
 
 security:
+  require-ssl: true
   token:
     header: X-Auth-Token
     secret: SECRET-KEY
@@ -54,4 +49,10 @@ logging:
     org.springframework.security: DEBUG
 
 server:
-    port: 9091
+    port: 8443
+    ssl:
+      key-store: C:\Users\Korisnik\Desktop\keystore.jks
+      key-password: soteria
+    tomcat:
+      remote-ip-header: x-forwarded-for
+      protocol-header: x-forwarded-proto

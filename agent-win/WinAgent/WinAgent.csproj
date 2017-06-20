@@ -65,9 +65,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleJson.cs" />
+    <Compile Include="util\Configuration.cs" />
     <Compile Include="util\CryptoUtil.cs" />
     <Compile Include="util\EnvUtil.cs" />
     <Compile Include="util\HttpClient.cs" />
+    <Compile Include="util\LogGenerator.cs" />
     <Compile Include="util\LogMonitoring.cs" />
   </ItemGroup>
   <ItemGroup>

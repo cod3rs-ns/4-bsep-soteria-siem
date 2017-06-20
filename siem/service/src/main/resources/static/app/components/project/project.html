@@ -1,0 +1,361 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2>
+                {{projectVm.info.attributes.name}}
+            </h2>
+        </div>
+        <div class="col-lg-6">
+            <div class="top-content">
+                <ul class="list-inline quick-access">
+                    <li>
+                        <a ui-sref="project.logs-report({'id': projectVm.projectId})">
+                            <div class="quick-access-item bg-color-green">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h5>LOGS REPORT</h5><em>monitor your project properly</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a ui-sref="project.alarms-report({'id': projectVm.projectId})">
+                            <div class="quick-access-item bg-color-orange">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <h5>ALARMS REPORT</h5><em>monitor your project properly</em>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a ui-sref="project.alarm-definitions({'id': projectVm.projectId})">
+                            <div class="quick-access-item bg-color-blue">
+                                <i class="fa fa-envelope"></i>
+                                <h5>ALARM DEFINITIONS</h5><em>define your own alarms</em>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Project Agents</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="row">
+                        <div class="col-md-4" ng-repeat="agent in projectVm.agents.data">
+                            <div class="widget quick-note-saved">
+                                <div class="widget-header">
+                                    <h3>{{agent.attributes["name"]}}</h3>
+                                </div>
+                                <div class="widget-content">
+                                    <dl class="dl-horizontal project-agent">
+                                        <dt>Type:</dt>
+                                        <dd>{{agent.attributes["agent-type"]}}</dd>
+
+                                        <dt>Description:</dt>
+                                        <dd>{{agent.attributes["description"]}}</dd>
+
+                                        <dt>Version:</dt>
+                                        <dd>{{agent.attributes["agent-version"]}}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="pager">
+                        <li ng-class="{ 'disabled': projectVm.agents.prev == null }"><a
+                                ng-click="projectVm.prevAgents(projectVm.agents.prev);">&larr; Previous</a></li>
+                        <li ng-class="{ 'disabled': projectVm.agents.next == null }"><a
+                                ng-click="projectVm.nextAgents(projectVm.agents.next);">Next &rarr;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Configure new agent</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 fa-logo"
+                         ng-class="{ 'background-dark': projectVm.config.os == 'WINDOWS' }"
+                         ng-click="projectVm.choosePlatform('WINDOWS')">
+                        <i class="fa fa-windows"></i>
+                    </div>
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'LINUX' }"
+                         ng-click="projectVm.choosePlatform('LINUX')">
+                        <i class="fa fa-linux"></i>
+                    </div>
+                    <div class="col-md-4 fa-logo" ng-class="{ 'background-dark': projectVm.config.os == 'OSX' }"
+                         ng-click="projectVm.choosePlatform('OSX')">
+                        <i class="fa fa-apple"></i>
+                    </div>
+                </div>
+                <div class="widget-content" ng-hide="projectVm.config.os == null">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            General agent info
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <label for="agent-name" class="col-sm-3 control-label">Name:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-name"
+                                                           id="agent-name" placeholder="Agent name"
+                                                           ng-model="projectVm.config.name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent-name"
+                                                       class="col-sm-3 control-label">Description:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-description"
+                                                           id="agent-description" placeholder="Agent description"
+                                                           ng-model="projectVm.config.description">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="agent-name" class="col-sm-3 control-label">Version:</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" class="form-control" name="agent-description"
+                                                           id="agent-version" placeholder="Agent version"
+                                                           ng-model="projectVm.config.version">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="default-log-level" class="col-sm-6 control-label">Choose
+                                                    default level:</label>
+                                                <div class="col-sm-6">
+                                                    <select name="default-log-level" id="default-log-level"
+                                                            class="select2" ng-model="projectVm.config.defaultLevel">
+                                                        <option value="DEBUG">DEBUG</option>
+                                                        <option value="INFO">INFO</option>
+                                                        <option value="NOTICE">NOTICE</option>
+                                                        <option value="WARN">WARN</option>
+                                                        <option value="ERROR">ERROR</option>
+                                                        <option value="CRIT">CRIT</option>
+                                                        <option value="ALERT">ALERT</option>
+                                                        <option value="EMERG">EMERG</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row" ng-show="projectVm.config.os == 'WINDOWS'">
+                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12"
+                                                       ng-repeat="(type, checked) in projectVm.config.types">
+                                                    <input type="checkbox" ng-model="projectVm.config.types[type]">
+                                                    <span>{{type}} logs</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title agent-config-header">
+                                            Agent custom paths
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            Provide your custom paths your agent has to parse logs from.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.paths" type="text"
+                                                           autocomplete="off" class="input form-control agent-field"
+                                                           id="{{'paths' + field.id}}" ng-model="field.value"/>
+                                                    <button class="btn btn-primary btn-add-field" type="button"
+                                                            ng-click="projectVm.addField('paths')">Add another field
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div ng-hide>
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
+                                    <div class="panel-heading agent-config-header">
+                                        <h4 class="panel-title agent-config-header">
+                                            Regex for parsing your logs
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            You have to provide regex so agent could know how to process your logs.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.regexes"
+                                                           type="text" autocomplete="off"
+                                                           class="input form-control agent-field"
+                                                           id="{{'regexes' + field.id}}" ng-model="field.value"/>
+                                                    <button class="btn btn-primary btn-add-field" type="button"
+                                                            ng-click="projectVm.addField('regexes')">Add another field
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default" ng-hide="projectVm.config.os == 'WINDOWS'">
+                                    <div class="panel-heading agent-config-header">
+                                        <h4 class="panel-title agent-config-header">
+                                            Patterns for parsing your logs
+                                        </h4>
+                                    </div>
+                                    <div class="panel-collapse collapse in">
+                                        <div class="panel-body">
+                                            For each regex you need to provide pattern.
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <input data-ng-repeat="field in projectVm.config.patterns"
+                                                           type="text" autocomplete="off"
+                                                           class="input form-control agent-field"
+                                                           id="{{'patterns' + field.id}}" ng-model="field.value"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-lg btn-primary" ng-click="projectVm.saveAgent();" type="button"
+                            style="width: 100%;">Get your agent!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="widget">
+                <div class="widget-header">
+                    <h3>Logs summary</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="container">
+                        <div class="col-md-12">
+                            <div class="contextual-summary-info">
+                                <i class="fa fa-close red-font"></i>
+                                <p class="pull-right"><span>ERRORS</span>4</p>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="contextual-summary-info">
+                                <i class="fa fa-warning yellow-font"></i>
+                                <p class="pull-right"><span>WARNINGS</span>12</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="widget widget-table">
+                <div class="widget-header">
+                    <h3>Logs</h3>
+                </div>
+                <div class="widget-content">
+                    <!-- Search fields -->
+                    <uib-accordion>
+                        <div uib-accordion-group class="panel panel-default" is-open="status.open">
+                            <uib-accordion-heading class="panel-heading">
+                                <h4 class="panel-title agent-config-header">
+                                    Filter your logs
+                                    <i class="pull-right glyphicon" class="search-collapse" ng-class="{'glyphicon-menu-up': status.open, 'glyphicon-menu-down': !status.open}"></i>
+                                </h4>
+                            </uib-accordion-heading>
+                            <div class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <div class="col-lg-4">
+                                        <label class="col-lg-6 control-inline fancy-checkbox custom-bgcolor-green"
+                                               ng-repeat="(level, checked) in projectVm.levelCheckboxes">
+                                            <input type="checkbox" ng-model="projectVm.levelCheckboxes[level]">
+                                            <span>{{level}}</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by message..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.message">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by host..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.host">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by source..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.source">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by pid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.pid">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by gid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.gid">
+                                        </div>
+                                        <div class="input-group input-group-sm col-lg-12 search-box">
+                                            <input type="search" placeholder="Search by uid..." class="form-control"
+                                                   ng-model="projectVm.logs.filters.info.uid">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <input date-range-picker class="form-control date-picker" type="text" ng-model="projectVm.timeRange.date"
+                                                       options="projectVm.options"/>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div uib-timepicker ng-model="projectVm.timeRange.fromTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div uib-timepicker ng-model="projectVm.timeRange.toTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                            </div>
+                                        </div>
+                                        <span class="input-group-btn">
+                                        <button class="col-lg-12 btn btn-primary" type="button"
+                                                ng-click="projectVm.filterLogs();">
+                                            <i class="fa fa-search"></i> Search
+                                        </button>
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </uib-accordion>
+
+                    <table id="ticket-table" class="table table-sorting">
+                        <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Time</th>
+                            <th>Host</th>
+                            <th>Message</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="log in projectVm.logs.data">
+                            <td><span class="label" ng-class="projectVm.getLabelColor(log.attributes.level)">{{log.attributes.level}}</span>
+                            </td>
+                            <td>{{log.attributes.time | date : 'yyyy-MM-dd HH:mm:ss'}}</td>
+                            <td>{{log.attributes.info.host}}</td>
+                            <td>{{log.attributes.message}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <button class="btn btn-custom-primary btn-lg btn-block btn-auth"
+                            ng-class="{ 'disabled': projectVm.logs.next == null }"
+                            ng-click="projectVm.loadMore(projectVm.logs.next);">Load more...
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

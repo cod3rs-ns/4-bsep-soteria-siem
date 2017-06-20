@@ -42,7 +42,7 @@ public class ProjectController extends StandardResponses {
 
     @PostMapping("/projects")
     @ResponseBody
-    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).WRITE_PROJECT)")
     public ResponseEntity<?> createProject(final HttpServletRequest request,
                                            @Valid @RequestBody final ProjectRequest projectRequest) throws URISyntaxException {
         final User user = securityUtil.getLoggedUser();
@@ -60,7 +60,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/owned")
     @ResponseBody
-    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_PROJECT)")
     public ResponseEntity<?> getOwnedProjects(final HttpServletRequest request,
                                               @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
                                               @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit) {
@@ -81,7 +81,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/member-of")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_PROJECT)")
     public ResponseEntity<?> getMembershipProjects(final HttpServletRequest request,
                                                    @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
                                                    @RequestParam(value = "page[limit]", required = false, defaultValue = "2") final Integer limit,
@@ -104,7 +104,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_PROJECT)")
     public ResponseEntity<?> getProject(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
@@ -120,7 +120,7 @@ public class ProjectController extends StandardResponses {
     }
 
     @DeleteMapping("/projects/{projectId}")
-    @PreAuthorize("hasAuthority(T(bsep.sw.domain.UserRole).ADMIN)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).REMOVE_PROJECT)")
     public ResponseEntity<?> deleteProject(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
@@ -135,7 +135,7 @@ public class ProjectController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/users")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_PROJECT_COLLABORATORS)")
     public ResponseEntity<?> projectCollaborators(@Valid @PathVariable final Long projectId) {
         final User user = securityUtil.getLoggedUser();
 
@@ -152,10 +152,11 @@ public class ProjectController extends StandardResponses {
 
     @PostMapping("/projects/{projectId}/users/{userId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).WRITE_PROJECT_COLLABORATORS)")
     public ResponseEntity<?> addCollaborator(@Valid @PathVariable final Long projectId, @Valid @PathVariable final Long userId) {
         final User user = securityUtil.getLoggedUser();
 
+        // TODO now when only admin can access this method should be used 'method' with owned
         final Project project = projectService.findByMembershipAndId(user, projectId);
         if (project == null) {
             return notFound("project");

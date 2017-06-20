@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,6 +60,15 @@ public class User extends EntityMeta {
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Project> ownedProjects = new HashSet<>(0);
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<Role> roles;
 
     public String getName() {
         return firstName + " " + lastName;
@@ -209,6 +219,19 @@ public class User extends EntityMeta {
 
     public User addProject(final Project project) {
         this.projects.add(project);
+        return this;
+    }
+
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
+    public User roles(Collection<Role> roles) {
+        this.roles = roles;
         return this;
     }
 

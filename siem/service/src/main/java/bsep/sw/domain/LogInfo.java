@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 @Document
@@ -13,6 +15,9 @@ public class LogInfo {
     private String host;
 
     private String source;
+
+    @Enumerated(EnumType.STRING)
+    private PlatformType platform;
 
     private String pid;
 
@@ -49,6 +54,19 @@ public class LogInfo {
 
     public LogInfo source(final String source) {
         this.source = source;
+        return this;
+    }
+
+    public PlatformType getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(PlatformType platform) {
+        this.platform = platform;
+    }
+
+    public LogInfo platform(final PlatformType platform) {
+        this.platform = platform;
         return this;
     }
 

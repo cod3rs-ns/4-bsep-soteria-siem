@@ -11,9 +11,9 @@ namespace WinAgent.util
     {
         public static String CreateRequest(String data)
         {
-            String privateKey = EnvUtil.Configuration.Property("PRIVATE_KEY");
-            String publicKey = EnvUtil.Configuration.Property("PUBLIC_KEY");
-            String secretKey = EnvUtil.Configuration.Property("SECRET_KEY");
+            String privateKey = EnvUtil.Configuration.Properties.PrivateKey;
+            String publicKey = EnvUtil.Configuration.Properties.PublicKey;
+            String secretKey = EnvUtil.Configuration.Properties.SecretKey;
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo("java", "-jar main.jar \"" + data + "\" " + privateKey + " " + secretKey + " " + publicKey);

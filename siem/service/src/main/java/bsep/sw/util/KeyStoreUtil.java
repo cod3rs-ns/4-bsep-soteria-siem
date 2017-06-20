@@ -48,10 +48,10 @@ public class KeyStoreUtil {
         inputStream.close();
     }
 
-    public PublicKey readPublicKey(final String username) {
+    public PublicKey readPublicKey(final String agentId) {
         try {
-            if (keyStore.isKeyEntry(username)) {
-                return keyStore.getCertificate(username).getPublicKey();
+            if (keyStore.isKeyEntry(agentId)) {
+                return keyStore.getCertificate(agentId).getPublicKey();
             }
         } catch (final Exception e) {
             logger.error("Problem occurred while reading private key from store", e);
@@ -60,10 +60,10 @@ public class KeyStoreUtil {
         return null;
     }
 
-    public PrivateKey readPrivateKey(final String username) {
+    public PrivateKey readPrivateKey(final String agentId) {
         try {
-            if (keyStore.isKeyEntry(username)) {
-                return (PrivateKey) keyStore.getKey(username, this.password.toCharArray());
+            if (keyStore.isKeyEntry(agentId)) {
+                return (PrivateKey) keyStore.getKey(agentId, this.password.toCharArray());
             }
         } catch (final Exception e) {
             logger.error("Problem occurred while reading private key from store", e);
@@ -78,14 +78,14 @@ public class KeyStoreUtil {
         out.close();
     }
 
-    public SecretKey loadSecretAsymmetricKey() throws Exception {
+    public SecretKey loadSecretSymmetricKey() throws Exception {
         final KeyStore store = KeyStore.getInstance("JCEKS");
 
         final FileInputStream in = new FileInputStream(this.secretStorePath);
         store.load(in, this.password.toCharArray());
         in.close();
 
-        return (SecretKey) store.getKey("asymetric", this.password.toCharArray());
+        return (SecretKey) store.getKey("symetric", this.password.toCharArray());
     }
 
     public KeyPair generateKeys() throws NoSuchAlgorithmException {
@@ -94,30 +94,36 @@ public class KeyStoreUtil {
         return keyPairGenerator.generateKeyPair();
     }
 
-    public void addCertificate(final String username, final PrivateKey privateKey, final X509Certificate certificate) {
+    public void addCertificate(final String agentId, final PrivateKey privateKey, final X509Certificate certificate) {
         try {
-            keyStore.setKeyEntry(username, privateKey, password.toCharArray(), new Certificate[]{certificate});
+            keyStore.setKeyEntry(agentId, privateKey, password.toCharArray(), new Certificate[]{certificate});
             saveKeyStore();
         } catch (final Exception e) {
             logger.error("Problem occurred while adding new certificate in key store", e);
         }
     }
 
-    public void generateAndSaveCertificate(final String username) {
+    public void generateAndSaveCertificate(final String agentId) {
         try {
             final KeyPair keypair = generateKeys();
-            final X509Certificate certificate = generateCertificate(username, keypair, 30, "MD5WithRSA");
-            addCertificate(username, keypair.getPrivate(), certificate);
+            final X509Certificate certificate = generateCertificate(agentId, keypair, 30, "MD5WithRSA");
+            addCertificate(agentId, keypair.getPrivate(), certificate);
         } catch (final Exception e) {
             logger.error("Problem occurred while generating new certificate", e);
         }
     }
 
-    public AgentKeys findKeys(final String username) throws Exception {
-        final String privateKey = Base64.encodeBase64String(readPrivateKey(username).getEncoded());
-        final String publicKey = Base64.encodeBase64String(readPublicKey(username).getEncoded());
-        final String secretKey = Base64.encodeBase64String(loadSecretAsymmetricKey().getEncoded());
+    public AgentKeys findKeys(final String agentId) {
+        try {
+            final String privateKey = Base64.encodeBase64String(readPrivateKey(agentId).getEncoded());
+            final String publicKey = Base64.encodeBase64String(readPublicKey(agentId).getEncoded());
+            final String secretKey = Base64.encodeBase64String(loadSecretSymmetricKey().getEncoded());
 
-        return new AgentKeys(privateKey, publicKey, secretKey);
+            return new AgentKeys(privateKey, publicKey, secretKey);
+        } catch (final Exception e) {
+            logger.error(String.format("Can't read keys for agent %s", agentId), e);
+        }
+
+        return null;
     }
 }

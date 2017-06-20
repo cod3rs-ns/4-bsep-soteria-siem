@@ -19,6 +19,7 @@ public class Agent extends EntityMeta {
 
     @NotNull
     @Column(name = "a_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private AgentType type;
 
     @NotNull

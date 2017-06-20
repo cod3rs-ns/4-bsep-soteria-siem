@@ -12,7 +12,7 @@ public class AgentRequest {
         return new Agent()
                 .name(data.attributes.name)
                 .description(data.attributes.description)
-                .type(AgentType.valueOf(AgentType.class, data.attributes.agentType.toUpperCase()))
+                .type(AgentType.valueOf(AgentType.class, data.attributes.agentType.toUpperCase() + "_AGENT"))
                 .agentVersion(data.attributes.agentVersion);
     }
 }

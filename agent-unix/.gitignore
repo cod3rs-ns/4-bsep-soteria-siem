@@ -1,0 +1,6 @@
+.idea/
+*.pyc
+config.yml
+license_decrypter.jar
+request_encryptor.jar
+license

@@ -5,6 +5,7 @@ import bsep.sw.security.EntryPointUnauthorizedHandler;
 import bsep.sw.security.TokenUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -35,15 +36,17 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final EntryPointUnauthorizedHandler unauthorizedHandler;
     private final UserDetailsService userDetailsService;
     private final TokenUtils tokenUtils;
-
+    private final String userInfoUrl;
 
     @Autowired
     public WebSecurityConfiguration(final EntryPointUnauthorizedHandler unauthorizedHandler,
                                     final UserDetailsService userDetailsService,
-                                    final TokenUtils tokenUtils) {
+                                    final TokenUtils tokenUtils,
+                                    @Value("${spring.social.facebook.user-info-url}") final String userInfoUrl) {
         this.unauthorizedHandler = unauthorizedHandler;
         this.userDetailsService = userDetailsService;
         this.tokenUtils = tokenUtils;
+        this.userInfoUrl = userInfoUrl;
     }
 
     /**
@@ -57,7 +60,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             authenticationManagerBuilder
                     .userDetailsService(this.userDetailsService)
                     .passwordEncoder(passwordEncoder());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.error("Exception in WebSecurityConfiguration.configureAuthentication();", e);
         }
 
@@ -87,7 +90,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     @Bean
     public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
-        final AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(userDetailsService, tokenUtils);
+        final AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(userDetailsService, tokenUtils, userInfoUrl);
         authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationTokenFilter;
     }
@@ -104,10 +107,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/facebook/access-token**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/users**").permitAll();
         // Custom JWT based authentication
         httpSecurity
                 .addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
+
+        httpSecurity.requiresChannel().anyRequest().requiresSecure();
     }
+
 }

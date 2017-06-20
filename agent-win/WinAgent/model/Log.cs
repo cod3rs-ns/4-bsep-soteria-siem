@@ -16,14 +16,16 @@ namespace WinAgent.model
         public string Message { get; set; }
         public string Host { get; set; }
         public string Source { get; set; }
+        public string Pid { get; set; }
 
-        public Log(LogLevel level, DateTime time, string message, string host, string source)
+        public Log(LogLevel level, DateTime time, string message, string host, string source, string pid)
         {
             this.Level = level;
             this.Time = time;
             this.Message = message;
             this.Host = host;
             this.Source = source;
+            this.Pid = pid;
         }
     }
 }

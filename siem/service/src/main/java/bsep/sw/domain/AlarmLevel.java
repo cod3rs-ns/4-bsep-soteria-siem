@@ -1,5 +1,9 @@
 package bsep.sw.domain;
 
 public enum AlarmLevel {
-    INFO, LOW, MEDIUM, HIGH, SEVERE
+    INFO,
+    LOW,
+    MEDIUM,
+    HIGH,
+    SEVERE
 }

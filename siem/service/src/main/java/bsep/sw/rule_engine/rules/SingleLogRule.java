@@ -2,6 +2,7 @@ package bsep.sw.rule_engine.rules;
 
 import bsep.sw.domain.*;
 import bsep.sw.rule_engine.FieldSupplier;
+import bsep.sw.rule_engine.FieldType;
 import bsep.sw.rule_engine.RuleMethodSupplier;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
@@ -12,6 +13,9 @@ import org.easyrules.core.BasicRule;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class SingleLogRule extends BasicRule {
@@ -29,6 +33,8 @@ public class SingleLogRule extends BasicRule {
 
     private final FieldSupplier fieldSupplier = new FieldSupplier();
     private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
+
+    private final List<FieldType> errorFields = Arrays.asList(FieldType.ERROR, FieldType.ERROR_NO, FieldType.ERROR_TYPE, FieldType.STACK);
 
     SingleLogRule(final Log log,
                   final AlarmDefinition alarmDefinition,
@@ -48,10 +54,25 @@ public class SingleLogRule extends BasicRule {
     @Override
     public boolean evaluate() {
         for (final SingleRule rule : alarmDefinition.getSingleRules()) {
-            if (!methodSupplier
-                    .getMethod(rule.getMethod())
-                    .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
-                return false;
+            // specific check for list of errors, need at least one to match rule
+            if (errorFields.contains(rule.getField())) {
+                Boolean atLeastOneMatchingRule = false;
+                for (LogError error : log.getInfo().getErrors()) {
+                    if (methodSupplier
+                            .getMethod(rule.getMethod())
+                            .apply(fieldSupplier.getErrorField(log, rule.getField(), error).get(), rule.getValue())) {
+                        atLeastOneMatchingRule = true;
+                    }
+                }
+                if (!atLeastOneMatchingRule) {
+                    return false;
+                }
+            } else {
+                if (!methodSupplier
+                        .getMethod(rule.getMethod())
+                        .apply(fieldSupplier.getField(log, rule.getField()).get(), rule.getValue())) {
+                    return false;
+                }
             }
         }
         return true;
@@ -62,7 +83,8 @@ public class SingleLogRule extends BasicRule {
         final Alarm alarm = new Alarm()
                 .definition(alarmDefinition)
                 .message(alarmDefinition.getMessage())
-                .resolved(false);
+                .resolved(false)
+                .level(alarmDefinition.getLevel());
 
         final LogAlarmPair lap = new LogAlarmPair().alarm(alarm).log(log.getId());
         final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
@@ -81,7 +103,7 @@ public class SingleLogRule extends BasicRule {
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, log, alarm));
+                    new AlarmNotification(project, Collections.singletonList(log), alarm));
         }
     }
 
