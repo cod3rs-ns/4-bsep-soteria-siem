@@ -107,6 +107,11 @@
                         <p class="reminder-place">{{homeVm.alarm.alarm.data.attributes.level}}</p>
                         <em class="reminder-notes">{{homeVm.alarm.alarm.data.attributes.message}}</em>
                         <i class="fa fa-bell"></i>
+                        <hr class="dashed" />
+                        <div class="text-center">
+                            <button type="button" ui-sref="alarm({'projectId': homeVm.alarm.alarm.data.attributes['project-id'], 'alarmId': homeVm.alarm.alarm.data.id })" class="btn btn-small btn-primary"><i class="fa fa-eye"></i> Preview</button>
+						    <button type="button" ng-click="homeVm.resolveAlarm(homeVm.alarm.alarm.data.id);" class="btn btn-small btn-success"><i class="fa fa-check"></i> Resolve alarm!</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -45,7 +45,8 @@
                         <i class="fa fa-bell"></i>
                         <hr class="dashed" />
                         <div class="text-center">
-						    <button type="button" ng-click="alarmsVm.resolveAlarm(alarm.id);" class="btn btn-small btn-primary"><i class="fa fa-check"></i> Resolve alarm!</button>
+                            <button type="button" ui-sref="alarm({'projectId': alarm.attributes['project-id'], 'alarmId': alarm.id })" class="btn btn-small btn-primary"><i class="fa fa-eye"></i> Preview</button>
+						    <button type="button" ng-click="alarmsVm.resolveAlarm(alarm.id);" class="btn btn-small btn-success"><i class="fa fa-check"></i> Resolve alarm!</button>
                         </div>
                     </div>
                 </div>
