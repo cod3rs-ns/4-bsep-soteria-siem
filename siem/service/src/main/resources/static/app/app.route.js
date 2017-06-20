@@ -19,14 +19,14 @@ angular
         }
     ])
     .constant(
-        'CONFIG', {
-            'SERVICE_URL': 'http://localhost:9091/api',
-            'SUBSCRIPTION_URL': 'http://localhost:9091/subscriber/register',
-            'AUTH_TOKEN': 'X-Auth-Token',
-            'AGENTS_LIMIT': 6,
-            'FB_FIELDS': 'id,first_name,last_name,email',
-            'DEFINITIONS_LIMIT': 9
-        })
+    'CONFIG', {
+        'SERVICE_URL': 'https://localhost:8443/api',
+        'SUBSCRIPTION_URL': 'https://localhost:8443/subscriber/register',
+        'AUTH_TOKEN': 'X-Auth-Token',
+        'AGENTS_LIMIT': 6,
+        'FB_FIELDS': 'id,first_name,last_name,email',
+        'DEFINITIONS_LIMIT': 9
+    })
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
         // For any unmatched url, redirect to /login
