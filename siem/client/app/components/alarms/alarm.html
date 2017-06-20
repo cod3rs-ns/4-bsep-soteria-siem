@@ -1,0 +1,77 @@
+<div class="col-lg-8">
+    <div class="widget widget-table">
+        <div class="widget-header">
+            <h3><i class="fa fa-table"></i> Logs</h3>
+        </div>
+        <div class="widget-content">
+            <table id="logs-table" class="table table-sorting table-striped table-hover datatable">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Time</th>
+                        <th>Host</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="log in alarmVm.logs">
+                        <td><span class="label label-critical">{{log.attributes.level}}</span></td>
+                        <td>{{log.attributes.time}}</td>
+                        <td>{{log.attributes.info.host}}</td>
+                        <td>{{log.attributes.message}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-lg-4">
+    <div class="widget">
+        <div class="widget-header">
+            <h3>Alarm details</h3>
+            <div class="btn-group widget-header-toolbar" ng-if="!alarmVm.alarm.attributes.resolved">
+                <a ng-click="alarmVm.resolveAlarm()" href="javascript:void(0);" title="Resolve" class="btn-borderless btn-remove"><i class="fa fa-check"></i></a>
+            </div>
+        </div>
+        <div class="widget-content">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="basic-info">
+                        <p class="data-row">
+                            <span class="data-name">Message</span>
+                            <span class="data-value"><em>{{alarmVm.alarm.attributes.message}}</em></span>
+                        </p>
+
+                        <p class="data-row" style="margin-bottom: 2px;">
+                            <span class="data-name">Priority</span>
+                            <span class="data-value" style="margin-top: 3px"><span ng-class="['label', alarmVm.levelClasses[alarmVm.alarm.attributes.level]]">{{alarmVm.alarm.attributes.level}}</span></span>
+                        </p>
+
+                        <p class="data-row">
+                            <span class="data-name">Created at</span>
+                            <span class="data-value"><em>{{alarmVm.alarm.attributes['created-at'] | date: 'dd-MM-yyyy HH:mm'}}<em></em></span>
+                        </p>
+
+                        <p class="data-row">
+                            <span class="data-name">Project</span>
+                            <span class="data-value"><a ui-sref="project({'id':alarmVm.alarm.attributes['project-id']})">{{alarmVm.alarm.attributes['project-name']}}</a></span>
+                        </p>
+
+                        <div ng-if="alarmVm.alarm.attributes.resolved">
+                            <p class="data-row">
+                                <span class="data-name">Resolved by</span>
+                                <span class="data-value">{{alarmVm.alarm.attributes['resolved-by']}}</span>
+                            </p>
+
+                            <p class="data-row">
+                                <span class="data-name">Resloved at</span>
+                                <span class="data-value"><em>{{alarmVm.alarm.attributes['resolved-at'] | date: 'dd-MM-yyyy HH:mm'}}<em></em></span>
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
