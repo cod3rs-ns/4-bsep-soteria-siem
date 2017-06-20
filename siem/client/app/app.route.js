@@ -96,6 +96,19 @@ angular
                     }
                 }
             })
+            .state('alarm', {
+                url: '/project/:projectId/alarm/:alarmId',
+                data: {
+                    pageTitle: 'Soteria | Alarm details'
+                },
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/alarms/alarm.html',
+                        controller: 'AlarmController',
+                        controllerAs: 'alarmVm'
+                    }
+                }
+            })
             .state('alarms', {
                 url: '/alarms',
                 data: {
