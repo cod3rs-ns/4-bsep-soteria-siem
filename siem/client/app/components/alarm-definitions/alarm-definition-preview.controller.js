@@ -5,9 +5,9 @@
         .module('soteria-app')
         .controller('AlarmDefinitionPreviewController', AlarmDefinitionPreviewController);
 
-    AlarmDefinitionPreviewController.$inject = ['CONFIG', '$stateParams', '$log', 'definitionService', 'alarmsService', '_'];
+    AlarmDefinitionPreviewController.$inject = ['$stateParams', '$log', 'definitionService', 'alarmsService', '_'];
 
-    function AlarmDefinitionPreviewController(CONFIG, $stateParams, $log, definitionService, alarmsService, _) {
+    function AlarmDefinitionPreviewController($stateParams, $log, definitionService, alarmsService, _) {
         var defPreviewVm = this;
 
         defPreviewVm.definition = {};
@@ -27,6 +27,9 @@
             lineWidth: 10,
             lineCap: 'circle'
         };
+
+        defPreviewVm.getLabelLevelColor = getLabelLevelColor;
+        defPreviewVm.getLabelTypeColor = getLabelTypeColor;
 
         activate();
 
@@ -71,6 +74,34 @@
                 }
             });
             defPreviewVm.resolvedPercentage = Math.round(defPreviewVm.resolvedAlarms / defPreviewVm.alarms.length * 100.0);
+        }
+
+        function getLabelLevelColor(logLevel) {
+            switch (_.toUpper(logLevel)) {
+                case 'ERROR':
+                    return 'label label-danger';
+                case 'HIGH':
+                    return 'label label-warning';
+                case 'MEDIUM':
+                    return 'label label-primary';
+                case 'LOW':
+                    return 'label label-default';
+                case 'INFO':
+                    return 'label label-info';
+                default:
+                    return 'label label-default';
+            }
+        }
+
+        function getLabelTypeColor(logLevel) {
+            switch (_.toUpper(logLevel)) {
+                case 'SINGLE':
+                    return 'label label-info';
+                case 'MULTI':
+                    return 'label label-primary';
+                default:
+                    return 'label label-default';
+            }
         }
 
     }

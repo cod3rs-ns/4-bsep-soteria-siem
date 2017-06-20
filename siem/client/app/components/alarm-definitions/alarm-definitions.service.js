@@ -25,8 +25,8 @@
                 });
         }
 
-        function getAlarmDefinitions(project_id) {
-            return $http.get(CONFIG.SERVICE_URL + '/projects/' + project_id + '/alarm-definitions')
+        function getAlarmDefinitions(url) {
+            return $http.get(url)
                 .then(function successCallback(response) {
                     console.log(response.data);
                     return response.data;

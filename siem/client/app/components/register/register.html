@@ -64,7 +64,7 @@
 				<div class="form-group" ng-class="{ 'has-error' : registrationForm.phoneNumber.$invalid && registrationForm.phoneNumber.$dirty }">
 					<div class="input-group">
 						<input type="text" ng-model="registerVm.registrationUser.phoneNumber" name="phoneNumber" placeholder="Phone number" class="form-control"
-							id="sign-up-last-name" ng-maxlength="16">
+							id="sign-up-phone" ng-maxlength="16">
 						<span class="input-group-addon"><i class="fa fa-mobile"></i></span>
 					</div>
 					<span ng-show="registrationForm.phoneNumber.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Phone number contains less than 30 characters.</span>

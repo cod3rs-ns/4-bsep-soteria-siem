@@ -11,6 +11,7 @@
         var projectVm = this;
 
         projectVm.info = null;
+        projectVm.projectId = $stateParams.id;
 
         projectVm.logs = {
             'filters': {},
@@ -80,7 +81,7 @@
             var id = $stateParams.id;
             projectVm.loadProject(id);
             projectVm.loadInitialLogs(CONFIG.SERVICE_URL + '/projects/' + id + '/logs?page[limit]=2');
-            projectVm.loadInitialAgents(CONFIG.SERVICE_URL + /projects/ + id + '/agents');
+            projectVm.loadInitialAgents(CONFIG.SERVICE_URL + '/projects/' + id + '/agents');
         }
 
         function loadProject(id) {
@@ -114,11 +115,10 @@
             $log.info(projectVm.timeRange.fromTime.toISOString());
             $log.info(projectVm.timeRange.toTime.toISOString());
 
-            var id = $stateParams.id;
             var filters = createFilters();
             projectVm.logs.data = [];
             projectVm.logs.next = null;
-            loadLogs(CONFIG.SERVICE_URL + '/projects/' + id + '/logs?page[limit]=2' + filters);
+            loadLogs(CONFIG.SERVICE_URL + '/projects/' + projectVm.projectId + '/logs?page[limit]=2' + filters);
         }
 
         function loadAgents(url) {
