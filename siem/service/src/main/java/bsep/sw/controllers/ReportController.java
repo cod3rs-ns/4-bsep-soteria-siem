@@ -22,9 +22,9 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class ReportController extends StandardResponses {
 
-    final private LogsService logsService;
-    final private AlarmService alarmService;
-    final private ProjectService projectService;
+    private final LogsService logsService;
+    private final AlarmService alarmService;
+    private final ProjectService projectService;
     private final UserSecurityUtil securityUtil;
 
     @Autowired
@@ -40,7 +40,7 @@ public class ReportController extends StandardResponses {
 
     @PostMapping("/projects/{projectId}/report")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_REPORT)")
     public ResponseEntity<?> createCustomReport(@PathVariable final Long projectId,
                                                 @Valid @RequestBody final ReportRequest reportRequest) {
         final User user = securityUtil.getLoggedUser();
@@ -67,7 +67,7 @@ public class ReportController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/std-reports/{reportType}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_REPORT)")
     public ResponseEntity<?> retrieveAlarmReportLevels(@PathVariable final Long projectId,
                                                        @PathVariable final ReportRequestType reportType) {
         final User user = securityUtil.getLoggedUser();
@@ -97,4 +97,5 @@ public class ReportController extends StandardResponses {
 
         return ResponseEntity.ok(report);
     }
+
 }

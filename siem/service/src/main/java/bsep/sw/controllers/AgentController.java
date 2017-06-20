@@ -63,7 +63,7 @@ public class AgentController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/agents")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_AGENT)")
     public ResponseEntity<?> getProjectAgents(final HttpServletRequest request,
                                               @Valid @PathVariable final Long projectId,
                                               @RequestParam(value = "page[offset]", required = false, defaultValue = "0") final Integer offset,
@@ -92,7 +92,7 @@ public class AgentController extends StandardResponses {
 
     @PostMapping("/projects/{projectId}/agents")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).WRITE_AGENT)")
     public ResponseEntity<?> addAgentToProject(@Valid @PathVariable final Long projectId, @RequestBody final AgentRequest request) {
         final User user = securityUtil.getLoggedUser();
 
@@ -112,7 +112,7 @@ public class AgentController extends StandardResponses {
 
     @GetMapping("/projects/{projectId}/agents/{agentId}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_AGENT)")
     public ResponseEntity<?> getProjectAgent(@Valid @PathVariable final Long projectId,
                                              @Valid @PathVariable final Long agentId) {
         final User user = securityUtil.getLoggedUser();
@@ -135,7 +135,7 @@ public class AgentController extends StandardResponses {
     }
 
     @PostMapping(value = "/agents", produces = "application/zip", consumes = "application/json")
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).DOWNLOAD_AGENT)")
     public void downloadAgentWithConfiguration(final HttpServletResponse response, @RequestBody final AgentConfigRequest request) throws IOException {
         final Agent agent = agentService.findOne(request.getData().getAttributes().getAgentId());
         final User user = securityUtil.getLoggedUser();
@@ -172,4 +172,5 @@ public class AgentController extends StandardResponses {
 
         zip.close();
     }
+
 }

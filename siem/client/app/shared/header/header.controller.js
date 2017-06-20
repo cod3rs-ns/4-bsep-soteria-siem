@@ -79,9 +79,10 @@
             loginService.loggedInUser()
                 .then(function (response) {
                     headerVm.loggedInUser = response.data;
-                    $localStorage.image = headerVm.loggedInUser.attributes.imagePath
-                    $localStorage.userInfo = headerVm.loggedInUser.attributes.firstName + " " + headerVm.loggedInUser.attributes.lastName
-                    if (_.isEqual($localStorage.role, 'FACEBOOK')) {
+                    $localStorage.image = headerVm.loggedInUser.attributes.imagePath;
+                    // TODO image
+                    $localStorage.userInfo = headerVm.loggedInUser.attributes.firstName + " " + headerVm.loggedInUser.attributes.lastName;
+                    if (_.isEqual($localStorage.role, 'OPERATOR')) {
                         $localStorage.image = 'http://graph.facebook.com/' + $localStorage.user.substring(3) + '/picture?type=square'
                     }
                 })

@@ -1,11 +1,14 @@
 package bsep.sw.controllers;
 
+import bsep.sw.domain.Role;
 import bsep.sw.domain.User;
 import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.user.AuthResponse;
 import bsep.sw.hateoas.user.AvailabilityResponse;
 import bsep.sw.hateoas.user.UserRequest;
 import bsep.sw.hateoas.user.UserResponse;
+import bsep.sw.repositories.RoleRepository;
+import bsep.sw.security.Roles;
 import bsep.sw.security.TokenUtils;
 import bsep.sw.services.UserService;
 import bsep.sw.util.StandardResponses;
@@ -24,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api")
@@ -33,14 +39,17 @@ public class UserController extends StandardResponses {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final TokenUtils tokenUtils;
+    private final RoleRepository roleRepository;
 
     @Autowired
     public UserController(final UserService userService, final AuthenticationManager authenticationManager,
-                          final UserDetailsService userDetailsService, final TokenUtils tokenUtils) {
+                          final UserDetailsService userDetailsService, final TokenUtils tokenUtils,
+                          final RoleRepository roleRepository) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.tokenUtils = tokenUtils;
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping(path = "/users/auth")
@@ -68,19 +77,29 @@ public class UserController extends StandardResponses {
                     String.format("User with username: %s  already exists.", user.getUsername()));
             return ResponseEntity.badRequest().body(errorResponse);
         }
-
+        final Collection<Role> roles = new ArrayList<>();
+        switch (user.getRole()) {
+            case ADMIN:
+                roles.add(roleRepository.findRoleByName(Roles.ADMIN));
+                roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
+                break;
+            case OPERATOR:
+                roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
+                break;
+        }
+        user.roles(roles);
         return ResponseEntity.ok(UserResponse.fromDomain(userService.save(user)));
     }
 
     @PutMapping("/users/fb")
     @PermitAll
     public ResponseEntity<?> registerFbUser(@Valid @RequestBody final UserRequest userRequest) {
-        final User user = userRequest.toDomain();
+        final User user = userRequest.toDomain().roles(Collections.singletonList(roleRepository.findRoleByName(Roles.OPERATOR)));
         return ResponseEntity.ok(UserResponse.fromDomain(userService.update(user)));
     }
 
     @RequestMapping("/users/me")
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).READ_SELF_INFO)")
     public ResponseEntity<UserResponse> me() throws IOException {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String currentPrincipalName = authentication.getName();
@@ -108,7 +127,7 @@ public class UserController extends StandardResponses {
 
     @GetMapping("/users/{email:.+}")
     @ResponseBody
-    @PreAuthorize("hasAnyAuthority(T(bsep.sw.domain.UserRole).ADMIN, T(bsep.sw.domain.UserRole).OPERATOR, T(bsep.sw.domain.UserRole).FACEBOOK)")
+    @PreAuthorize("hasAuthority(T(bsep.sw.security.Privileges).WRITE_PROJECT_COLLABORATORS)")
     public ResponseEntity<?> getUserByEmail(@Valid @PathVariable final String email) {
         final User user = userService.findUserByEmail(email);
 
@@ -120,4 +139,5 @@ public class UserController extends StandardResponses {
                 .ok()
                 .body(UserResponse.fromDomain(user));
     }
+
 }

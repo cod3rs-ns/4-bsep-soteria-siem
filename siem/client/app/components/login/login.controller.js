@@ -68,7 +68,7 @@
                 .then(function (response) {
                     $localStorage.token = "bearer " + token;
                     $localStorage.user = response.data.attributes.username;
-                    $localStorage.role = "FACEBOOK";
+                    $localStorage.role = "OPERATOR";
 
                     $scope.$emit('userLoggedIn', $localStorage.user)
                     $state.go('home');
@@ -82,7 +82,7 @@
             return {
                 'username': 'fb_' + user.id,
                 'email': user.email,
-                'role': 'FACEBOOK',
+                'role': 'OPERATOR',
                 'password': 'default',
                 'firstName': user.first_name,
                 'lastName': user.last_name
