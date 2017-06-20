@@ -15,7 +15,11 @@
                 </thead>
                 <tbody>
                     <tr ng-repeat="log in alarmVm.logs">
-                        <td><span class="label label-critical">{{log.attributes.level}}</span></td>
+                        <td>
+                            <span ng-class="['label', alarmVm.getLogLabelColor(log.attributes.level)]">
+                                {{log.attributes.level}}
+                            </span>
+                        </td>
                         <td>{{log.attributes.time}}</td>
                         <td>{{log.attributes.info.host}}</td>
                         <td>{{log.attributes.message}}</td>
