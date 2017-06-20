@@ -5,14 +5,16 @@
         .module('soteria-app')
         .controller('AlarmReportController', AlarmReportController);
 
-    AlarmReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
+    AlarmReportController.$inject = ['$stateParams', '$log', 'reportService', '_', 'ngToast'];
 
-    function AlarmReportController($stateParams, $log, reportService, _) {
+    function AlarmReportController($stateParams, $log, reportService, _, ngToast) {
         var reportVm = this;
 
+        reportVm.mainReportVisible = false;
+
         reportVm.reportRequest = {
-            type: 'ALARM_RESOLVED',
-            'entity-type': 'LOGS',
+            type: 'ALARM_LEVEL',
+            'entity-type': 'ALARMS',
             value: '',
             from: null,
             to: null
@@ -110,12 +112,21 @@
             reportService.getCriteriaReport(reportVm.projectId, reportVm.reportRequest)
                 .then(function (response) {
                     reportVm.report = response;
+                    try {
+                        reportVm.mainReportVisible = response.reports.length > 0;
+                    } catch (e){
+                        reportVm.mainReportVisible = false;
+                    }
                     var lst = [];
                     _.forEach(reportVm.report.reports, function (value) {
                         reportVm.mainChart.labels.push(value['day']);
                         lst.push(value['day-count']);
                     });
                     reportVm.mainChart.data.push(lst);
+                    ngToast.create({
+                        className: 'success',
+                        content: '<strong>Successfully retrieved report.</strong>'
+                    });
                 })
                 .catch(function (error) {
                     $log.error(error);

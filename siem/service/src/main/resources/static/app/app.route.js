@@ -226,7 +226,7 @@ angular
                 'responseError': function (response) {
                     // If you get Unauthorized on login page you should just write message
                     if ('/login' !== $location.path()) {
-                        if (response.status === 401 || response.status === 403) {
+                        if (response.status === 401 || response.status === 403 || response.status === 404) {
                             $location.path('/page-not-found');
                         } else {
                             $location.path('/internal-server-error');
