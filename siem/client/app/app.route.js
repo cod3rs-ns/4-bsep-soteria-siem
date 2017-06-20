@@ -130,6 +130,14 @@ angular
                     }
                 }
             })
+            .state('internalServerError', {
+                url: '/internal-server-error',
+                views: {
+                    'content@': {
+                        templateUrl: 'app/components/error-templates/internal-server-error.html'
+                    }
+                }
+            })
             .state('project.alarm-definitions', {
                 parent: 'project',
                 url: '/alarm-definitions',
@@ -218,6 +226,8 @@ angular
                     if ('/login' !== $location.path()) {
                         if (response.status === 401 || response.status === 403) {
                             $location.path('/page-not-found');
+                        } else {
+                            $location.path('/internal-server-error');
                         }
                         return $q.reject(response);
                     }
