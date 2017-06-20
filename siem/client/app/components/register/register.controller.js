@@ -10,8 +10,8 @@
     function RegisterController(registerService, $log, ngToast, $scope) {
         var registerVm = this;
         
-        registerVm.registrationUser = {'role': 'OPERATOR'}
-        registerVm.register = register
+        registerVm.registrationUser = {'role': 'OPERATOR'};
+        registerVm.register = register;
 
         function register() {
             registerVm.registrationUser.email = registerVm.registrationUser.email.$$state.value;
