@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class InitialRolesLoader implements ApplicationListener<ContextRefreshedEvent> {
@@ -51,17 +49,17 @@ public class InitialRolesLoader implements ApplicationListener<ContextRefreshedE
         final Privilege readSelfInfo = createPrivilegeIfNotFound(Privileges.READ_SELF_INFO);
 
         // basic privileges collection for all users
-        final Collection<Privilege> basicPrivileges = new ArrayList<>();
-        basicPrivileges.add(writeAgent);
-        basicPrivileges.add(readAgent);
-        basicPrivileges.add(downloadAgent);
-        basicPrivileges.add(readAlarm);
-        basicPrivileges.add(writeAlarm);
-        basicPrivileges.add(readDefinition);
-        basicPrivileges.add(readProject);
-        basicPrivileges.add(readCollaborators);
-        basicPrivileges.add(readReport);
-        basicPrivileges.add(readSelfInfo);
+        final Collection<Privilege> operatorPrivileges = new ArrayList<>();
+        operatorPrivileges.add(writeAgent);
+        operatorPrivileges.add(readAgent);
+        operatorPrivileges.add(downloadAgent);
+        operatorPrivileges.add(readAlarm);
+        operatorPrivileges.add(writeAlarm);
+        operatorPrivileges.add(readDefinition);
+        operatorPrivileges.add(readProject);
+        operatorPrivileges.add(readCollaborators);
+        operatorPrivileges.add(readReport);
+        operatorPrivileges.add(readSelfInfo);
 
         // admin only privileges
         final Collection<Privilege> adminPrivileges = new ArrayList<>();
@@ -72,16 +70,10 @@ public class InitialRolesLoader implements ApplicationListener<ContextRefreshedE
         adminPrivileges.add(writeCollaborators);
 
         // create ADMIN role
-        final Set<Privilege> allAdminPrivileges = new HashSet<>();
-        allAdminPrivileges.addAll(basicPrivileges);
-        allAdminPrivileges.addAll(adminPrivileges);
-        createRoleIfNotFound("ROLE_ADMIN", allAdminPrivileges);
+        createRoleIfNotFound(Roles.ADMIN, adminPrivileges);
 
         // create OPERATOR and FACEBOOK role
-        final Set<Privilege> allBasicPrivileges = new HashSet<>();
-        allBasicPrivileges.addAll(basicPrivileges);
-        createRoleIfNotFound("ROLE_OPERATOR", allBasicPrivileges);
-        createRoleIfNotFound("ROLE_FACEBOOK", allBasicPrivileges);
+        createRoleIfNotFound(Roles.OPERATOR, operatorPrivileges);
 
         alreadySetup = true;
     }
@@ -98,7 +90,7 @@ public class InitialRolesLoader implements ApplicationListener<ContextRefreshedE
     }
 
     @Transactional
-    private void createRoleIfNotFound(final String name, final Set<Privilege> privileges) {
+    private void createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
         Role role = roleRepository.findRoleByName(name);
         if (role == null) {
             role = new Role().name(name);

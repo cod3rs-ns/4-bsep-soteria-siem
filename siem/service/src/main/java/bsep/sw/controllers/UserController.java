@@ -82,24 +82,19 @@ public class UserController extends StandardResponses {
             case ADMIN:
                 roles.add(roleRepository.findRoleByName(Roles.ADMIN));
                 roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
-                roles.add(roleRepository.findRoleByName(Roles.FACEBOOK));
                 break;
             case OPERATOR:
                 roles.add(roleRepository.findRoleByName(Roles.OPERATOR));
                 break;
-            case FACEBOOK:
-                roles.add(roleRepository.findRoleByName(Roles.FACEBOOK));
-                break;
         }
-        user.roles(Collections.singletonList(roleRepository.findRoleByName("ROLE_ADMIN")));
+        user.roles(roles);
         return ResponseEntity.ok(UserResponse.fromDomain(userService.save(user)));
     }
 
     @PutMapping("/users/fb")
     @PermitAll
     public ResponseEntity<?> registerFbUser(@Valid @RequestBody final UserRequest userRequest) {
-        final User user = userRequest.toDomain();
-        user.roles(Collections.singletonList(roleRepository.findRoleByName(Roles.FACEBOOK)));
+        final User user = userRequest.toDomain().roles(Collections.singletonList(roleRepository.findRoleByName(Roles.OPERATOR)));
         return ResponseEntity.ok(UserResponse.fromDomain(userService.update(user)));
     }
 
