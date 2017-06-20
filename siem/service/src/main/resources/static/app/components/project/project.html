@@ -167,21 +167,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="default-log-level" class="col-sm-6 control-label">Choose
-                                                        default level:</label>
-                                                    <div class="col-sm-6">
-                                                        <select name="default-log-level" id="default-log-level"
-                                                                class="select2"
-                                                                ng-model="projectVm.config.defaultLevel">
-                                                            <option value="DEBUG">DEBUG</option>
-                                                            <option value="INFO">INFO</option>
-                                                            <option value="NOTICE">NOTICE</option>
-                                                            <option value="WARN">WARN</option>
-                                                            <option value="ERROR">ERROR</option>
-                                                            <option value="CRIT">CRIT</option>
-                                                            <option value="ALERT">ALERT</option>
-                                                            <option value="EMERG">EMERG</option>
-                                                        </select>
+                                                    <div class="form-group">
+                                                        <label class="col-md-3 control-label">Default level:</label>
+                                                        <div class="col-md-9">
+                                                            <select id="default-log-level"
+                                                                    class="form-control"
+                                                                    ng-model="projectVm.config.defaultLevel">
+                                                                <option value="DEBUG">DEBUG</option>
+                                                                <option value="INFO">INFO</option>
+                                                                <option value="NOTICE">NOTICE</option>
+                                                                <option value="WARN">WARN</option>
+                                                                <option value="ERROR">ERROR</option>
+                                                                <option value="CRIT">CRIT</option>
+                                                                <option value="ALERT">ALERT</option>
+                                                                <option value="EMERG">EMERG</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row" ng-show="projectVm.config.os == 'WINDOWS'">
