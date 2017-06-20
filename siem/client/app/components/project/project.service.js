@@ -13,7 +13,6 @@
             getLogs: getLogs,
             getAgents: getAgents,
             addAgent: addAgent,
-            createProject: createProject,
             downloadAgent: downloadAgent
         };
 
@@ -51,16 +50,6 @@
 
         function addAgent(id, agentData) {
             return $http.post(CONFIG.SERVICE_URL + '/projects/' + id + '/agents', { 'data': agentData })
-                .then(function successCallback(response) {
-                    return response.data;
-                }, function errorCallback(response) {
-                    $log.warn(response.data.detail);
-                    throw response.data.detail;
-                });
-        }
-
-        function createProject(project) {
-            return $http.post(CONFIG.SERVICE_URL + '/projects', { 'data': project })
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {

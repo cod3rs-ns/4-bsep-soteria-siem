@@ -5,9 +5,9 @@
         .module('soteria-app')
         .controller('ProjectsController', ProjectsController);
 
-    ProjectsController.$inject = ['projectsService', 'usersService', 'CONFIG', '$log', '_'];
+    ProjectsController.$inject = ['projectsService', 'usersService', 'ngToast', 'CONFIG', '$log', '$state', '_'];
 
-    function ProjectsController(projectsService, usersService, CONFIG, $log, _) {
+    function ProjectsController(projectsService, usersService, ngToast, CONFIG, $log, $state, _) {
         var projectsVm = this;
 
         projectsVm.ownedProjects = {
@@ -27,6 +27,10 @@
             "collaborators": []
         };
 
+        projectsVm.createProjectDialog = {
+            "project": {}
+        };
+
         projectsVm.prevOwnedProjects = getOwnedProjects;
         projectsVm.nextOwnedProjects = getOwnedProjects;
         projectsVm.prevMembershipProjects = getMembershipProjects;
@@ -35,6 +39,7 @@
         projectsVm.setDialogId = setProjectId;
         projectsVm.addCollaborator = addCollaborator;
         projectsVm.getCollaborators = getCollaborators;
+        projectsVm.createProject = createProject;
 
         activate();
 
@@ -111,6 +116,20 @@
         function setProjectId(id) {
             projectsVm.projectDialogInfo.id = id;
             getCollaborators(id);
+        }
+
+        function createProject() {
+            projectsService.createProject({'type': 'projects', 'attributes':  projectsVm.createProjectDialog.project})
+                .then(function(response) {
+                    ngToast.create({
+                        className: 'success',
+                        content: '<strong>Successfully create project.</strong>'
+                    });
+                    $state.go('project', {'id': response.data.id});
+                })
+                .catch(function(error) {
+                    $log.error(error);
+                });
         }
     }
 })();
