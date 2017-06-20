@@ -1,11 +1,13 @@
 package bsep.sw.controllers;
 
+import bsep.sw.domain.Alarm;
 import bsep.sw.domain.Log;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.log.LogCollectionResponse;
 import bsep.sw.hateoas.log.LogRequest;
 import bsep.sw.hateoas.log.LogResponse;
 import bsep.sw.rule_engine.rules.RulesService;
+import bsep.sw.services.AlarmService;
 import bsep.sw.services.LogsService;
 import bsep.sw.util.CSRUtil;
 import bsep.sw.util.FilterExtractor;
@@ -29,14 +31,17 @@ public class LogController extends StandardResponses {
 
     private final LogsService logsService;
     private final RulesService rulesService;
+    private final AlarmService alarmService;
     private final CSRUtil csrUtil;
 
     @Autowired
     public LogController(final LogsService logsService,
                          final RulesService rulesService,
+                         final AlarmService alarmService,
                          final CSRUtil csrUtil) {
         this.logsService = logsService;
         this.rulesService = rulesService;
+        this.alarmService = alarmService;
         this.csrUtil = csrUtil;
     }
 
@@ -89,4 +94,17 @@ public class LogController extends StandardResponses {
         return ResponseEntity.ok(LogResponse.fromDomain(savedLog));
     }
 
+
+    @GetMapping("/logs/alarms/{alarmId}")
+    public ResponseEntity<?> retrieveLogsForAlarm(@PathVariable("alarmId") final Long alarmId) {
+        final Alarm alarm = alarmService.findOne(alarmId);
+        if (alarm == null) {
+            notFound("alarm");
+        }
+
+        final List<Log> logs = logsService.findByAlarm(alarm);
+
+        return ResponseEntity
+                .ok(LogCollectionResponse.fromDomain(logs, new PaginationLinks(null, null)));
+    }
 }
