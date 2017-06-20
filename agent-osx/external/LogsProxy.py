@@ -7,7 +7,7 @@ from LogRequest import LogRequest
 class LogsProxy(object):
     # FIXME Change Base service URL
     def __init__(self, config, url):
-        self.SERVICE_URL = url
+        self.SERVICE_URL = url + config['agentId']
         self.PRIVATE_KEY = config['privateKey']
         self.SECRET_KEY = config['secretKey']
         self.PUBLIC_KEY = config['publicKey']

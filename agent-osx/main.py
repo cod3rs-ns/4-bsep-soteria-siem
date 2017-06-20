@@ -13,7 +13,7 @@ if __name__ == "__main__":
     try:
         service_url = sys.argv[1]
     except IndexError:
-        service_url = 'http://localhost:9091/api/logs'
+        service_url = 'http://localhost:9091/api/logs/agent/'
 
     print service_url
 
