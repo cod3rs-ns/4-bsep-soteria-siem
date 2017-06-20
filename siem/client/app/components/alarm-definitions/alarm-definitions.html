@@ -1,5 +1,8 @@
 <div class="container">
-	
+	<div class="main-header" style="margin-top: 20px;">
+		<h2>Alarm definitions</h2>
+		<em>Design your custom alarms</em>
+	</div>
 	<div class="row">
 		<div class="col-lg-8">
 			<div class="widget">
@@ -15,32 +18,50 @@
 									</h3>
 								</div>
 								<div class="widget-content">
-									<dl class="dl-horizontal project-agent">
-										<dt>Level:</dt>
-										<dd>{{alarmDefinition.attributes["level"]}}</dd>
+									<div class="basic-info">
+										<p class="data-row" style="margin-bottom: 2px;">
+											<span class="data-name">Level</span>
+											<span class="data-value" style="margin-top: 3px;"><span
+													ng-class="defVm.getLabelColor(alarmDefinition.attributes.level)">{{alarmDefinition.attributes["level"]}}</span></span>
+										</p>
 										
-										<dt>Description:</dt>
-										<dd>{{alarmDefinition.attributes["description"]}}</dd>
+										<p class="data-row">
+											<span class="data-name">Description</span>
+											<span class="data-value">{{alarmDefinition.attributes["description"]}}</span>
+										</p>
 										
-										<dt>Occurs:</dt>
-										<dd>{{alarmDefinition.attributes["triggers"]}}</dd>
+										<p class="data-row">
+											<span class="data-name">Alarms occurred</span>
+											<span
+													class="data-value"><em>{{alarmDefinition.attributes["triggers"]}}</em></span>
+										</p>
 										
-										<dt>First time:</dt>
-										<dd>{{alarmDefinition.attributes["first-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</dd>
+										<p class="data-row" style="margin-bottom: 2px;">
+											<span class="data-name">First occurrence</span>
+											<span class="data-value"><em>{{alarmDefinition.attributes["first-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</em></span>
+										</p>
 										
-										<dt>Last time:</dt>
-										<dd>{{alarmDefinition.attributes["last-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</dd>
-									
-									</dl>
+										<p class="data-row" style="margin-bottom: 2px;">
+											<span class="data-name">Last occurrence</span>
+											<span class="data-value" style="margin-top: 3px"><em>{{alarmDefinition.attributes["last-occurrence"] | date: 'dd-MM-yyyy HH:mm:ss'}}</em></span></span>
+										</p>
+										
+										<p class="data-row">
+											<span class="data-name">Default message</span>
+											<span class="data-value"><em>{{alarmDefinition.attributes["message"]}}</em></span>
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<ul class="pager">
-						<li ng-class="{ 'disabled': defVm.definitions.prev == null }"><a
-								ng-click="defVm.prevDefs(defVm.definitions.prev);">&larr; Previous</a></li>
-						<li ng-class="{ 'disabled': defVm.definitions.next == null }"><a
-								ng-click="defVm.nextDefs(defVm.definitions.next);">Next &rarr;</a></li>
+					<ul class="pager" ng-if="defVm.definitions.data.length > 0">
+						<li ng-if="defVm.definitions.prev != null"><a
+								ng-click="defVm.loadAlarmDefinitions(defVm.definitions.prev);" style="cursor: hand;">&larr; Previous</a>
+						</li>
+						<li ng-if="defVm.definitions.next != null"><a
+								ng-click="defVm.loadAlarmDefinitions(defVm.definitions.next);" style="cursor: hand;">Next &rarr;</a>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -213,77 +234,77 @@
 											<div class="row">
 												<form class="form-horizontal label-left" id="rules-form" name="rulesForm" novalidate>
 													<div class="col-md-12">
-													<!-- SINGLE RULE -->
-													<div class="panel panel-default"
-													     data-ng-repeat="rule in defVm.newDefinition.rules">
-														<div class="panel-heading">
-															<h4 class="panel-title agent-config-header">
-																Simple Rule {{rule.id}}
-															</h4>
-														</div>
-														<div class="panel-collapse collapse in">
-															<form class="form-horizontal label-left">
-																<div class="panel-body">
-																	<div class="col-md-12">
-																		<div class="form-group">
-																			<label class="col-md-3 control-label">Log field: </label>
-																			<div class="col-md-9">
-																				<select id="{{'rule-field-' + rule.id}}"
-																				        class="form-control"
-																				        ng-model="rule.field">
-																					<option value="MESSAGE">Message</option>
-																					<option value="HOST">Host</option>
-																					<option value="LEVEL">Level</option>
-																					<option value="SOURCE">Source</option>
-																					<option value="PID">PID</option>
-																					<option value="GID">GID</option>
-																					<option value="UID">UID</option>
-																					<option value="ERROR_TYPE">Error type</option>
-																					<option value="ERROR">Error value</option>
-																					<option value="ERROR_NO">Error no.</option>
-																					<option value="STACK">Stack</option>
-																				</select>
+														<!-- SINGLE RULE -->
+														<div class="panel panel-default"
+														     data-ng-repeat="rule in defVm.newDefinition.rules">
+															<div class="panel-heading">
+																<h4 class="panel-title agent-config-header">
+																	Simple Rule {{rule.id}}
+																</h4>
+															</div>
+															<div class="panel-collapse collapse in">
+																<form class="form-horizontal label-left">
+																	<div class="panel-body">
+																		<div class="col-md-12">
+																			<div class="form-group">
+																				<label class="col-md-3 control-label">Log field: </label>
+																				<div class="col-md-9">
+																					<select id="{{'rule-field-' + rule.id}}"
+																					        class="form-control"
+																					        ng-model="rule.field">
+																						<option value="MESSAGE">Message</option>
+																						<option value="HOST">Host</option>
+																						<option value="LEVEL">Level</option>
+																						<option value="SOURCE">Source</option>
+																						<option value="PID">PID</option>
+																						<option value="GID">GID</option>
+																						<option value="UID">UID</option>
+																						<option value="ERROR_TYPE">Error type</option>
+																						<option value="ERROR">Error value</option>
+																						<option value="ERROR_NO">Error no.</option>
+																						<option value="STACK">Stack</option>
+																					</select>
+																				</div>
 																			</div>
-																		</div>
-																		<div class="form-group">
-																			<label class="col-md-3 control-label">Method:</label>
-																			<div class="col-md-9">
-																				<select id="{{'rule-method-' + rule.id}}"
-																				        class="form-control"
-																				        ng-model="rule.method">
-																					<option value="CONTAINS">Contains</option>
-																					<option value="EQUALS">Equals</option>
-																					<option value="STARTS_WITH">Starts with</option>
-																					<option value="ENDS_WITH">Ends with</option>
-																					<option value="REGEX">Regular expression</option>
-																				</select>
+																			<div class="form-group">
+																				<label class="col-md-3 control-label">Method:</label>
+																				<div class="col-md-9">
+																					<select id="{{'rule-method-' + rule.id}}"
+																					        class="form-control"
+																					        ng-model="rule.method">
+																						<option value="CONTAINS">Contains</option>
+																						<option value="EQUALS">Equals</option>
+																						<option value="STARTS_WITH">Starts with</option>
+																						<option value="ENDS_WITH">Ends with</option>
+																						<option value="REGEX">Regular expression</option>
+																					</select>
+																				</div>
 																			</div>
-																		</div>
-																		<div class="form-group"
-																		     ng-class="{ 'has-error' : rulesForm['ruleValue' + rule.id].$invalid && rulesForm['ruleValue' + rule.id].$dirty }">
-																			<label for="{{'rule-value-' + rule.id}}"
-																			       class="col-sm-3 control-label">Value:</label>
-																			<div class="col-sm-9">
-																				<input type="text" class="form-control"
-																				       name="{{'ruleValue' + rule.id}}"
-																				       id="{{'rule-value-' + rule.id}}"
-																				       placeholder="{{'Rule ' + rule.id + ' value'}}"
-																				       ng-model="rule.value" required/>
-																				<span
-																						ng-show="rulesForm['ruleValue' + rule.id].$error.required && rulesForm['ruleValue' + rule.id].$dirty"
-																						class="help-block" style="font-size: 10pt; margin:0px;">Value is required.
+																			<div class="form-group"
+																			     ng-class="{ 'has-error' : rulesForm['ruleValue' + rule.id].$invalid && rulesForm['ruleValue' + rule.id].$dirty }">
+																				<label for="{{'rule-value-' + rule.id}}"
+																				       class="col-sm-3 control-label">Value:</label>
+																				<div class="col-sm-9">
+																					<input type="text" class="form-control"
+																					       name="{{'ruleValue' + rule.id}}"
+																					       id="{{'rule-value-' + rule.id}}"
+																					       placeholder="{{'Rule ' + rule.id + ' value'}}"
+																					       ng-model="rule.value" required/>
+																					<span
+																							ng-show="rulesForm['ruleValue' + rule.id].$error.required && rulesForm['ruleValue' + rule.id].$dirty"
+																							class="help-block" style="font-size: 10pt; margin:0px;">Value is required.
 																				</span>
+																				</div>
 																			</div>
 																		</div>
 																	</div>
-																</div>
-															</form>
+																</form>
+															</div>
 														</div>
+														<button class="btn btn-primary btn-add-field" type="button"
+														        ng-click="defVm.addSingleRule()"> + RULE
+														</button>
 													</div>
-													<button class="btn btn-primary btn-add-field" type="button"
-													        ng-click="defVm.addSingleRule()"> + RULE
-													</button>
-												</div>
 												</form>
 											</div>
 										</div>

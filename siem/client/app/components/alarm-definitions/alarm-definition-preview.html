@@ -1,8 +1,9 @@
 <div class="container">
-	<div class="main-header">
+	<div class="main-header" style="margin-top: 20px;">
 		<h2>Alarm definition</h2>
-		<em>This definition triggered total of <span class="label label-warning">{{defPreviewVm.alarms.length + ' alarm(s)'}}</span>, by its <span
-				class="label label-info">{{defPreviewVm.rules.length + ' rule(s)'}}</span></em>
+		<em>This definition triggered total of <span class="label label-warning">{{defPreviewVm.alarms.length + ' alarm(s)'}}</span>,
+		    by its <span
+					class="label label-info">{{defPreviewVm.rules.length + ' rule(s)'}}</span></em>
 	</div>
 	<div class="main-content">
 		<div class="row" style="margin-right: 10px;">
@@ -16,7 +17,7 @@
 							<div class="col-sm-9">
 								<div class="basic-info">
 									<p class="data-row">
-										<span class="data-name">Created at:</span>
+										<span class="data-name">Created at</span>
 										<span class="data-value"><em>{{defPreviewVm.meta['created-at'] | date: 'dd-MM-yyyy HH:mm'}}<em></em></span>
 									</p>
 									
@@ -38,12 +39,14 @@
 									
 									<p class="data-row" style="margin-bottom: 2px;">
 										<span class="data-name">Priority</span>
-										<span class="data-value" style="margin-top: 3px"><span class="label label-danger">{{defPreviewVm.definition.attributes.level}}</span></span>
+										<span class="data-value" style="margin-top: 3px"><span
+												ng-class="defPreviewVm.getLabelTypeColor(defPreviewVm.definition.attributes.level)">{{defPreviewVm.definition.attributes.level}}</span></span>
 									</p>
 									
 									<p class="data-row" style="margin-bottom: 2px;">
 										<span class="data-name">Type</span>
-										<span class="data-value" style="margin-top: 3px"><span class="label label-danger">{{defPreviewVm.definition.attributes.type}}</span></span>
+										<span class="data-value" style="margin-top: 3px"><span
+												ng-class="defPreviewVm.getLabelTypeColor(defPreviewVm.definition.attributes.type)">{{defPreviewVm.definition.attributes.type}}</span></span>
 									</p>
 									
 									<p class="data-row">
@@ -55,11 +58,11 @@
 										<span class="data-name">Total alarms</span>
 										<span class="data-value" style="margin-top: 3px;"><span class="label label-info">{{defPreviewVm.definition.attributes.triggers}}</span></span>
 									</p>
-									<p class="data-row">
+									<p class="data-row" style="margin-bottom: 2px;">
 										<span class="data-name">First alarm occurrence</span>
 										<span class="data-value"><em>{{defPreviewVm.definition.attributes['first-occurrence'] | date: 'dd-MM-yyyy HH:mm'}}</em></span>
 									</p>
-									<p class="data-row">
+									<p class="data-row" style="margin-bottom: 2px;">
 										<span class="data-name">Last alarm occurence</span>
 										<span class="data-value"><em>{{defPreviewVm.definition.attributes['last-occurrence'] | date: 'dd-MM-yyyy HH:mm'}}</em></span>
 									</p>
@@ -122,17 +125,17 @@
 							<p class="pull-right"><span> TOTAL ALARMS</span>{{defPreviewVm.alarms.length}}</p>
 						</div>
 					</div>
-					
 					<div class="row" style="margin-bottom: 10px;">
 						<div class="contextual-summary-info">
-							<i class="fa fa-check-circle"></i>
+							<i class="fa fa-check-circle green-font"></i>
 							<p class="pull-right"><span> RESOLVED ALARMS</span>{{defPreviewVm.resolvedAlarms}}</p>
 						</div>
 					</div>
 					<div class="row" style="margin-bottom: 10px;">
 						<div class="contextual-summary-info">
 							<i class="fa fa-close"></i>
-							<p class="pull-right"><span> NOT RESOLVED</span>{{defPreviewVm.alarms.length - defPreviewVm.resolvedAlarms}}</p>
+							<p class="pull-right"><span> NOT RESOLVED</span>{{defPreviewVm.alarms.length -
+							                                                defPreviewVm.resolvedAlarms}}</p>
 						</div>
 					</div>
 				</div>

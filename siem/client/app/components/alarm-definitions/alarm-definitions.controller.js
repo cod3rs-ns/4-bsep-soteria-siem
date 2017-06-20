@@ -1,14 +1,16 @@
-(function() {
+(function () {
     'use strict';
 
     angular
         .module('soteria-app')
         .controller('AlarmDefinitionsController', AlarmDefinitionsController);
 
-    AlarmDefinitionsController.$inject = ['CONFIG', '$stateParams', '$log', 'definitionService', '_', '$scope'];
+    AlarmDefinitionsController.$inject = ['CONFIG', '$stateParams', '$log', 'definitionService', '_', '$scope', 'ngToast'];
 
-    function AlarmDefinitionsController(CONFIG, $stateParams, $log, definitionService, _, $scope) {
+    function AlarmDefinitionsController(CONFIG, $stateParams, $log, definitionService, _, $scope, ngToast) {
         var defVm = this;
+
+        defVm.projectId = $stateParams.id;
 
         defVm.definitions = {
             'data': [],
@@ -33,25 +35,29 @@
         defVm.loadAlarmDefinitions = loadAlarmDefinitions;
         defVm.saveAlarmDefinition = saveDefinition;
         defVm.addSingleRule = addSingleRule;
+        defVm.getLabelColor = getLabelColor;
 
         activate();
 
-        function activate () {
-            //$scope.definitionForm.$setPristine();
-            //$scope.definitionForm.$setDirty();
-
-            var project_id = $stateParams.id;
-            defVm.loadAlarmDefinitions(project_id);
+        function activate() {
+            var defaultUrl = CONFIG.SERVICE_URL + '/projects/' + defVm.projectId + '/alarm-definitions?page[offset]=0&page[limit]=' + CONFIG.DEFINITIONS_LIMIT;
+            defVm.loadAlarmDefinitions(defaultUrl);
         }
 
-        function loadAlarmDefinitions(project_id) {
-            definitionService.getAll(project_id)
-                .then(function(response) {
+        function loadAlarmDefinitions(url) {
+            // reset
+            defVm.definitions = {
+                'data': [],
+                'next': null,
+                'prev': null
+            };
+            definitionService.getAll(url)
+                .then(function (response) {
                     defVm.definitions.data = _.concat(defVm.definitions.data, response.data);
-                    defVm.definitions.next = response.links.next;
+                    defVm.definitions.next = response.links.next != undefined ? response.links.next : null;
                     defVm.definitions.prev = response.links.prev;
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     $log.error(error);
                 });
         }
@@ -72,23 +78,66 @@
                     'multi-rule': defVm.newDefinition.multiRule
                 }
             };
-            console.log(data);
-
-
             definitionService.create(projectId, data)
-                .then(function(response) {
-                    if (_.size(defVm.definitions.data) < CONFIG.AGENTS_LIMIT + 21) {
+                .then(function (response) {
+                    ngToast.create({
+                        className: 'success',
+                        content: '<strong>Successfully created new alarm definition.</strong>'
+                    });
+                    if (_.size(defVm.definitions.data) < CONFIG.DEFINITIONS_LIMIT) {
                         defVm.definitions.data.push(response.data);
                     }
+                    // reset model
+                    defVm.newDefinition = {
+                        name: null,
+                        description: null,
+                        level: 'INFO',
+                        message: null,
+                        type: 'SINGLE',
+                        multiRule: {
+                            type: 'multi-rule',
+                            interval: null,
+                            'repetition-trigger': null
+                        },
+                        rules: []
+                    };
+
+                    // reset form validation
+                    $scope.definitionForm.$setPristine();
+                    $scope.rulesForm.$setPristine();
+                    $scope.multiRuleForm.$setPristine();
                 })
-                .catch(function(error) {
+                .catch(function (error) {
                     $log.error(error);
                 });
         }
 
         function addSingleRule() {
             var index = _.size(defVm.newDefinition.rules) + 1;
-            defVm.newDefinition.rules.push({id: index, value: '', method: 'EQUALS', field: 'MESSAGE', type: 'single-rules'});
+            defVm.newDefinition.rules.push({
+                id: index,
+                value: '',
+                method: 'EQUALS',
+                field: 'MESSAGE',
+                type: 'single-rules'
+            });
+        }
+
+        function getLabelColor(logLevel) {
+            switch (_.toUpper(logLevel)) {
+                case 'ERROR':
+                    return 'label label-danger';
+                case 'HIGH':
+                    return 'label label-warning';
+                case 'MEDIUM':
+                    return 'label label-primary';
+                case 'LOW':
+                    return 'label label-default';
+                case 'INFO':
+                    return 'label label-info';
+                default:
+                    return 'label label-default';
+            }
         }
     }
 })();
