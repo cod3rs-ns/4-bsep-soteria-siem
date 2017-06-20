@@ -5,12 +5,14 @@
         .module('soteria-app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['$log', 'CONFIG', '$localStorage', '$scope'];
+    HomeController.$inject = ['alarmsService', '$log', 'CONFIG', '$localStorage', '$scope'];
 
-    function HomeController($log, CONFIG, $localStorage, $scope) {
+    function HomeController(alarmsService, $log, CONFIG, $localStorage, $scope) {
         var homeVm = this;
 
         homeVm.alarm = null;
+
+        homeVm.resolveAlarm = resolveAlarm;
 
         activate();
 
@@ -54,5 +56,16 @@
             }
 
         }
+
+        function resolveAlarm(alarmId) {
+            alarmsService.resolveAlarm(alarmId)
+                .then(function (response) {
+                    homeVm.alarm = null;
+                })
+                .catch(function (error) {
+                    $log.error(error);
+                });
+        }
+
     }
 })();

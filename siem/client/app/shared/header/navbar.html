@@ -1,14 +1,15 @@
 <div class="top-bar navbar-fixed-top" ng-controller="HeaderController as headerVm">
 	<div class="container">
 		<div class="clearfix">
-			<a href="#" class="pull-left toggle-sidebar-collapse"><i class="fa fa-bars"></i></a>
 			<!-- logo -->
 			<div class="pull-left left app-logo">
 				<a ui-sref="home"><img src="../../../assets/images/logo.png"
                                        alt="Soteria Application"/></a>
-				<h1 class="sr-only">Soteria Application</h1>
 			</div>
-			<!-- end logo -->
+
+			<div class="pull-left lef">
+				<h5 style="color:white">&nbsp;&nbsp; Soteria</h5>
+			</div>
 
 			<div class="pull-right right">
 				<!-- top-bar-right -->
@@ -19,7 +20,7 @@
 					<a ui-sref="alarms" ng-if="!(headerVm.$storage.role === 'guest')">
                         <button type="button" id="nav-alarms" class="btn btn-link">Alarms</button>
                     </a>
-					<a  ng-if="!(headerVm.$storage.role === 'guest')">
+					<a ng-if="!(headerVm.$storage.role === 'guest')">
                         <button type="button" id="nav-reports" class="btn btn-link">Reports</button>
                     </a>
 					<a ui-sref="login" ng-if="(headerVm.$storage.role === 'guest')">

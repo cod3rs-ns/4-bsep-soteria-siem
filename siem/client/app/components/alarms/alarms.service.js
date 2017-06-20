@@ -12,7 +12,9 @@
             getAlarmsForUser: getAlarmsForUser,
             getLogById: getLogById,
             resolveAlarm: resolveAlarm,
-            getAllByDefinition: getAlarmsByDefinition
+            getAllByDefinition: getAlarmsByDefinition,
+            getAlarm: getAlarm,
+            getLogsForAlarm: getLogsForAlarm
         };
 
         function getAlarmsForUser(url) {
@@ -48,6 +50,26 @@
 
         function resolveAlarm(alarmId) {
             return $http.put(CONFIG.SERVICE_URL + "/alarms/" + alarmId + "/resolve")
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function getAlarm(projectId, alarmId) {
+            return $http.get(CONFIG.SERVICE_URL + "/projects/" + projectId + "/alarms/" + alarmId)
+                .then(function successCallback(response) {
+                    return response.data;
+                }, function errorCallback(response) {
+                    $log.warn(response.data.detail);
+                    throw response.data.detail;
+                });
+        }
+
+        function getLogsForAlarm(alarmId) {
+            return $http.get(CONFIG.SERVICE_URL + "/logs/alarms/" + alarmId)
                 .then(function successCallback(response) {
                     return response.data;
                 }, function errorCallback(response) {

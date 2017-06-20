@@ -1,9 +1,6 @@
 package bsep.sw.services;
 
-import bsep.sw.domain.Log;
-import bsep.sw.domain.LogLevel;
-import bsep.sw.domain.PlatformType;
-import bsep.sw.domain.Project;
+import bsep.sw.domain.*;
 import bsep.sw.hateoas.reports.*;
 import bsep.sw.repositories.LogsRepository;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 public class LogsService {
@@ -62,6 +60,14 @@ public class LogsService {
 
         return operations.find(query, Log.class, "logs");
     }
+
+    public List<Log> findByAlarm(final Alarm alarm) {
+        final List<String> ids = alarm.getLogs().stream().map(LogAlarmPair::getLog).collect(Collectors.toList());
+        final ArrayList<Log> list = new ArrayList<>();
+        repository.findAll(ids).forEach(list::add);
+        return list;
+    }
+
 
     public GlobalReport getReport(final Project project, final ReportRequest request) {
         final List<Log> logs = new ArrayList<>();
