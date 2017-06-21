@@ -50,6 +50,10 @@
             }
         };
 
+        projectVm.numberLogs = {
+            'error': 0,
+            'warn': 0
+        };
         projectVm.levelCheckboxes = {
             DEBUG: false,
             INFO: false,
@@ -74,6 +78,8 @@
 
         projectVm.addField = addField;
         projectVm.getLabelColor = getLabelColor;
+        projectVm.countLogs = countLogs;
+        projectVm.updateMiniReport = updateMiniReport;
 
         activate();
 
@@ -99,6 +105,7 @@
                 .then(function(response) {
                     projectVm.logs.data = _.concat(projectVm.logs.data, response.data);
                     projectVm.logs.next = response.links.next;
+                    projectVm.updateMiniReport();
                 })
                 .catch(function(error) {
                     $log.error(error);
@@ -195,7 +202,7 @@
 
                     projectService.downloadAgent(config)
                         .then(function(response) {
-                            // TODO Add some message :)
+                            $log.info("Successfully downloaded agent");
                         })
                         .catch(function(error) {
                             $log.error(error);
@@ -264,6 +271,17 @@
                 default:
                     return 'label-default';
             }
+        }
+
+        function updateMiniReport() {
+           projectVm.countLogs('error');
+           projectVm.countLogs('warn');
+        }
+
+        function countLogs(level) {
+            projectVm.numberLogs[level] = _.size(_.filter(projectVm.logs.data, function(log) {
+                return _.toLower(log.attributes.level) === level;
+            }));
         }
 
         projectVm.options = projectVm.options = {
