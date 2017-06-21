@@ -227,8 +227,8 @@ angular
                     // If you get Unauthorized on login page you should just write message
                     if ('/login' !== $location.path()) {
 
-                        // It should reject for not found user for collaborator
-                        if (response.status === 404 && '/projects' === $location.path()) {
+                        // It should reject for not found user for collaborator or duplicated collaborator
+                        if ((response.status === 404 || response.status === 400) && '/projects' === $location.path()) {
                             return $q.reject(response);
                         }
 

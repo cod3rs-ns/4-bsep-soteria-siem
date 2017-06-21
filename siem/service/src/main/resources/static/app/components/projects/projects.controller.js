@@ -96,10 +96,11 @@
                             projectsVm.projectDialogInfo.collaborators.push(collaborator);
                         })
                         .catch(function (error) {
-                            $log.error(error);
+                            projectsVm.message = error;
                         });
                 })
                 .catch(function (error) {
+                    $log.info(error);
                     projectsVm.message = "There's no registered user with this email."
                 });
         }
