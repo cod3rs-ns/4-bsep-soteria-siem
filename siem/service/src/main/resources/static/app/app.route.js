@@ -226,6 +226,12 @@ angular
                 'responseError': function (response) {
                     // If you get Unauthorized on login page you should just write message
                     if ('/login' !== $location.path()) {
+
+                        // It should reject for not found user for collaborator
+                        if (response.status === 404 && '/projects' === $location.path()) {
+                            return $q.reject(response);
+                        }
+
                         if (response.status === 401 || response.status === 403 || response.status === 404) {
                             $location.path('/page-not-found');
                         } else {

@@ -7,22 +7,27 @@
                 <h2>Your projects</h2>
                 <em>owned by you</em>
 
-                <button type="button" class="btn btn-success pull-right" data-toggle="modal" data-target="#createProjectDialog">
-                           <i class="fa fa-plus-square"></i> New project </button>
+                <button type="button" class="btn btn-success pull-right" data-toggle="modal"
+                        data-target="#createProjectDialog">
+                    <i class="fa fa-plus-square"></i> New project
+                </button>
             </div>
 
             <div class="widget" ng-repeat="project in projectsVm.ownedProjects.data">
                 <div class="widget-header">
-                    <h3><i class="fa fa-newspaper-o"></i> <a ui-sref="project({id: {{project.id}}})"> {{project.attributes.name}} </a>                        </h3>
+                    <h3><i class="fa fa-newspaper-o"></i> <a ui-sref="project({id: {{project.id}}})">
+                        {{project.attributes.name}} </a></h3>
                     <div class="btn-group widget-header-toolbar">
-                        <a data-toggle="modal" data-target="#projectCollaborators" ng-click="projectsVm.setDialogId(project.id);" title="Collaborators"
-                            class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
+                        <a data-toggle="modal" data-target="#projectCollaborators"
+                           ng-click="projectsVm.setDialogId(project.id);" title="Collaborators"
+                           class="btn-borderless btn-remove"><i class="fa fa-user"></i></a>
                     </div>
                 </div>
                 <div class="widget-content text-center">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px" class="img-circle" alt="Avatar" />
+                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px"
+                                 class="img-circle" alt="Avatar"/>
                         </div>
                         <div class="col-md-8">
                             <p>
@@ -40,8 +45,10 @@
             </div>
 
             <ul class="pager" ng-if="projectsVm.ownedProjects.data.length > 0">
-                <li ng-class="{ 'disabled': projectsVm.ownedProjects.prev == null }"><a ng-click="projectsVm.prevOwnedProjects(projectsVm.ownedProjects.prev);">&larr; Previous</a></li>
-                <li ng-class="{ 'disabled': projectsVm.ownedProjects.next == null }"><a ng-click="projectsVm.nextOwnedProjects(projectsVm.ownedProjects.next);">Next &rarr;</a></li>
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.prev == null }"><a
+                        ng-click="projectsVm.prevOwnedProjects(projectsVm.ownedProjects.prev);">&larr; Previous</a></li>
+                <li ng-class="{ 'disabled': projectsVm.ownedProjects.next == null }"><a
+                        ng-click="projectsVm.nextOwnedProjects(projectsVm.ownedProjects.next);">Next &rarr;</a></li>
             </ul>
         </div>
 
@@ -60,7 +67,8 @@
 
             <div class="widget" ng-repeat="project in projectsVm.membershipProjects.data">
                 <div class="widget-header">
-                    <h3><i class="fa fa-newspaper-o"></i> <a ui-sref="project({id: {{project.id}}})"> {{project.attributes.name}} </a>                        </h3>
+                    <h3><i class="fa fa-newspaper-o"></i> <a ui-sref="project({id: {{project.id}}})">
+                        {{project.attributes.name}} </a></h3>
                     <div class="btn-group widget-header-toolbar">
                         <button title="Collaborators" class="btn-borderless btn-remove"><i class="fa fa-user"></i>
                         </button>
@@ -69,7 +77,8 @@
                 <div class="widget-content text-center">
                     <div class="row">
                         <div class="col-md-4">
-                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px" class="img-circle" alt="Avatar" />
+                            <img src="../../../assets/images/project-avatar.png" style="height:100px; width:100px"
+                                 class="img-circle" alt="Avatar"/>
                         </div>
                         <div class="col-md-8">
                             <p>
@@ -87,50 +96,67 @@
             </div>
 
             <ul class="pager" ng-if="projectsVm.membershipProjects.data.length > 0">
-                <li ng-class="{ 'disabled': projectsVm.membershipProjects.prev == null }"><a ng-click="projectsVm.prevMembershipProjects(projectsVm.membershipProjects.prev);">&larr;
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.prev == null }"><a
+                        ng-click="projectsVm.prevMembershipProjects(projectsVm.membershipProjects.prev);">&larr;
                     Previous</a></li>
-                <li ng-class="{ 'disabled': projectsVm.membershipProjects.next == null }"><a ng-click="projectsVm.nextMembershipProjects(projectsVm.membershipProjects.next);">Next
+                <li ng-class="{ 'disabled': projectsVm.membershipProjects.next == null }"><a
+                        ng-click="projectsVm.nextMembershipProjects(projectsVm.membershipProjects.next);">Next
                     &rarr;</a></li>
             </ul>
         </div>
     </div>
 
     <!-- Create new project dialog -->
-    <div class="modal fade" id="createProjectDialog" tabindex="-1" role="dialog" aria-labelledby="createProjectDialog" aria-hidden="true">
+    <div class="modal fade" id="createProjectDialog" tabindex="-1" role="dialog" aria-labelledby="createProjectDialog"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h5 class="modal-title" id="labelTitle"> <i class="fa fa-edit"></i>Create new project</h5>
+                    <h5 class="modal-title" id="labelTitle"><i class="fa fa-edit"></i>Create new project</h5>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal label-left" role="form" id="projectForm" name="projectForm" novalidate>
-                        <div class="form-group" ng-class="{ 'has-error' : projectForm.name.$invalid && projectForm.name.$dirty }">
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : projectForm.name.$invalid && projectForm.name.$dirty }">
                             <label for="name" class="col-sm-4 control-label">Name</label>
                             <div class="col-sm-8">
-                                <input type="text" ng-model="projectsVm.createProjectDialog.project.name" id="name" name="name" class="form-control" required
-                                    ng-minlength="2" ng-maxlength="30">
-                                <span ng-show="projectForm.name.$error.required && projectForm.name.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Project name is required.</span>
-                                <span ng-show="projectForm.name.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Project name must contains at least 2 characters.</span>
-                                <span ng-show="projectForm.name.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">Project name must contains less than 30 characters.</span>
+                                <input type="text" ng-model="projectsVm.createProjectDialog.project.name" id="name"
+                                       name="name" class="form-control" required
+                                       ng-minlength="2" ng-maxlength="30">
+                                <span ng-show="projectForm.name.$error.required && projectForm.name.$dirty"
+                                      class="help-block"
+                                      style="font-size: 10pt; margin:0px;">Project name is required.</span>
+                                <span ng-show="projectForm.name.$error.minlength" class="help-block"
+                                      style="font-size: 10pt; margin:0px;">Project name must contains at least 2 characters.</span>
+                                <span ng-show="projectForm.name.$error.maxlength" class="help-block"
+                                      style="font-size: 10pt; margin:0px;">Project name must contains less than 30 characters.</span>
                             </div>
                         </div>
-                        <div class="form-group" ng-class="{ 'has-error' : projectForm.description.$invalid && projectForm.description.$dirty }">
-                            <label for="description" class="col-sm-4 control-label">Description</label>
+                        <div class="form-group"
+                             ng-class="{ 'has-error' : projectForm.description.$invalid && projectForm.description.$dirty }">
+                            <label class="col-sm-4 control-label">Description</label>
                             <div class="col-sm-8">
-                                <textarea ng-model="projectsVm.createProjectDialog.project.description" class="form-control textarea-with-counter" rows="4"
-                                    cols="30" name="description" required ng-minlength="1" ng-maxlength="60"></textarea>
+                                <textarea ng-model="projectsVm.createProjectDialog.project.description"
+                                          class="form-control textarea-with-counter" rows="4"
+                                          cols="30" name="description" required ng-minlength="1"
+                                          ng-maxlength="60"></textarea>
                                 <p class="help-block text-right textarea-msg"><span class="text-muted"></span></p>
-                                <span ng-show="projectForm.description.$error.required && projectForm.description.$dirty" class="help-block" style="font-size: 10pt; margin:0px;">Description is required.</span>
-                                <span ng-show="projectForm.description.$error.minlength" class="help-block" style="font-size: 10pt; margin:0px;">Description must contains at least 2 characters.</span>
-                                <span ng-show="projectForm.description.$error.maxlength" class="help-block" style="font-size: 10pt; margin:0px;">description must contains less than 30 characters.</span>
+                                <span ng-show="projectForm.description.$error.required && projectForm.description.$dirty"
+                                      class="help-block"
+                                      style="font-size: 10pt; margin:0px;">Description is required.</span>
+                                <span ng-show="projectForm.description.$error.minlength" class="help-block"
+                                      style="font-size: 10pt; margin:0px;">Description must contains at least 2 characters.</span>
+                                <span ng-show="projectForm.description.$error.maxlength" class="help-block"
+                                      style="font-size: 10pt; margin:0px;">description must contains less than 30 characters.</span>
                             </div>
                         </div>
                     </form>
-                    <hr class="dashed" />
+                    <hr class="dashed"/>
                     <em>&nbsp;</em>
-                    <button type="button" data-dismiss="modal" class="btn btn-large btn-primary pull-right" style="margin-bottom:10px" ng-click="projectsVm.createProject();"
-                        ng-disabled="projectForm.$invalid">
+                    <button type="button" data-dismiss="modal" class="btn btn-large btn-primary pull-right"
+                            style="margin-bottom:10px" ng-click="projectsVm.createProject();"
+                            ng-disabled="projectForm.$invalid">
                         <i class="fa fa-save"></i> Create project
                     </button>
                 </div>
@@ -140,8 +166,9 @@
 
 
     <!-- Project's dialog collaborators -->
-    <div class="modal fade" id="projectCollaborators" tabindex="-1" role="dialog" aria-labelledby="projectCollaboratorsLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="projectCollaborators" tabindex="-1" role="dialog"
+         aria-labelledby="projectCollaboratorsLabel"
+         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -151,32 +178,39 @@
                 <div class="modal-body">
                     <ul class="list-unstyled activity-list">
                         <li ng-repeat="collaborator in projectsVm.projectDialogInfo.collaborators">
-                            <div class="col-md-11">
-                                <img ng-src="{{collaborator.attributes.imagepath}}" width="" alt="Avatar" class="img-circle pull-left avatar" width="32px"
-                                    height="32px" />
+                            <div class="row">
+                                <img ng-src="{{collaborator.attributes.imagepath}}" width="" alt="Avatar"
+                                     class="img-circle pull-left avatar" width="32px"
+                                     height="32px"/>
                                 <p>
                                     {{collaborator.attributes.firstName + ' ' + collaborator.attributes.lastName}}
                                     <span class="timestamp">{{collaborator.attributes.email}}</span>
                                 </p>
                             </div>
-                            <div class="btn-group activity-actions col-md-1 pull-right">
-                                <button type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown">
-                                    <i class="fa fa-angle-down"></i>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                                    <li><a href="#">Remove</a></li>
-                                </ul>
-                            </div>
                         </li>
                     </ul>
 
-                    <div class="input-group">
-                        <input type="text" class="form-control" ng-model="projectsVm.collaboratorEmail">
-                        <div class="input-group-btn">
-                            <button type="button" ng-click="projectsVm.addCollaborator(projectsVm.collaboratorEmail)" class="btn btn-warning" tabindex="-1">Add collaborator</button>
+                    <form id="add-collaborator-form" name="addCollaboratorForm" novalidate>
+                        <div class="input-group">
+                            <input type="email" name="collaboratorEmail" class="form-control"
+                                   ng-model="projectsVm.collaboratorEmail" required>
+                            <div class="input-group-btn">
+                                <button type="button"
+                                        ng-click="projectsVm.addCollaborator(projectsVm.collaboratorEmail)"
+                                        class="btn btn-warning" tabindex="-1">Add collaborator
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                        <div ng-class="{ 'has-error' : (addCollaboratorForm.collaboratorEmail.$invalid && addCollaboratorForm.collaboratorEmail.$dirty) || projectsVm.message !== '' }">
+                        <span ng-show="addCollaboratorForm.collaboratorEmail.$error.required && addCollaboratorForm.collaboratorEmail.$dirty"
+                              class="help-block"
+                              style="font-size: 10pt; margin:0px;">Collaborator's email is required.</span>
+                            <span ng-show="addCollaboratorForm.collaboratorEmail.$error.email"
+                                  class="help-block" style="font-size: 10pt; margin:0px;">Wrong email format.</span>
+                            <span ng-show="projectsVm.message !== ''"
+                                  class="help-block" style="font-size: 10pt; margin:0px;">{{projectsVm.message}}</span>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
