@@ -34,6 +34,8 @@
             }
         };
 
+        projectsVm.message = "";
+
         projectsVm.prevOwnedProjects = getOwnedProjects;
         projectsVm.nextOwnedProjects = getOwnedProjects;
         projectsVm.prevMembershipProjects = getMembershipProjects;
@@ -81,6 +83,8 @@
                     var userId = response.data.id;
                     var projectId = projectsVm.projectDialogInfo.id;
 
+                    projectsVm.message = "";
+
                     projectsService.addCollaborator(projectId, userId)
                         .then(function (response) {
                             var collaborator = response.data;
@@ -88,15 +92,16 @@
                             if (_.isUndefined(collaborator.attributes.imagepath)) {
                                 collaborator.attributes.imagepath = defaultProfileImage;
                             }
-
+                            projectsVm.collaboratorEmail = "";
                             projectsVm.projectDialogInfo.collaborators.push(collaborator);
                         })
                         .catch(function (error) {
-                            $log.error(error);
+                            projectsVm.message = error;
                         });
                 })
                 .catch(function (error) {
-                    $log.error(error);
+                    $log.info(error);
+                    projectsVm.message = "There's no registered user with this email."
                 });
         }
 
@@ -118,6 +123,7 @@
 
         function setProjectId(id) {
             projectsVm.projectDialogInfo.id = id;
+            projectsVm.message = "";
             getCollaborators(id);
         }
 
