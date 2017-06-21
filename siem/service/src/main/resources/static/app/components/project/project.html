@@ -106,55 +106,93 @@
                                     </div>
                                     <div class="panel-collapse collapse in">
                                         <div class="panel-body">
-                                            <div class="form-group">
-                                                <label for="agent-name" class="col-sm-3 control-label">Name:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="agent-name"
-                                                           id="agent-name" placeholder="Agent name"
-                                                           ng-model="projectVm.config.name">
+                                            <form id="agent-config-form" name="agentConfigForm" novalidate>
+                                                <div class="form-group"
+                                                     ng-class="{ 'has-error' : agentConfigForm.agentName.$invalid && agentConfigForm.agentName.$dirty }">
+                                                    <label for="agent-name" class="col-sm-3 control-label">Name:</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" name="agentName"
+                                                               id="agent-name" placeholder="Agent name"
+                                                               ng-model="projectVm.config.name"
+                                                               required ng-minlength="3" ng-maxlength="20">
+                                                        <span
+                                                                ng-show="agentConfigForm.agentName.$error.required && agentConfigForm.agentName.$dirty"
+                                                                class="help-block" style="font-size: 10pt; margin:0px;">Name is required.</span>
+                                                        <span ng-show="agentConfigForm.agentName.$error.minlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Name must contains at least 3 characters.</span>
+                                                        <span ng-show="agentConfigForm.agentName.$error.maxlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Name must contains less than 20 characters.</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="agent-name"
-                                                       class="col-sm-3 control-label">Description:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="agent-description"
-                                                           id="agent-description" placeholder="Agent description"
-                                                           ng-model="projectVm.config.description">
+                                                <div class="form-group"
+                                                     ng-class="{ 'has-error' : agentConfigForm.agentDescription.$invalid && agentConfigForm.agentDescription.$dirty }">
+                                                    <label for="agent-name"
+                                                           class="col-sm-3 control-label">Description:</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" name="agentDescription"
+                                                               id="agent-description" placeholder="Agent description"
+                                                               ng-model="projectVm.config.description"
+                                                               required ng-minlength="3" ng-maxlength="60">
+                                                        <span
+                                                                ng-show="agentConfigForm.agentDescription.$error.required && agentConfigForm.agentDescription.$dirty"
+                                                                class="help-block" style="font-size: 10pt; margin:0px;">Name is required.</span>
+                                                        <span ng-show="agentConfigForm.agentDescription.$error.minlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Description must contains at least 1 characters.</span>
+                                                        <span ng-show="agentConfigForm.agentDescription.$error.maxlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Description must contains less than 60 characters.</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="agent-name" class="col-sm-3 control-label">Version:</label>
-                                                <div class="col-sm-9">
-                                                    <input type="text" class="form-control" name="agent-description"
-                                                           id="agent-version" placeholder="Agent version"
-                                                           ng-model="projectVm.config.version">
+                                                <div class="form-group"
+                                                     ng-class="{ 'has-error' : agentConfigForm.agentVersion.$invalid && agentConfigForm.agentVersion.$dirty }">
+                                                    <label for="agent-name"
+                                                           class="col-sm-3 control-label">Version:</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" class="form-control" name="agentVersion"
+                                                               id="agent-version" placeholder="Agent version"
+                                                               ng-model="projectVm.config.version"
+                                                               required ng-minlength="1" ng-maxlength="10">
+                                                        <span
+                                                                ng-show="agentConfigForm.agentVersion.$error.required && agentConfigForm.agentVersion.$dirty"
+                                                                class="help-block" style="font-size: 10pt; margin:0px;">Name is required.</span>
+                                                        <span ng-show="agentConfigForm.agentVersion.$error.minlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Version must contains at least 1 characters.</span>
+                                                        <span ng-show="agentConfigForm.agentVersion.$error.maxlength"
+                                                              class="help-block"
+                                                              style="font-size: 10pt; margin:0px;">Version must contains less than 10 characters.</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="default-log-level" class="col-sm-6 control-label">Choose
-                                                    default level:</label>
-                                                <div class="col-sm-6">
-                                                    <select name="default-log-level" id="default-log-level"
-                                                            class="select2" ng-model="projectVm.config.defaultLevel">
-                                                        <option value="DEBUG">DEBUG</option>
-                                                        <option value="INFO">INFO</option>
-                                                        <option value="NOTICE">NOTICE</option>
-                                                        <option value="WARN">WARN</option>
-                                                        <option value="ERROR">ERROR</option>
-                                                        <option value="CRIT">CRIT</option>
-                                                        <option value="ALERT">ALERT</option>
-                                                        <option value="EMERG">EMERG</option>
-                                                    </select>
+                                                <div class="form-group">
+                                                    <div class="form-group">
+                                                        <label class="col-md-3 control-label">Default level:</label>
+                                                        <div class="col-md-9">
+                                                            <select id="default-log-level"
+                                                                    class="form-control"
+                                                                    ng-model="projectVm.config.defaultLevel">
+                                                                <option value="DEBUG">DEBUG</option>
+                                                                <option value="INFO">INFO</option>
+                                                                <option value="NOTICE">NOTICE</option>
+                                                                <option value="WARN">WARN</option>
+                                                                <option value="ERROR">ERROR</option>
+                                                                <option value="CRIT">CRIT</option>
+                                                                <option value="ALERT">ALERT</option>
+                                                                <option value="EMERG">EMERG</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="row" ng-show="projectVm.config.os == 'WINDOWS'">
-                                                <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12"
-                                                       ng-repeat="(type, checked) in projectVm.config.types">
-                                                    <input type="checkbox" ng-model="projectVm.config.types[type]">
-                                                    <span>{{type}} logs</span>
-                                                </label>
-                                            </div>
+                                                <div class="row" ng-show="projectVm.config.os == 'WINDOWS'">
+                                                    <label class="control-inline fancy-checkbox custom-bgcolor-green col-md-12"
+                                                           ng-repeat="(type, checked) in projectVm.config.types">
+                                                        <input type="checkbox" ng-model="projectVm.config.types[type]">
+                                                        <span>{{type}} logs</span>
+                                                    </label>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -245,13 +283,13 @@
                         <div class="col-md-12">
                             <div class="contextual-summary-info">
                                 <i class="fa fa-close red-font"></i>
-                                <p class="pull-right"><span>ERRORS</span>4</p>
+                                <p class="pull-right"><span>ERRORS</span>{{projectVm.numberLogs.error}}</p>
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="contextual-summary-info">
                                 <i class="fa fa-warning yellow-font"></i>
-                                <p class="pull-right"><span>WARNINGS</span>12</p>
+                                <p class="pull-right"><span>WARNINGS</span>{{projectVm.numberLogs.warn}}</p>
                             </div>
                         </div>
                     </div>
@@ -270,7 +308,8 @@
                             <uib-accordion-heading class="panel-heading">
                                 <h4 class="panel-title agent-config-header">
                                     Filter your logs
-                                    <i class="pull-right glyphicon" class="search-collapse" ng-class="{'glyphicon-menu-up': status.open, 'glyphicon-menu-down': !status.open}"></i>
+                                    <i class="pull-right glyphicon" class="search-collapse"
+                                       ng-class="{'glyphicon-menu-up': status.open, 'glyphicon-menu-down': !status.open}"></i>
                                 </h4>
                             </uib-accordion-heading>
                             <div class="panel-collapse collapse in">
@@ -309,14 +348,17 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-lg-12">
-                                                <input date-range-picker class="form-control date-picker" type="text" ng-model="projectVm.timeRange.date"
+                                                <input date-range-picker class="form-control date-picker" type="text"
+                                                       ng-model="projectVm.timeRange.date"
                                                        options="projectVm.options"/>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div uib-timepicker ng-model="projectVm.timeRange.fromTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                                <div uib-timepicker ng-model="projectVm.timeRange.fromTime"
+                                                     hour-step="1" minute-step="1" show-meridian="false"></div>
                                             </div>
                                             <div class="col-lg-6">
-                                                <div uib-timepicker ng-model="projectVm.timeRange.toTime" hour-step="1" minute-step="1" show-meridian="false"></div>
+                                                <div uib-timepicker ng-model="projectVm.timeRange.toTime" hour-step="1"
+                                                     minute-step="1" show-meridian="false"></div>
                                             </div>
                                         </div>
                                         <span class="input-group-btn">

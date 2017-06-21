@@ -5,10 +5,12 @@
         .module('soteria-app')
         .controller('LogReportController', LogReportController);
 
-    LogReportController.$inject = ['$stateParams', '$log', 'reportService', '_'];
+    LogReportController.$inject = ['$stateParams', '$log', 'reportService', '_', 'ngToast'];
 
-    function LogReportController($stateParams, $log, reportService, _) {
+    function LogReportController($stateParams, $log, reportService, _, ngToast) {
         var reportVm = this;
+
+        reportVm.mainReportVisible = false;
 
         reportVm.reportRequest = {
             type: 'LOG_HOST',
@@ -110,12 +112,21 @@
             reportService.getCriteriaReport(reportVm.projectId, reportVm.reportRequest)
                 .then(function (response) {
                     reportVm.report = response;
+                    try {
+                        reportVm.mainReportVisible = response.reports.length > 0;
+                    } catch (e) {
+                        reportVm.mainReportVisible = false;
+                    }
                     var lst = [];
                     _.forEach(reportVm.report.reports, function (value) {
                         reportVm.mainChart.labels.push(value['day']);
                         lst.push(value['day-count']);
                     });
                     reportVm.mainChart.data.push(lst);
+                    ngToast.create({
+                        className: 'success',
+                        content: '<strong>Successfully retrieved report.</strong>'
+                    });
                 })
                 .catch(function (error) {
                     $log.error(error);

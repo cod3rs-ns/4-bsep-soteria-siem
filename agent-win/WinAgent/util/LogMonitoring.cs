@@ -11,7 +11,7 @@ namespace WinAgent.util
     class LogMonitoring
     {
         public static List<string> types = EnvUtil.Configuration.Properties.Types;
-
+        
         public static void StartWatch()
         {
             foreach(string type in types) {

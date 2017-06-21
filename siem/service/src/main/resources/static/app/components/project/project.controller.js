@@ -50,6 +50,10 @@
             }
         };
 
+        projectVm.numberLogs = {
+            'error': 0,
+            'warn': 0
+        };
         projectVm.levelCheckboxes = {
             DEBUG: false,
             INFO: false,
@@ -74,13 +78,15 @@
 
         projectVm.addField = addField;
         projectVm.getLabelColor = getLabelColor;
+        projectVm.countLogs = countLogs;
+        projectVm.updateMiniReport = updateMiniReport;
 
         activate();
 
         function activate () {
             var id = $stateParams.id;
             projectVm.loadProject(id);
-            projectVm.loadInitialLogs(CONFIG.SERVICE_URL + '/projects/' + id + '/logs?page[limit]=2');
+            projectVm.loadInitialLogs(CONFIG.SERVICE_URL + '/projects/' + id + '/logs?page[limit]=10');
             projectVm.loadInitialAgents(CONFIG.SERVICE_URL + '/projects/' + id + '/agents');
         }
 
@@ -99,6 +105,7 @@
                 .then(function(response) {
                     projectVm.logs.data = _.concat(projectVm.logs.data, response.data);
                     projectVm.logs.next = response.links.next;
+                    projectVm.updateMiniReport();
                 })
                 .catch(function(error) {
                     $log.error(error);
@@ -106,19 +113,37 @@
         }
 
         function filterLogs() {
-            $log.info(projectVm.timeRange.fromTime);
-            $log.info(projectVm.timeRange.toTime);
-            $log.info(projectVm.timeRange.date);
+            var from = null;
+            var to = null;
 
-            $log.info(new Date(projectVm.timeRange.date.startDate.format('LL')).setTime(projectVm.timeRange.fromTime.getTime()));
+            if (!_.isNull(projectVm.timeRange.date.startDate) && !_.isNull(projectVm.timeRange.fromTime)
+                && !_.isNull(projectVm.timeRange.date.endDate) && !_.isNull(projectVm.timeRange.toTime)) {
+                from = new Date(
+                    projectVm.timeRange.date.startDate.year(),
+                    projectVm.timeRange.date.startDate.month(),
+                    projectVm.timeRange.date.startDate.date(),
+                    projectVm.timeRange.fromTime.getHours(),
+                    projectVm.timeRange.fromTime.getMinutes()
+                ).toISOString();
 
-            $log.info(projectVm.timeRange.fromTime.toISOString());
-            $log.info(projectVm.timeRange.toTime.toISOString());
+                to = new Date(
+                    projectVm.timeRange.date.endDate.year(),
+                    projectVm.timeRange.date.endDate.month(),
+                    projectVm.timeRange.date.endDate.date(),
+                    projectVm.timeRange.toTime.getHours(),
+                    projectVm.timeRange.toTime.getMinutes()
+                ).toISOString();
+            }
 
             var filters = createFilters();
+
+            if (!_.isNull(from) && !_.isNull(to)) {
+                filters += '&filter[from]=' + from + '&filter[to]=' + to;
+            }
+
             projectVm.logs.data = [];
             projectVm.logs.next = null;
-            loadLogs(CONFIG.SERVICE_URL + '/projects/' + projectVm.projectId + '/logs?page[limit]=2' + filters);
+            loadLogs(CONFIG.SERVICE_URL + '/projects/' + projectVm.projectId + '/logs?page[limit]=10' + filters);
         }
 
         function loadAgents(url) {
@@ -169,7 +194,7 @@
                             'defaultLevel': projectVm.config.defaultLevel,
                             'paths': _.map(projectVm.config.paths, 'value'),
                             'regexes': _.map(projectVm.config.regexes, 'value'),
-                            'patterns':  _.map(projectVm.config.patterns, 'value'),
+                            'patterns': _.map(projectVm.config.patterns, 'value'),
                             'types': types,
                             'agentId': response.data.id
                         }
@@ -177,7 +202,7 @@
 
                     projectService.downloadAgent(config)
                         .then(function(response) {
-                            // TODO Add some message :)
+                            $log.info("Successfully downloaded agent");
                         })
                         .catch(function(error) {
                             $log.error(error);
@@ -246,6 +271,17 @@
                 default:
                     return 'label-default';
             }
+        }
+
+        function updateMiniReport() {
+           projectVm.countLogs('error');
+           projectVm.countLogs('warn');
+        }
+
+        function countLogs(level) {
+            projectVm.numberLogs[level] = _.size(_.filter(projectVm.logs.data, function(log) {
+                return _.toLower(log.attributes.level) === level;
+            }));
         }
 
         projectVm.options = projectVm.options = {

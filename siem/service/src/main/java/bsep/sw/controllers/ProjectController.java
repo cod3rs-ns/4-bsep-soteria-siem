@@ -2,6 +2,7 @@ package bsep.sw.controllers;
 
 import bsep.sw.domain.Project;
 import bsep.sw.domain.User;
+import bsep.sw.hateoas.ErrorResponse;
 import bsep.sw.hateoas.PaginationLinks;
 import bsep.sw.hateoas.project.ProjectCollectionResponse;
 import bsep.sw.hateoas.project.ProjectResponse;
@@ -165,6 +166,11 @@ public class ProjectController extends StandardResponses {
         final User collaborator = userService.findOne(userId);
         if (collaborator == null) {
             return notFound("user");
+        }
+
+        final Project alreadyCollaborate = projectService.findByMembershipAndId(collaborator, projectId);
+        if (alreadyCollaborate != null) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("400", "User collaborator", "User is already collaborator!"));
         }
 
         userService.save(collaborator.addProject(project));

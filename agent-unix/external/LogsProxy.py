@@ -5,16 +5,16 @@ from LogRequest import LogRequest
 
 
 class LogsProxy(object):
-    # FIXME Change Base service URL
     def __init__(self, config, url):
-        self.SERVICE_URL = url + config['agentId']
+        self.SERVICE_URL = url + str(config['agentId'])
         self.PRIVATE_KEY = config['privateKey']
         self.SECRET_KEY = config['secretKey']
         self.PUBLIC_KEY = config['publicKey']
 
     def send_log(self, log):
         data = self.get_encrypted_data(LogRequest(log).json())
-        requests.post(self.SERVICE_URL, data=data, headers={'Content-Type': 'text/plain'})
+
+        requests.post(self.SERVICE_URL, data=data, headers={'Content-Type': 'text/plain'}, verify=False)
 
     def get_encrypted_data(self, data):
         data.replace('\"', '\\\"')

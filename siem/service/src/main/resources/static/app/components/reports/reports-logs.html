@@ -5,13 +5,10 @@
 	<title>Project Reports</title>
 </head>
 <body>
-<div class="container">
-
-</div>
 
 <div class="container">
-	<div class="main-header">
-		<h2>Report s</h2>
+	<div class="main-header" style="margin-top: 20px;">
+		<h2>Logs Report</h2>
 		<em>Deeper insights into your logs</em>
 	</div>
 	<div class="main-content">
@@ -21,7 +18,7 @@
 					<div class="widget-header">
 						<h3><i class="fa fa-edit"></i>Custom report criteria</h3></div>
 					<div class="widget-content clearfix">
-						<form class="form-horizontal label-left">
+						<form class="form-horizontal label-left" name="reportForm" novalidate>
 							<div class="form-group">
 								<label class="col-md-3 control-label">Method:</label>
 								<div class="col-md-9">
@@ -35,15 +32,19 @@
 									</select>
 								</div>
 							</div>
-							<div class="form-group">
+							<div class="form-group"
+							     ng-class="{ 'has-error' : reportForm.reportValue.$invalid && reportForm.reportValue.$dirty }">
 								<label for="report-value"
 								       class="col-sm-3 control-label">Value:</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control"
-									       name="definition-description"
+									       name="reportValue"
 									       id="report-value"
 									       placeholder="Criteria value..."
-									       ng-model="reportVm.reportRequest.value">
+									       ng-model="reportVm.reportRequest.value" required/>
+									<span
+											ng-show="reportForm.reportValue.$error.required && reportForm.reportValue.$dirty"
+											class="help-block" style="font-size: 10pt; margin:0px;">Value is required.</span>
 								</div>
 							</div>
 							<p>Report range -
@@ -53,7 +54,7 @@
 							       options="reportVm.rangePicker.options"/>
 						</form>
 						<button class="btn btn-primary btn-add-field pull-right" type="button"
-						        ng-click="reportVm.loadReport()"> SHOW REPORT!
+						        ng-click="reportVm.loadReport()" ng-disabled="reportForm.$invalid"> SHOW REPORT!
 						</button>
 					</div>
 				</div>
@@ -61,13 +62,18 @@
 					<div class="widget-header">
 						<h3><i class="fa fa-bar-chart"></i>Main report</h3>
 					</div>
-					<div class="widget-content" style="padding: 10px;">
+					<div class="widget-content" style="padding: 10px;" ng-show="reportVm.mainReportVisible">
 						<div class="row" style="margin: 10px;">
 							<canvas id="mainChart" class="chart chart-line" chart-data="reportVm.mainChart.data"
 							        chart-labels="reportVm.mainChart.labels" chart-series="reportVm.mainChart.series"
 							        chart-options="reportVm.mainChart.options"
 							        chart-dataset-override="reportVm.mainChart.datasetOverride">
 							</canvas>
+						</div>
+					</div>
+					<div class="widget-content" style="padding: 10px;" ng-hide="reportVm.mainReportVisible">
+						<div class="row" style="margin: 10px;">
+							<span>There is not enough data.</span>
 						</div>
 					</div>
 				</div>
