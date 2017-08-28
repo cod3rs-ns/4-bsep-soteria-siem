@@ -3,6 +3,7 @@ package bsep.sw.rule_engine.rules;
 
 import bsep.sw.domain.*;
 import bsep.sw.repositories.AlarmedLogsRepository;
+import bsep.sw.rule_engine.RuleEngineProvider;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.LogsService;
@@ -30,6 +31,7 @@ public class RulesService {
     private final AlarmDefinitionService alarmDefinitionService;
     private final LogsService logsService;
     private final AlarmedLogsRepository alarmedLogsRepository;
+    private final RuleEngineProvider ruleEngineProvider;
 
     @Autowired
     public RulesService(final SimpMessagingTemplate template,
@@ -37,30 +39,20 @@ public class RulesService {
                         final ProjectService projectService,
                         final AlarmDefinitionService alarmDefinitionService,
                         final LogsService logsService,
-                        final AlarmedLogsRepository alarmedLogsRepository) {
+                        final AlarmedLogsRepository alarmedLogsRepository,
+                        final RuleEngineProvider ruleEngineProvider) {
         this.template = template;
         this.alarmService = alarmService;
         this.projectService = projectService;
         this.alarmDefinitionService = alarmDefinitionService;
         this.logsService = logsService;
         this.alarmedLogsRepository = alarmedLogsRepository;
+        this.ruleEngineProvider = ruleEngineProvider;
     }
 
     public void evaluateNewLog(final Log log) {
-        final RulesEngine rulesEngine = RulesEngineBuilder
-                .aNewRulesEngine()
-                .named(UUID.randomUUID().toString())
-                .withSkipOnFirstAppliedRule(false)
-                .withSkipOnFirstNonTriggeredRule(false)
-                .withSkipOnFirstFailedRule(false)
-                .withSilentMode(true)
-                .build();
-
+        final RulesEngine rulesEngine = ruleEngineProvider.get();
         final Project project = projectService.findOne(log.getProject());
-
-        // don't risk
-        if (project == null) return;
-
         final List<AlarmDefinition> definitions = alarmDefinitionService.findAllByProject(project);
 
         for (final AlarmDefinition definition : definitions) {
@@ -69,14 +61,12 @@ public class RulesService {
                 rulesEngine.registerRule(logRule);
             } else {
                 final ArrayList<Log> logs = gatherNonProcessedLogs(definition);
-                if (logs.size() > 0) {
-                    final MultiLogRule logRule = new MultiLogRule(logs, definition, projectService, alarmService, alarmDefinitionService, template, alarmedLogsRepository);
-                    rulesEngine.registerRule(logRule);
-                }
+                final MultiLogRule logRule = new MultiLogRule(logs, definition, projectService, alarmService, alarmDefinitionService, template, alarmedLogsRepository);
+                rulesEngine.registerRule(logRule);
             }
         }
         rulesEngine.fireRules();
-        logger.info("Rules engine fired rules evaluation.");
+        rulesEngine.clearRules();
     }
 
     private ArrayList<Log> gatherNonProcessedLogs(final AlarmDefinition definition) {

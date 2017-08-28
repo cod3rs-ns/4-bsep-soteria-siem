@@ -4,7 +4,7 @@ import bsep.sw.domain.*;
 import bsep.sw.repositories.AlarmedLogsRepository;
 import bsep.sw.rule_engine.FieldSupplier;
 import bsep.sw.rule_engine.FieldType;
-import bsep.sw.rule_engine.RuleMethodSupplier;
+import bsep.sw.rule_engine.MethodSupplier;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.ProjectService;
@@ -33,7 +33,7 @@ public class MultiLogRule extends BasicRule {
     private final List<Log> logs;
     private final AlarmDefinition alarmDefinition;
     private final FieldSupplier fieldSupplier = new FieldSupplier();
-    private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
+    private final MethodSupplier methodSupplier = new MethodSupplier();
 
     private final List<AlarmedLogs> possibleTriggeredPairs = new ArrayList<>();
     private final AlarmedLogsRepository alarmedLogsRepository;
@@ -69,7 +69,7 @@ public class MultiLogRule extends BasicRule {
                     for (LogError error : log.getInfo().getErrors()) {
                         if (methodSupplier
                                 .getMethod(rule.getMethod())
-                                .apply(fieldSupplier.getErrorField(log, rule.getField(), error).get(), rule.getValue())) {
+                                .apply(fieldSupplier.getErrorField(rule.getField(), error).get(), rule.getValue())) {
                             atLeastOneMatchingRule = true;
                         }
                     }
@@ -124,7 +124,7 @@ public class MultiLogRule extends BasicRule {
         for (final User user : project.getMembers()) {
             template.convertAndSend(
                     "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, logs, alarm)); // TODO extend notification
+                    new AlarmNotification(project, logs, alarm));
         }
     }
 }
