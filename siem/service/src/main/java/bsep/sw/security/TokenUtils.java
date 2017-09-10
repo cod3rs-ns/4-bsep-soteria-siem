@@ -86,7 +86,7 @@ public class TokenUtils {
 
         claims.put(SUBJECT, userDetails.getUsername());
         // Set Role of User to token. Our user has only one role.
-        claims.put(ROLE, userDetails.getAuthorities().toArray()[0]);
+        claims.put(ROLE, ((SecurityUser) userDetails).getType());
         claims.put(CREATED, this.generateCurrentDate());
         claims.put(LOGIN_TYPE, loginType);
         return this.generateToken(claims, tokenExpiration);

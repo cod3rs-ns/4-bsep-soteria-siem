@@ -6,7 +6,7 @@ import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 
-public class RuleMethodSupplier {
+public class MethodSupplier {
 
     public BiFunction<String, String, Boolean> getMethod(final MethodType methodType) {
         switch (methodType) {

@@ -3,7 +3,7 @@ package bsep.sw.rule_engine.rules;
 import bsep.sw.domain.*;
 import bsep.sw.rule_engine.FieldSupplier;
 import bsep.sw.rule_engine.FieldType;
-import bsep.sw.rule_engine.RuleMethodSupplier;
+import bsep.sw.rule_engine.MethodSupplier;
 import bsep.sw.services.AlarmDefinitionService;
 import bsep.sw.services.AlarmService;
 import bsep.sw.services.ProjectService;
@@ -12,11 +12,7 @@ import org.apache.log4j.Logger;
 import org.easyrules.core.BasicRule;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class SingleLogRule extends BasicRule {
 
@@ -32,7 +28,7 @@ public class SingleLogRule extends BasicRule {
     private final AlarmDefinition alarmDefinition;
 
     private final FieldSupplier fieldSupplier = new FieldSupplier();
-    private final RuleMethodSupplier methodSupplier = new RuleMethodSupplier();
+    private final MethodSupplier methodSupplier = new MethodSupplier();
 
     private final List<FieldType> errorFields = Arrays.asList(FieldType.ERROR, FieldType.ERROR_NO, FieldType.ERROR_TYPE, FieldType.STACK);
 
@@ -60,7 +56,7 @@ public class SingleLogRule extends BasicRule {
                 for (LogError error : log.getInfo().getErrors()) {
                     if (methodSupplier
                             .getMethod(rule.getMethod())
-                            .apply(fieldSupplier.getErrorField(log, rule.getField(), error).get(), rule.getValue())) {
+                            .apply(fieldSupplier.getErrorField(rule.getField(), error).get(), rule.getValue())) {
                         atLeastOneMatchingRule = true;
                     }
                 }
@@ -86,25 +82,20 @@ public class SingleLogRule extends BasicRule {
                 .resolved(false)
                 .level(alarmDefinition.getLevel());
 
-        final LogAlarmPair lap = new LogAlarmPair().alarm(alarm).log(log.getId());
-        final ArrayList<LogAlarmPair> logPairs = new ArrayList<>();
-        logPairs.add(lap);
-        alarm.logs(logPairs);
-
-        logger.info(alarm);
+        final LogAlarmPair lap = new LogAlarmPair()
+                .alarm(alarm)
+                .log(log.getId());
+        alarm.getLogs().add(lap);
 
         // save alarm and update definition stats
         final Alarm savedAlarm = alarmService.save(alarm);
         alarmDefinition.updateWithAlarm(savedAlarm);
         alarmDefinitionService.save(alarmDefinition);
 
-        // Send notifications through socket
+        // send notifications through socket
         final Project project = projectService.findOne(log.getProject());
-        for (final User user : project.getMembers()) {
-            template.convertAndSend(
-                    "/publish/threat/" + user.getUsername(),
-                    new AlarmNotification(project, Collections.singletonList(log), alarm));
-        }
+        project.getMembers().forEach(u ->
+                template.convertAndSend("/publish/threat/" + u.getUsername(),
+                        new AlarmNotification(project, Collections.singletonList(log), alarm)));
     }
-
 }
