@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,7 +37,7 @@ public class Alarm extends EntityMeta {
     private AlarmDefinition definition;
 
     @OneToMany(mappedBy = "alarm", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<LogAlarmPair> logs;
+    private List<LogAlarmPair> logs = new ArrayList<>();
 
     public String getMessage() {
         return message;

@@ -28,7 +28,7 @@
                         $localStorage.token = token;
                         $localStorage.user = tokenPayload.sub;
                         $localStorage.role = tokenPayload.role.authority;
-                        $scope.$emit('userLoggedIn', $localStorage.user)
+                        $scope.$emit('userLoggedIn', $localStorage.user);
 
                         $state.go('home');
                     }

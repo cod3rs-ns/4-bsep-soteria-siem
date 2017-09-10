@@ -16,7 +16,7 @@ Our logs are unstructured. I think the best option is to save them in _document 
 We should take a look on **ECS logging** and make schema like that. It will help us during querying.
 
 ##### Why MySQL?
-The main benefit of using **relational databas** is **Hibernate ORM**. This could be right place for
+The main benefit of using **relational database** is **Hibernate ORM**. This could be right place for
 all entities we need in our application such as:
 
 - users with roles

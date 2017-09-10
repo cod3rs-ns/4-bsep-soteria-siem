@@ -28,7 +28,7 @@ public class FieldSupplier {
         }
     }
 
-    public Supplier<String> getErrorField(final Log log, final FieldType fieldType, final LogError errorError) {
+    public Supplier<String> getErrorField(final FieldType fieldType, final LogError errorError) {
         switch (fieldType) {
             case ERROR_TYPE:
                 return errorError::getType;
